@@ -123,9 +123,9 @@
 #define userAcount @"userAccount"
 #define userPassWord @"passWord"
  //测试模式
-#define API_UserLogin @"http://88.88.3.109/youmi/member/login"
+//#define API_UserLogin @"http://88.88.3.109/youmi/member/login"
 //发布模式
-//#define API_UserLogin @"http://120.24.71.104:8080/youmi/member/login"
+#define API_UserLogin @"http://120.24.71.104:8080/youmi/member/login"
 
 /*
  *修改昵称

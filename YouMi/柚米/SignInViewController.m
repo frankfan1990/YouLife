@@ -208,6 +208,12 @@
             [ProgressHUD showError:@"信息不完整" Interaction:NO];
         
         }else{//正常填写信息
+            
+            if([self.userPassword_input.text length]<6){
+            
+                [ProgressHUD showError:@"密码过短" Interaction:NO];
+                return;
+            }
         
             [ProgressHUD show:@"登陆中..." Interaction:NO];
             if(![reachability isReachable]){//网络链接异常
@@ -233,7 +239,6 @@
                         return ;
                     
                     }
-                    
                     
                     
                     if([responseObject[@"success"]integerValue]==1){
@@ -267,9 +272,7 @@
         
         }
         
-        
-        
-        NSLog(@"登陆");
+            NSLog(@"登陆");
     
     }else if (sender.tag==1004){
         
@@ -287,6 +290,8 @@
     }
 
 }
+
+
 
 #pragma mark 社交分享调用
 - (void)gestureTaped:(UIGestureRecognizer *)gesture{
@@ -322,15 +327,8 @@
     
         if(!isValidatePhone(textField.text) && !isValidateEmail(textField.text)){
             
-            UIAlertView *alertView =[[UIAlertView alloc]initWithTitle:@"请输入格式正确的账号" message:@"请重新输入格式正确的账号" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil, nil];
-            [alertView show];
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                
-                [alertView dismissWithClickedButtonIndex:0 animated:YES];
-                textField.text = nil;
-                
-            });
+            [ProgressHUD showError:@"非法输入" Interaction:NO];
+            textField.text = nil;
             
         }
     

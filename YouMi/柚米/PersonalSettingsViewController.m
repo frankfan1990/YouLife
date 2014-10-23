@@ -482,8 +482,8 @@
 #pragma mark 退出登录触发
 - (void)logOutButtonClicked:(UIButton *)sender{
 
-
-
+    [[TMCache sharedCache]removeObjectForKey:kUserInfo];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 

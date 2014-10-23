@@ -16,12 +16,14 @@
 #import "UserInfoModel.h"
 #import "ProgressHUD.h"
 #import <TMCache.h>
+#import "UserInfoModel.h"
 
 
 @interface AboutMineViewController ()<UIAlertViewDelegate>
 {
 
     NSArray *itemNames;
+    UserInfoModel *userinfo;
 }
 @end
 
@@ -77,14 +79,16 @@
     self.userID.textAlignment = NSTextAlignmentCenter;
     self.userID.font = [UIFont systemFontOfSize:15];
     [headerImageView addSubview:self.userID];
-#warning 此处为fake data
-    /*fake data-用户id*/
-    if([[NSUserDefaults standardUserDefaults]valueForKey:kUser_ID]){
+
     
-        self.userID.text = [[NSUserDefaults standardUserDefaults]valueForKey:kUser_ID];
+    userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+    
+    if([userinfo.telphone length]){
+    
+       
     }else{
     
-        self.userID.text = @"登陆";
+        self.userID.text = @"登录";
         
         UITapGestureRecognizer *tap =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumpToLandUI)];
         [self.userID addGestureRecognizer:tap];
@@ -102,12 +106,7 @@
     self.phoneNumber.font = [UIFont systemFontOfSize:12.5];
     [headerImageView addSubview:self.phoneNumber];
     
-#warning 此处为fake data
-    /*fake data*/
-    if([[NSUserDefaults standardUserDefaults]valueForKey:kUser_phoneNum]){
-    
-        self.phoneNumber.text = [[NSUserDefaults standardUserDefaults]valueForKey:kUser_phoneNum];
-    }
+
     
     
     
@@ -138,12 +137,29 @@
 - (void)viewDidAppear:(BOOL)animated{
 
     [super viewDidAppear:animated];
-    if([[NSUserDefaults standardUserDefaults]objectForKey:kUser_headerImage]){
+    
+    userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+    
+    if([userinfo.avatar length]){
         
-        NSURL *userHeaderImageURL = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults]objectForKey:kUser_headerImage]];
+        NSURL *userHeaderImageURL = [NSURL URLWithString:userinfo.avatar];
         [self.headerImage sd_setBackgroundImageWithURL:userHeaderImageURL forState:UIControlStateNormal];
     
+    }else{
+    
+        [self.headerImage setBackgroundImage:nil forState:UIControlStateNormal];
     }
+    
+    if([userinfo.telphone length]){
+    
+        self.phoneNumber.text = userinfo.telphone;
+        
+    }else{
+    
+        self.userID.text = @"登录";
+    
+    }
+    
     
 }
 
@@ -155,7 +171,10 @@
     
 #pragma mark 这里有警告
 #warning 调试模式 正常模式需要将前面的取反（!）号去掉
-    if([[TMCache sharedCache]objectForKey:kUserInfo]){
+    
+
+    
+    if([userinfo.memberId length]){
         
         PersonalSettingsViewController *personalSetting =[PersonalSettingsViewController new];
         personalSetting.hidesBottomBarWhenPushed = YES;
@@ -256,6 +275,10 @@
     return cell;
 
 }
+
+
+
+
 
 #pragma mark cell被选择回调方法
 
