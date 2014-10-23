@@ -195,6 +195,8 @@
 		63EE69B319B43EF000CC7540 /* 娱乐.png in Resources */ = {isa = PBXBuildFile; fileRef = 63EE69AB19B43EF000CC7540 /* 娱乐.png */; };
 		63EE69BB19B441A100CC7540 /* 首页选中@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63EE69B919B441A100CC7540 /* 首页选中@2x.png */; };
 		63EE69BF19B4475300CC7540 /* 首页未选中@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63EE69BE19B4475300CC7540 /* 首页未选中@2x.png */; };
+		63EEA92219F89B4300F5A8A5 /* UserInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEA92119F89B4300F5A8A5 /* UserInfoModel.m */; };
+		63EEA93B19F8A80B00F5A8A5 /* ForgetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EEA93A19F8A80B00F5A8A5 /* ForgetPasswordViewController.m */; };
 		63F780BC19BEADC200DF7585 /* 左箭头@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63F780BB19BEADC200DF7585 /* 左箭头@2x.png */; };
 		63F780BF19BFDE1D00DF7585 /* FoodDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F780BE19BFDE1D00DF7585 /* FoodDetailViewController.m */; };
 		63F780C419C0018100DF7585 /* 朝左箭头icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 63F780C319C0018100DF7585 /* 朝左箭头icon.png */; };
@@ -548,6 +550,10 @@
 		63EE69AB19B43EF000CC7540 /* 娱乐.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "娱乐.png"; sourceTree = "<group>"; };
 		63EE69B919B441A100CC7540 /* 首页选中@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "首页选中@2x.png"; sourceTree = "<group>"; };
 		63EE69BE19B4475300CC7540 /* 首页未选中@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "首页未选中@2x.png"; sourceTree = "<group>"; };
+		63EEA92019F89B4300F5A8A5 /* UserInfoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoModel.h; sourceTree = "<group>"; };
+		63EEA92119F89B4300F5A8A5 /* UserInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoModel.m; sourceTree = "<group>"; };
+		63EEA93919F8A80B00F5A8A5 /* ForgetPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForgetPasswordViewController.h; sourceTree = "<group>"; };
+		63EEA93A19F8A80B00F5A8A5 /* ForgetPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForgetPasswordViewController.m; sourceTree = "<group>"; };
 		63F780BB19BEADC200DF7585 /* 左箭头@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "左箭头@2x.png"; sourceTree = "<group>"; };
 		63F780BD19BFDE1D00DF7585 /* FoodDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoodDetailViewController.h; sourceTree = "<group>"; };
 		63F780BE19BFDE1D00DF7585 /* FoodDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoodDetailViewController.m; sourceTree = "<group>"; };
@@ -838,6 +844,8 @@
 				635C3A5F19EE6DCC0090DE16 /* RegisterAcountViewController.m */,
 				635C3A6119EEA5710090DE16 /* RegisterAcount2ViewController.h */,
 				635C3A6219EEA5710090DE16 /* RegisterAcount2ViewController.m */,
+				63EEA93919F8A80B00F5A8A5 /* ForgetPasswordViewController.h */,
+				63EEA93A19F8A80B00F5A8A5 /* ForgetPasswordViewController.m */,
 				63D1C25E19F4FDAD00697F08 /* PersonalSetting */,
 			);
 			name = AboutAcount;
@@ -1046,10 +1054,9 @@
 		63B7AA0819AED24B00AAE30A /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				63B7AA0519AED24500AAE30A /* MainPageData.h */,
-				63B7AA0619AED24500AAE30A /* MainPageData.m */,
-				6360A98319AF1A9D0013809B /* DataAboutTitle.h */,
-				6360A98419AF1A9D0013809B /* DataAboutTitle.m */,
+				63EEA91919F899AA00F5A8A5 /* dataAboutView */,
+				63EEA92019F89B4300F5A8A5 /* UserInfoModel.h */,
+				63EEA92119F89B4300F5A8A5 /* UserInfoModel.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1163,6 +1170,17 @@
 				63E378D619EF94C100C0D02A /* Reachability.m */,
 			);
 			name = ReachAbility;
+			sourceTree = "<group>";
+		};
+		63EEA91919F899AA00F5A8A5 /* dataAboutView */ = {
+			isa = PBXGroup;
+			children = (
+				63B7AA0519AED24500AAE30A /* MainPageData.h */,
+				63B7AA0619AED24500AAE30A /* MainPageData.m */,
+				6360A98319AF1A9D0013809B /* DataAboutTitle.h */,
+				6360A98419AF1A9D0013809B /* DataAboutTitle.m */,
+			);
+			name = dataAboutView;
 			sourceTree = "<group>";
 		};
 		63F780C019BFDE2A00DF7585 /* PublicSubViewControllers */ = {
@@ -1389,6 +1407,7 @@
 			files = (
 				633E46ED19AE28C8001D8F75 /* UIViewController+ADTransitionController.m in Sources */,
 				635C3A5519EE6AE70090DE16 /* Email_Phone.m in Sources */,
+				63EEA92219F89B4300F5A8A5 /* UserInfoModel.m in Sources */,
 				633E469719AE2770001D8F75 /* ClassificationViewController.m in Sources */,
 				6397102019B451CB00793A3D /* POPPropertyAnimation.mm in Sources */,
 				6397101E19B451CB00793A3D /* POPLayerExtras.mm in Sources */,
@@ -1496,6 +1515,7 @@
 				6397102219B451CB00793A3D /* POPVector.mm in Sources */,
 				63E78BFF19D001D5002755E9 /* VillageDynamicTableViewCell.m in Sources */,
 				63970F7119B0609600793A3D /* CCSegmentedControl.m in Sources */,
+				63EEA93B19F8A80B00F5A8A5 /* ForgetPasswordViewController.m in Sources */,
 				6356263819C83CAB0011B926 /* BusinessInfoTableViewCell.m in Sources */,
 				633E46EB19AE28C8001D8F75 /* ADTransitioningViewController.m in Sources */,
 				63A09C8119C7E2DB00655A92 /* ItemDetailController.m in Sources */,

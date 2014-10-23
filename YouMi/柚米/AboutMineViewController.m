@@ -6,11 +6,17 @@
 //  Copyright (c) 2014年 ruizhou. All rights reserved.
 //
 
+//???:我的模块
+
 #import "AboutMineViewController.h"
 #import "SignInViewController.h"
 #import "SignInViewController.h"
 #import "PersonalSettingsViewController.h"
 #import "UIButton+WebCache.h"
+#import "UserInfoModel.h"
+#import "ProgressHUD.h"
+#import <TMCache.h>
+
 
 @interface AboutMineViewController ()<UIAlertViewDelegate>
 {
@@ -149,7 +155,7 @@
     
 #pragma mark 这里有警告
 #warning 调试模式 正常模式需要将前面的取反（!）号去掉
-    if(![[NSUserDefaults standardUserDefaults]valueForKey:kUser_ID]){
+    if([[TMCache sharedCache]objectForKey:kUserInfo]){
         
         PersonalSettingsViewController *personalSetting =[PersonalSettingsViewController new];
         personalSetting.hidesBottomBarWhenPushed = YES;
@@ -157,10 +163,10 @@
         
     
     }else{
-    
-        UIAlertView *alertView =[[UIAlertView alloc]initWithTitle:@"请先登陆" message:@"检测到您尚未登陆" delegate:self cancelButtonTitle:@"取消登陆" otherButtonTitles:@"马上登陆", nil];
-    
-        [alertView show];
+
+        [ProgressHUD showError:@"请先登录" Interaction:NO];
+        
+        
     }
     
     

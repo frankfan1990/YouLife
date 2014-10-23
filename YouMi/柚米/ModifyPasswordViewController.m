@@ -10,6 +10,8 @@
 #import <AFNetworking.h>
 #import "Reachability.h"
 #import "ProgressHUD.h"
+#import <TMCache.h>
+#import "UserInfoModel.h"
 
 @interface ModifyPasswordViewController ()<UITextFieldDelegate>
 {
@@ -47,6 +49,7 @@
     //
     oldPassword_inout =[[UITextField alloc]initWithFrame:CGRectMake(20, self.view.bounds.size.height*0.18, self.view.bounds.size.width-40, 40)];
     oldPassword_inout.backgroundColor =[UIColor whiteColor];
+    oldPassword_inout.secureTextEntry = YES;
     oldPassword_inout.returnKeyType  = UIReturnKeyDone;
     oldPassword_inout.delegate =self;
     oldPassword_inout.layer.cornerRadius = 2;
@@ -56,6 +59,7 @@
     
     //
     newPassword_inout =[[UITextField alloc]initWithFrame:CGRectMake(20, self.view.bounds.size.height*0.18+40, self.view.bounds.size.width-40, 40)];
+    newPassword_inout.secureTextEntry = YES;
     newPassword_inout.tag = 1001;
     newPassword_inout.backgroundColor =[UIColor whiteColor];
     newPassword_inout.returnKeyType  = UIReturnKeyDone;
@@ -66,6 +70,7 @@
     
     //
     checkNewPassword_inout =[[UITextField alloc]initWithFrame:CGRectMake(20, self.view.bounds.size.height*0.18+80, self.view.bounds.size.width-40, 40)];
+    checkNewPassword_inout.secureTextEntry = YES;
     checkNewPassword_inout.tag = 1002;
     checkNewPassword_inout.backgroundColor =[UIColor whiteColor];
     checkNewPassword_inout.delegate = self;
@@ -126,8 +131,14 @@
         AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
         
-#warning 这里的参数还没确定,以及返回值的意义
-        NSDictionary *parameters = @{userAcount:@"franfkan",userPassWord:newPassword_inout.text};
+        NSDictionary *parameters = nil;
+        UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+        if(userInfo.memberId){
+        
+            parameters = @{memberID:userInfo.memberId,userPassWord:newPassword_inout.text};
+        }
+        
+        
         [ProgressHUD show:@"修改中" Interaction:NO];
         [manager POST:API_ModifyPassword parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
@@ -137,7 +148,8 @@
             if([dict[@"success"]integerValue]==1){
             
                 [ProgressHUD showSuccess:@"修改成功" Interaction:NO];
-                [self.navigationController popViewControllerAnimated:YES];
+                [[TMCache sharedCache]removeObjectForKey:kUserInfo];
+                [self.navigationController popToRootViewControllerAnimated:YES];
             }
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

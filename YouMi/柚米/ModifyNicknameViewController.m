@@ -11,6 +11,8 @@
 #import "Reachability.h"
 #import <AFNetworking.h>
 #import "ProgressHUD.h"
+#import <TMCache.h>
+#import "UserInfoModel.h"
 
 @interface ModifyNicknameViewController ()<UITextFieldDelegate>
 {
@@ -86,11 +88,14 @@
             AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
             manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
             
-#warning 这是一个测试模式fake data
+
             NSDictionary *parameters = nil;
-            if([[NSUserDefaults standardUserDefaults]objectForKey:kUser_ID]){
             
-                parameters = @{memberID:[[NSUserDefaults standardUserDefaults]objectForKey:kUser_ID],nickName:self.nickName_input.text};
+            UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+            
+            if(userInfo.memberId){
+            
+                parameters = @{memberID:userInfo.memberId,api_nickName:self.nickName_input.text};
 
             }
             
@@ -103,7 +108,9 @@
                 if([responseObject[isSuccess]integerValue]==1){
                 
                     [ProgressHUD showSuccess:@"修改成功" Interaction:NO];
-                    [[NSNotificationCenter defaultCenter]postNotificationName:@"sendNickname" object:self.nickName_input.text];//若修改昵称成功，则将此昵称回显在上一页面
+                
+                    [[TMCache sharedCache] setObject:responseObject[@"data"] forKey:kUserInfo];
+                    
                     [self.navigationController popViewControllerAnimated:YES];
                 
                 }

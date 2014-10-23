@@ -94,7 +94,7 @@
 
 /*接口字段*/
 #define phoneNum @"telphone" //用户手机号码
-#define passWord @"passWord" //用户密码
+#define api_passWord @"passWord" //用户密码
 
 
 //测试接口-测试接口地址每天会有变更
@@ -110,9 +110,9 @@
  */
 
 //测试模式
-#define API_AploadImage @"http://88.88.3.123/youmi/attachment/upload"
+#define API_AploadImage @"http://88.88.3.109/youmi/member/upload/avatar"
 //发布模式
-//#define API_AploadImage @"http://120.24.71.104:8080/youmi/attachment/upload"
+//#define API_AploadImage @"http://120.24.71.104:8080/youmi/member/upload/avatar"
 
 
 
@@ -123,7 +123,7 @@
 #define userAcount @"userAccount"
 #define userPassWord @"passWord"
  //测试模式
-#define API_UserLogin @"http://88.88.3.123/youmi/member/login"
+#define API_UserLogin @"http://88.88.3.109/youmi/member/login"
 //发布模式
 //#define API_UserLogin @"http://120.24.71.104:8080/youmi/member/login"
 
@@ -132,7 +132,7 @@
  */
 //发布模式
 #define API_ModifyNickname @"http://120.24.71.104:8080/youmi/member"
-#define nickName @"nickName"//会员昵称字段
+#define api_nickName @"nickName"//会员昵称字段
 
 
 /*
@@ -151,7 +151,7 @@
 
 
 /*
- *修改手机绑定
+ *修改手机绑定
  */
 //发布模式
 #define API_ModiftPhoneBind @"http://120.24.71.104:8080/youmi/member"
@@ -168,7 +168,7 @@
  */
 //发布模式
 #define API_ModifyPersonalInfo @"http://120.24.71.104:8080/youmi/member"
-#define memberName @"memberName"//用户姓名
+#define api_memberName @"memberName"//用户姓名
 #define QQ @"qq"//用户QQ号码
 #define memberEmail @"email"//用户邮箱
 #define memberRegion @"regionId"//用户所在区

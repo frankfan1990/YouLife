@@ -15,6 +15,9 @@
 #import "ModBindPhoneViewController.h"
 #import "TPKeyboardAvoidingScrollView.h"
 #import "UIButton+WebCache.h"
+#import <TMCache.h>
+#import "UIButton+WebCache.h"
+#import "UserInfoModel.h"
 
 
 @interface PersonalSettingsViewController ()<UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate>
@@ -130,38 +133,23 @@
         [self.view addSubview:logOutButton];
     }
     
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(readTheObjFromNoti:) name:@"sendNickname" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(readThePhoneNumFromNoti:) name:@"sendNumber1" object:nil];
     
 #warning fake data //需要从接口取到相应数据
     
+    if([[TMCache sharedCache] objectForKey:kUserInfo]){
+    
+        UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+        
+        detailContentArray =[NSMutableArray arrayWithObjects:@"",userInfo.telphone,userInfo.nickName,@"",userInfo.telphone, nil];
 
-    detailContentArray =[NSMutableArray arrayWithObjects:@"",@"15575829007",@"franfkan",@"",@"15575829007", nil];
-
+    }
+    
+    
     // Do any additional setup after loading the view.
 }
 
 
-#pragma mark 从通知处接受传过来的nickname
-- (void)readTheObjFromNoti:(NSNotification *)notificaiotn{
 
-    NSString *nickname = [notificaiotn object];
-    [detailContentArray removeObjectAtIndex:2];
-    [detailContentArray insertObject:nickname atIndex:2];
-    [self.tableView reloadData];
-
-}
-
-#pragma mark 从通知处接受传过来的phoneNum
-
-- (void)readThePhoneNumFromNoti:(NSNotification *)notification{
-    
-    NSString *phonnNum = [notification object];
-    [detailContentArray removeObjectAtIndex:4];
-    [detailContentArray insertObject:phonnNum atIndex:4];
-    [self.tableView reloadData];
-
-}
 
 
 
@@ -399,13 +387,13 @@
         }
         
     }
-    
-    
+  
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:3000];
     nameLabel.text = @"姓名";
 
     return cell;
 }
+
 
 
 #pragma mark cell被选中触发
@@ -414,7 +402,6 @@
     if(isChangedState){
         return;
     }
-    
     
     
     if(indexPath.row==2){
@@ -458,18 +445,6 @@
     return YES;
 
 }
-
-
-
-//- (void)textFieldDidEndEditing:(UITextField *)textField{
-//
-//    if()
-//
-//
-//
-//}
-
-
 
 
 
@@ -598,8 +573,8 @@
                 if([result[@"success"]integerValue]==1){//如果头像修改成功，则：
 
                     [self.headerImage setBackgroundImage:[UIImage imageWithData:imageData] forState:UIControlStateNormal];
-                    [[NSUserDefaults standardUserDefaults]setObject:result[@"data"] forKey:kUser_headerImage];
-
+                    [[TMCache sharedCache]setObject:result[@"data"] forKey:kUserInfo];
+                    
                     [ProgressHUD showSuccess:@"修改成功" Interaction:NO];
                 }
                 
@@ -672,7 +647,7 @@
             
             
 #pragma mark这里有警告
-#warning 这里需要进行网络请求
+#warning 这里是处理用户详细信息的修改
         }else{//这里是详细信息的提交
         
             isChangedState = NO;
@@ -717,11 +692,13 @@
                 manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
                 
                 NSDictionary *parameters = nil;
-                if([[NSUserDefaults standardUserDefaults]objectForKey:kUser_ID]){
+                UserInfoModel *userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+                if(userinfo.memberId){
                 
-                    parameters = @{memberID:[[NSUserDefaults standardUserDefaults]objectForKey:kUser_ID],memberName:name_input.text,QQ:qq_input.text,memberEmail:emial_input.text,memberRegion:address_input.text,memberAddress:addressDetail_input.text,memberZipCode:zipCode_input.text};
+                    parameters = @{memberID:userinfo.memberId,api_memberName:name_input.text,QQ:qq_input.text,memberEmail:emial_input.text,memberRegion:address_input.text,memberAddress:addressDetail_input.text,memberZipCode:zipCode_input.text};
+                
                 }
-                
+          
                 [ProgressHUD show:@"修改中..." Interaction:NO];
                 [manager POST:API_ModifyPersonalInfo parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
                     
@@ -729,6 +706,9 @@
                     if([responseObject[isSuccess]integerValue]==1){
                     
                         [ProgressHUD showSuccess:@"修改成功" Interaction:NO];
+                        [[TMCache sharedCache]setObject:responseObject[@"data"] forKey:kUserInfo];
+                        
+                        
                     }else{
                     
                         [ProgressHUD showError:@"修改失败"];
@@ -744,8 +724,6 @@
                 }];
                 
                 
-            
-            
             }else{
             
             
@@ -754,14 +732,11 @@
                 
             }
             
-            
-           
         }
         
 
         NSLog(@"编辑按钮点击");
     }
-
 
 }
 
@@ -826,6 +801,41 @@
 }
 
 
+#pragma mark viewDidAppear
+- (void)viewDidAppear:(BOOL)animated{
+
+   
+    UserInfoModel *userInfo = [[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+    //用户头像显示
+    if([userInfo.avatar length]){
+    
+        [self.headerImage sd_setBackgroundImageWithURL:[NSURL URLWithString:userInfo.avatar] forState:UIControlStateNormal];
+    
+    }
+    
+    //用户昵称显示
+    if([userInfo.nickName length]){
+    
+        [detailContentArray removeObjectAtIndex:2];
+        [detailContentArray insertObject:userInfo.nickName atIndex:2];
+        [self.tableView reloadData];
+        
+    }
+    
+    //用户手机号码显示
+    
+    if([userInfo.telphone length]){
+        
+        [detailContentArray removeObjectAtIndex:4];
+        [detailContentArray insertObject:userInfo.telphone atIndex:4];
+        [self.tableView reloadData];
+    
+    }
+    
+    
+
+
+}
 
 
 
@@ -838,8 +848,6 @@
         [ProgressHUD dismiss];
     }
 }
-
-
 
 
 #pragma mark 图片缩放-该方法用来减小图片尺寸优化性能
@@ -856,7 +864,7 @@
 #pragma mark dealloc
 - (void)dealloc{
 
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
+   
 }
 
 

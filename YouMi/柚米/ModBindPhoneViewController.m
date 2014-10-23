@@ -12,6 +12,8 @@
 #import <AFNetworking.h>
 #import "TPKeyboardAvoidingScrollView.h"
 #import "Email_Phone.h"
+#import <TMCache.h>
+#import "UserInfoModel.h"
 
 @interface ModBindPhoneViewController ()<UITextFieldDelegate>
 {
@@ -147,8 +149,11 @@
             [ProgressHUD show:@"正在发送" Interaction:NO];
             AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
             manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
-#warning 这个参数不一定正确，待协商
-            NSDictionary *parameters =@{phoneNum:self.phoneNum_input.text};
+
+            UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+            
+            
+            NSDictionary *parameters =@{memberID:userInfo.memberId,phoneNum:self.phoneNum_input.text};
             
             [manager POST:API_GetSecurityCode parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
@@ -200,8 +205,14 @@
                 manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
                 [ProgressHUD show:@"正在修改..." Interaction:NO];
                 
-#warning 这里参数不确定
-                NSDictionary *parameters = @{phoneNum:self.phoneNum_input.text,memberID:[[NSUserDefaults standardUserDefaults]objectForKey:kUser_ID]};
+                
+                NSDictionary *parameters = nil;
+                UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+                if(userInfo.memberId){
+                
+                    parameters = @{memberID:userInfo.memberId,phoneNum:self.phoneNum_input.text};
+                }
+                
                 
                 [manager POST:API_ModiftPhoneBind parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
                     
@@ -209,10 +220,13 @@
                     NSDictionary *result = (NSDictionary *)responseObject;
                     NSLog(@"result:%@",result);
                     [ProgressHUD showSuccess:@"修改成功" Interaction:NO];
+                    
+                    [[TMCache sharedCache]setObject:responseObject[@"data"] forKey:kUserInfo];
+                    
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 
                         [self.navigationController popViewControllerAnimated:YES];
-                        [[NSNotificationCenter defaultCenter]postNotificationName:@"sendNumber1" object:self.phoneNum_input.text];
+                       
                     });
                     
                     

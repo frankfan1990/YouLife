@@ -15,6 +15,10 @@
 #import <AFNetworking.h>
 #import "ProgressHUD.h"
 #import "Reachability.h"
+#import <JSONModel.h>
+#import "UserInfoModel.h"
+#import <TMCache.h>
+#import "ForgetPasswordViewController.h"
 
 
 @interface SignInViewController ()<UITextFieldDelegate>
@@ -220,7 +224,7 @@
                 NSDictionary *parameters = @{userAcount:self.userID_input.text,userPassWord:self.userPassword_input.text};
                 [manager POST:API_UserLogin parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
 
-#warning 这里需要处理接口返回信息，以及可能要修改UI问题
+
                     NSLog(@"这里是登陆模块:%@",responseObject);
                     
                     if([responseObject[@"success"]integerValue]==0){
@@ -235,6 +239,11 @@
                     if([responseObject[@"success"]integerValue]==1){
                         
                         [ProgressHUD showSuccess:@"登陆成功" Interaction:NO];
+                        //!!!:如果登陆成功就将用户信息存储配置文件
+                        NSDictionary *data = responseObject[@"data"];
+                        //!!!:这里不能直接存自定义的类对象，应该先将data缓存，然后利用改缓存对象去映射为model层
+                        [[TMCache sharedCache]setObject:data forKey:kUserInfo];
+                        
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             
                             [self.navigationController popToRootViewControllerAnimated:YES];
@@ -243,8 +252,7 @@
                     
                     }
                     
-                    
-                    
+                           
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                     
                     NSLog(@"这里是登陆模块error:%@",error);
@@ -264,7 +272,12 @@
         NSLog(@"登陆");
     
     }else if (sender.tag==1004){
-    
+        
+        
+        ForgetPasswordViewController *forgetPassword = [ForgetPasswordViewController new];
+        forgetPassword.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:forgetPassword animated:YES];
+        
         NSLog(@"忘记密码");
     }else{
     
@@ -350,6 +363,16 @@
 
 
 -(void)dealloc{
+
+    if([ProgressHUD shared]){
+    
+        [ProgressHUD dismiss];
+    }
+
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated{
 
     if([ProgressHUD shared]){
     
