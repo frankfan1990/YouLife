@@ -259,7 +259,7 @@
             NSDictionary *parameters = @{phoneNum:self.userPhoneNum,api_passWord:self.PasswordInput.text};
             [manager POST:API_RegisterCommit parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
-#warning 这里面还要查看返回结果，根据结果再做相应响应
+
                 NSLog(@"response:%@",responseObject[@"data"]);
                 NSDictionary *result = (NSDictionary *)responseObject;
                 

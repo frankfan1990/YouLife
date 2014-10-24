@@ -19,6 +19,7 @@
 #import "UIButton+WebCache.h"
 #import "UserInfoModel.h"
 
+#import "TestModel.h"
 
 @interface PersonalSettingsViewController ()<UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate>
 {
@@ -135,10 +136,13 @@
     
     
 #warning fake data //需要从接口取到相应数据
+    //!!!:修改
+    UserInfoModel *userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
     
-    if([[TMCache sharedCache] objectForKey:kUserInfo]){
+    if([userinfo.memberId length]){
     
-        UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+        
+        UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
         
         detailContentArray =[NSMutableArray arrayWithObjects:@"",userInfo.telphone,userInfo.nickName,@"",userInfo.telphone, nil];
 
@@ -482,9 +486,14 @@
 #pragma mark 退出登录触发
 - (void)logOutButtonClicked:(UIButton *)sender{
 
-    [[TMCache sharedCache]removeObjectForKey:kUserInfo];
-    [self.navigationController popViewControllerAnimated:YES];
-}
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [[TMCache sharedCache]removeObjectForKey:kUserInfo];
+        [self.navigationController popViewControllerAnimated:YES];
+
+    });
+    
+    }
 
 
 
@@ -551,14 +560,18 @@
             [ProgressHUD show:@"修改中..." Interaction:NO];
             AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
             manager.requestSerializer =[AFHTTPRequestSerializer serializer];
-            manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
+            manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"text/html"];
 #pragma mark警告
 #warning 这里的问题是接口不正确会造成崩溃
             
             NSDictionary *parameters = nil;
-            if([[NSUserDefaults standardUserDefaults]objectForKey:kUser_ID]){
             
-                parameters = @{memberID:[[NSUserDefaults standardUserDefaults]objectForKey:kUser_ID]};
+            UserInfoModel *userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+            
+            
+            if([userinfo.memberId length]){
+            
+                parameters = @{memberID:userinfo.memberId};
             }
             
             
@@ -699,7 +712,7 @@
                 
                 }
           
-                [ProgressHUD show:@"修改中..." Interaction:NO];
+                [ProgressHUD show:nil Interaction:NO];
                 [manager POST:API_ModifyPersonalInfo parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
                     
                     NSLog(@"responseOBJ:%@",responseObject);
@@ -802,10 +815,14 @@
 
 
 #pragma mark viewDidAppear
+/*
 - (void)viewDidAppear:(BOOL)animated{
 
    
     UserInfoModel *userInfo = [[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+    
+    NSLog(@"........<:%@",[[TMCache sharedCache]objectForKey:kUserInfo]);
+    
     //用户头像显示
     if([userInfo.avatar length]){
     
@@ -832,10 +849,65 @@
     
     }
     
+  
+}*/
+
+//???:这里是有问题的
+
+- (void)viewWillAppear:(BOOL)animated{
+
+    [super viewWillAppear:animated];
+     NSLog(@"........<:%@",[[TMCache sharedCache]objectForKey:kUserInfo]);
     
+    //!!!:这个映射框架有问题，假如有字段为空，则会失效
+    NSError *error;
+//    UserInfoModel *userInfo = [[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:&error];
+    TestModel *testModel =[TestModel modelWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:&error];
+    
+    
+    NSLog(@"..error:%@",[error localizedDescription]);
+//    UserInfoModel *userInfo = [[UserInfoModel alloc]initWithDictionary:[[NSUserDefaults standardUserDefaults]objectForKey:kUserInfo] error:nil];
+    
+   
+    
+    //用户头像显示
+    if([testModel.avatar length]){
+        
+        [self.headerImage sd_setBackgroundImageWithURL:[NSURL URLWithString:testModel.avatar] forState:UIControlStateNormal];
+        
+    }
+    
+    //用户昵称显示
+    
+    
+    if([testModel.nickName length]){
+        
+        if([detailContentArray count]){
+            
+            [detailContentArray removeObjectAtIndex:2];
+            [detailContentArray insertObject:testModel.nickName atIndex:2];
+            [self.tableView reloadData];
+        
+        }
+       }
+    
+    //用户手机号码显示
+    
+    if([testModel.telphone length]){
+        
+        if([detailContentArray count]){
+        
+            [detailContentArray removeObjectAtIndex:4];
+            [detailContentArray insertObject:testModel.telphone atIndex:4];
+            [self.tableView reloadData];
+
+        }
+    }
+
 
 
 }
+
 
 
 

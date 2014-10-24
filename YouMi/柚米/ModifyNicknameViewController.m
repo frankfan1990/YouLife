@@ -14,6 +14,8 @@
 #import <TMCache.h>
 #import "UserInfoModel.h"
 
+
+
 @interface ModifyNicknameViewController ()<UITextFieldDelegate>
 {
 
@@ -93,13 +95,14 @@
             
             UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
             
+        
             if(userInfo.memberId){
             
                 parameters = @{memberID:userInfo.memberId,api_nickName:self.nickName_input.text};
 
             }
             
-            [ProgressHUD show:@"修改中" Interaction:NO];
+            [ProgressHUD show:nil Interaction:NO];
             [manager POST:API_ModifyNickname parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
                 
@@ -109,10 +112,14 @@
                 
                     [ProgressHUD showSuccess:@"修改成功" Interaction:NO];
                 
+                    //!!!:缓存
                     [[TMCache sharedCache] setObject:responseObject[@"data"] forKey:kUserInfo];
+             
+                    
+                    NSLog(@"修改昵称:%@", [[TMCache sharedCache]objectForKey:kUserInfo]);
                     
                     [self.navigationController popViewControllerAnimated:YES];
-                
+
                 }
                 
                 
@@ -175,6 +182,12 @@
 
 
 }
+
+
+
+
+
+
 
 
 

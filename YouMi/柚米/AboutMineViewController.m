@@ -17,6 +17,7 @@
 #import "ProgressHUD.h"
 #import <TMCache.h>
 #import "UserInfoModel.h"
+#import "EGOCache.h"
 
 
 @interface AboutMineViewController ()<UIAlertViewDelegate>
@@ -81,30 +82,41 @@
     [headerImageView addSubview:self.userID];
 
     
-    userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
-    
-    if([userinfo.telphone length]){
-    
-       
-    }else{
-    
-        self.userID.text = @"登录";
-        
-        UITapGestureRecognizer *tap =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumpToLandUI)];
-        [self.userID addGestureRecognizer:tap];
-        
-
-    }
-    
+//    userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+//    
+//    if([userinfo.telphone length]){
+//    
+//        [];
+//        
+//    }else{
+//    
+//        self.userID.text = @"登录";
+//        
+//        UITapGestureRecognizer *tap =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumpToLandUI)];
+//        [self.userID addGestureRecognizer:tap];
+//        
+//
+//    }
+//    
     
     
     
     /*手机号*/
-    self.phoneNumber =[[UILabel alloc]initWithFrame:CGRectMake(self.view.bounds.size.width/2.0-70, 115, 140, 30)];
-    self.phoneNumber.textColor =[UIColor whiteColor];
-    self.phoneNumber.textAlignment = NSTextAlignmentCenter;
-    self.phoneNumber.font = [UIFont systemFontOfSize:12.5];
+    self.phoneNumber =[UIButton buttonWithType:UIButtonTypeCustom];
+    self.phoneNumber.frame = CGRectMake(self.view.bounds.size.width/2.0-70, 100, 140, 40);
+    [self.phoneNumber setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.phoneNumber.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.phoneNumber.titleLabel.font = [UIFont systemFontOfSize:14];
+    self.phoneNumber.userInteractionEnabled = YES;
+    [self.phoneNumber addTarget:self action:@selector(jumpToLandUI) forControlEvents:UIControlEventTouchUpInside];
     [headerImageView addSubview:self.phoneNumber];
+    
+    
+//    self.phoneNumber =[[UILabel alloc]initWithFrame:CGRectMake(self.view.bounds.size.width/2.0-70, 115, 140, 30)];
+//    self.phoneNumber.textColor =[UIColor whiteColor];
+//    self.phoneNumber.textAlignment = NSTextAlignmentCenter;
+//    self.phoneNumber.font = [UIFont systemFontOfSize:12.5];
+//    [headerImageView addSubview:self.phoneNumber];
     
 
     
@@ -134,6 +146,7 @@
 
 
 #pragma mark 读取用户头像
+/*
 - (void)viewDidAppear:(BOOL)animated{
 
     [super viewDidAppear:animated];
@@ -152,16 +165,56 @@
     
     if([userinfo.telphone length]){
     
-        self.phoneNumber.text = userinfo.telphone;
+        [self.phoneNumber setTitle:userinfo.telphone forState:UIControlStateNormal];
+        self.phoneNumber.enabled = NO;
         
     }else{
     
-        self.userID.text = @"登录";
+        [self.phoneNumber setTitle:@"登陆" forState:UIControlStateNormal];
+        self.phoneNumber.enabled = YES;
     
     }
     
     
+}*/
+
+
+
+//???:这里是有问题的
+- (void)viewWillAppear:(BOOL)animated{
+
+    [super viewWillAppear:animated];
+    userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+  
+    
+    
+    if([userinfo.avatar length]){
+        
+        NSURL *userHeaderImageURL = [NSURL URLWithString:userinfo.avatar];
+        [self.headerImage sd_setBackgroundImageWithURL:userHeaderImageURL forState:UIControlStateNormal];
+        
+    }else{
+        
+        [self.headerImage setBackgroundImage:nil forState:UIControlStateNormal];
+    }
+    
+    if([userinfo.telphone length]){
+        
+        [self.phoneNumber setTitle:userinfo.telphone forState:UIControlStateNormal];
+        self.phoneNumber.enabled = NO;
+        
+    }else{
+        
+        [self.phoneNumber setTitle:@"登陆" forState:UIControlStateNormal];
+        self.phoneNumber.enabled = YES;
+        
+    }
+
+
+
 }
+
+
 
 
 

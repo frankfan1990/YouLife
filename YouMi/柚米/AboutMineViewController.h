@@ -12,7 +12,10 @@
 
 @property (nonatomic,strong)UIButton *headerImage;
 @property (nonatomic,strong)UILabel *userID;
-@property (nonatomic,strong)UILabel *phoneNumber;
+//@property (nonatomic,strong)UILabel *phoneNumber;
+
+@property (nonatomic,strong)UIButton *phoneNumber;
+
 
 @property (nonatomic,strong)UITableView *tableView;
 @end

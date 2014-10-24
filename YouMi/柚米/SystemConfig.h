@@ -83,7 +83,8 @@
     字段-----------意义--------------方法--post
     telphone     电话号码
  */
-#define API_RegisterPhoneNum @"http://120.24.71.104:8080/youmi/member/validator"//提交电话号码
+//#define API_RegisterPhoneNum @"http://120.24.71.104:8080/youmi/member/validator"//提交电话号码
+#define API_RegisterPhoneNum @"http://88.88.3.109/youmi/member/validator"//提交电话号码
 
 
 
@@ -98,9 +99,9 @@
 
 
 //测试接口-测试接口地址每天会有变更
-//#define API_RegisterCommit @"http://88.88.3.117/youmi/member/register"//注册提交_测试接口
+#define API_RegisterCommit @"http://88.88.3.109/youmi/member/register"//注册提交_测试接口
 //正式接口
-#define API_RegisterCommit @"http://120.24.71.104:8080/youmi/member/register"//注册提交
+//#define API_RegisterCommit @"http://120.24.71.104:8080/youmi/member/register"//注册提交
 
 
 
@@ -132,6 +133,7 @@
  */
 //发布模式
 #define API_ModifyNickname @"http://120.24.71.104:8080/youmi/member"
+//#define API_ModifyNickname @"http://88.88.3.109/youmi/member"
 #define api_nickName @"nickName"//会员昵称字段
 
 

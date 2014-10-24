@@ -36,4 +36,8 @@
 @property (nonatomic,assign)int gradeId;//会员等级
 @property (nonatomic,assign)double score;//会员积分
 @property (nonatomic,assign)double ucoin;//U币余额
+
+
+//- (instancetype)initWithDict:(NSDictionary *)dict;
+
 @end

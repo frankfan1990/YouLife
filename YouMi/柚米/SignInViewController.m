@@ -19,7 +19,7 @@
 #import "UserInfoModel.h"
 #import <TMCache.h>
 #import "ForgetPasswordViewController.h"
-
+#import "EGOCache.h"
 
 @interface SignInViewController ()<UITextFieldDelegate>
 {
@@ -249,6 +249,7 @@
                         //!!!:这里不能直接存自定义的类对象，应该先将data缓存，然后利用改缓存对象去映射为model层
                         [[TMCache sharedCache]setObject:data forKey:kUserInfo];
                         
+                        
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             
                             [self.navigationController popToRootViewControllerAnimated:YES];
@@ -336,8 +337,6 @@
     
      
     }
-
-
 
 }
 

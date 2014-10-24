@@ -148,7 +148,7 @@
             if([dict[@"success"]integerValue]==1){
             
                 [ProgressHUD showSuccess:@"修改成功" Interaction:NO];
-                [[TMCache sharedCache]removeObjectForKey:kUserInfo];
+                [[TMCache sharedCache]setObject:dict[@"data"] forKey:kUserInfo];
                 [self.navigationController popToRootViewControllerAnimated:YES];
             }
             

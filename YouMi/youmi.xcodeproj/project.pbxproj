@@ -172,6 +172,8 @@
 		63B915C519B9B34C006F09EC /* page_state_highlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B915C319B9B34C006F09EC /* page_state_highlight@2x.png */; };
 		63B9163119BE9771006F09EC /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B9163019BE9771006F09EC /* bg.png */; };
 		63B9163519BE9DCA006F09EC /* 头像啊.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B9163419BE9DCA006F09EC /* 头像啊.png */; };
+		63BCD26319FA0ECB00092C05 /* EGOCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD26219FA0ECB00092C05 /* EGOCache.m */; };
+		63BCD30119FA85B600092C05 /* TestModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD30019FA85B600092C05 /* TestModel.m */; };
 		63C60BFC19C6F06E002FEBB9 /* 分享@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C60BFB19C6F06E002FEBB9 /* 分享@2x.png */; };
 		63C60BFE19C6F082002FEBB9 /* 收藏@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C60BFD19C6F082002FEBB9 /* 收藏@2x.png */; };
 		63D1C26119F4FEBC00697F08 /* ModifyNicknameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D1C26019F4FEBC00697F08 /* ModifyNicknameViewController.m */; };
@@ -519,6 +521,10 @@
 		63B915C319B9B34C006F09EC /* page_state_highlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "page_state_highlight@2x.png"; sourceTree = "<group>"; };
 		63B9163019BE9771006F09EC /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg.png; sourceTree = "<group>"; };
 		63B9163419BE9DCA006F09EC /* 头像啊.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "头像啊.png"; sourceTree = "<group>"; };
+		63BCD26119FA0ECB00092C05 /* EGOCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGOCache.h; sourceTree = "<group>"; };
+		63BCD26219FA0ECB00092C05 /* EGOCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGOCache.m; sourceTree = "<group>"; };
+		63BCD2FF19FA85B600092C05 /* TestModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestModel.h; sourceTree = "<group>"; };
+		63BCD30019FA85B600092C05 /* TestModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestModel.m; sourceTree = "<group>"; };
 		63C60BF719C6E35A002FEBB9 /* ----以上为美食part----.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "----以上为美食part----.h"; sourceTree = "<group>"; };
 		63C60BFB19C6F06E002FEBB9 /* 分享@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "分享@2x.png"; sourceTree = "<group>"; };
 		63C60BFD19C6F082002FEBB9 /* 收藏@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "收藏@2x.png"; sourceTree = "<group>"; };
@@ -564,8 +570,9 @@
 		63F780CA19C0496000DF7585 /* EntertainmentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntertainmentTableViewCell.m; sourceTree = "<group>"; };
 		63F780CC19C050C200DF7585 /* EntertainmentDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntertainmentDetailViewController.h; sourceTree = "<group>"; };
 		63F780CD19C050C200DF7585 /* EntertainmentDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntertainmentDetailViewController.m; sourceTree = "<group>"; };
+		82A7D0C43FD308F9DE8A4C7A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		879606343DB7A7B905A262D5 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9D1FF5C7C08246569BC2D9CD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		EDFE98843AD64943B8297770 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -598,7 +605,7 @@
 				633E458319AD7A7C001D8F75 /* 柚米Tests */,
 				633E456319AD7A7C001D8F75 /* Frameworks */,
 				633E456219AD7A7C001D8F75 /* Products */,
-				EDFE98843AD64943B8297770 /* Pods.xcconfig */,
+				64D48494345E943995A34037 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -769,6 +776,7 @@
 		633E46EE19AE292A001D8F75 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				63BCD26419FA0ECF00092C05 /* EGOCache */,
 				635C3A5819EE6B700090DE16 /* ProgressHUD */,
 				635C397A19EBB20B0090DE16 /* TPKeyboardAvoiding */,
 				6356262419C82C4C0011B926 /* EDStarRating */,
@@ -1057,6 +1065,8 @@
 				63EEA91919F899AA00F5A8A5 /* dataAboutView */,
 				63EEA92019F89B4300F5A8A5 /* UserInfoModel.h */,
 				63EEA92119F89B4300F5A8A5 /* UserInfoModel.m */,
+				63BCD2FF19FA85B600092C05 /* TestModel.h */,
+				63BCD30019FA85B600092C05 /* TestModel.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1148,6 +1158,15 @@
 			path = SDWebImage;
 			sourceTree = "<group>";
 		};
+		63BCD26419FA0ECF00092C05 /* EGOCache */ = {
+			isa = PBXGroup;
+			children = (
+				63BCD26119FA0ECB00092C05 /* EGOCache.h */,
+				63BCD26219FA0ECB00092C05 /* EGOCache.m */,
+			);
+			name = EGOCache;
+			sourceTree = "<group>";
+		};
 		63D1C25E19F4FDAD00697F08 /* PersonalSetting */ = {
 			isa = PBXGroup;
 			children = (
@@ -1200,6 +1219,15 @@
 				63901DCF19C17A3E006C4158 /* MedicalViewController.m */,
 			);
 			name = PublicSubViewControllers;
+			sourceTree = "<group>";
+		};
+		64D48494345E943995A34037 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				82A7D0C43FD308F9DE8A4C7A /* Pods.debug.xcconfig */,
+				879606343DB7A7B905A262D5 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1380,7 +1408,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		588E797FCC3945A59888438C /* Check Pods Manifest.lock */ = {
@@ -1471,6 +1499,7 @@
 				63B9158919B992CE006F09EC /* CycleScrollView.m in Sources */,
 				6312572019CC270D00436C39 /* CommunityDetailsViewController.m in Sources */,
 				6356262119C7E5E60011B926 /* MallViewController.m in Sources */,
+				63BCD26319FA0ECB00092C05 /* EGOCache.m in Sources */,
 				6317A56819F63FCE009E332F /* ModBindPhoneViewController.m in Sources */,
 				6397101419B451CB00793A3D /* POPAnimationEvent.mm in Sources */,
 				633E46EA19AE28C8001D8F75 /* ADTransitioningDelegate.m in Sources */,
@@ -1515,6 +1544,7 @@
 				6397102219B451CB00793A3D /* POPVector.mm in Sources */,
 				63E78BFF19D001D5002755E9 /* VillageDynamicTableViewCell.m in Sources */,
 				63970F7119B0609600793A3D /* CCSegmentedControl.m in Sources */,
+				63BCD30119FA85B600092C05 /* TestModel.m in Sources */,
 				63EEA93B19F8A80B00F5A8A5 /* ForgetPasswordViewController.m in Sources */,
 				6356263819C83CAB0011B926 /* BusinessInfoTableViewCell.m in Sources */,
 				633E46EB19AE28C8001D8F75 /* ADTransitioningViewController.m in Sources */,
@@ -1644,7 +1674,7 @@
 		};
 		633E458E19AD7A7C001D8F75 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EDFE98843AD64943B8297770 /* Pods.xcconfig */;
+			baseConfigurationReference = 82A7D0C43FD308F9DE8A4C7A /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1668,7 +1698,7 @@
 		};
 		633E458F19AD7A7C001D8F75 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EDFE98843AD64943B8297770 /* Pods.xcconfig */;
+			baseConfigurationReference = 879606343DB7A7B905A262D5 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;

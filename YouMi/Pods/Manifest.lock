@@ -21,16 +21,21 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - JSONModel (1.0.1)
+  - Mantle (1.5.1):
+    - Mantle/extobjc
+  - Mantle/extobjc (1.5.1)
   - TMCache (1.2.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.4.1)
   - JSONModel (~> 1.0.1)
+  - Mantle (~> 1.5.1)
   - TMCache (~> 1.2.1)
 
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   JSONModel: 634100aaacbd89811bc8a03da209356e5989c569
+  Mantle: d7c5ac734579ec751c58fecbf56189853056c58c
   TMCache: ed936c5b4684e4ea15113d46fba8829ed3baadad
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.34.4
