@@ -253,7 +253,7 @@
         
         if([self.reachability isReachable]){
             
-            [ProgressHUD show:@"注册中..." Interaction:NO];
+            [ProgressHUD show:nil Interaction:NO];
             AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
             manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
             NSDictionary *parameters = @{phoneNum:self.userPhoneNum,api_passWord:self.PasswordInput.text};

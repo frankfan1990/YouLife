@@ -13,18 +13,19 @@
 #import "SignInViewController.h"
 #import "PersonalSettingsViewController.h"
 #import "UIButton+WebCache.h"
-#import "UserInfoModel.h"
+
 #import "ProgressHUD.h"
 #import <TMCache.h>
-#import "UserInfoModel.h"
+
 #import "EGOCache.h"
+#import "Userinfo.h"
 
 
 @interface AboutMineViewController ()<UIAlertViewDelegate>
 {
 
     NSArray *itemNames;
-    UserInfoModel *userinfo;
+//    UserInfoModel *userinfo;
 }
 @end
 
@@ -184,7 +185,8 @@
 - (void)viewWillAppear:(BOOL)animated{
 
     [super viewWillAppear:animated];
-    userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+//    userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+    Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
   
     
     
@@ -223,10 +225,10 @@
 - (void)headerButtonClicked:(UIButton *)sender{
     
 #pragma mark 这里有警告
-#warning 调试模式 正常模式需要将前面的取反（!）号去掉
-    
 
     
+
+     Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
     if([userinfo.memberId length]){
         
         PersonalSettingsViewController *personalSetting =[PersonalSettingsViewController new];

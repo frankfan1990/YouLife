@@ -17,9 +17,10 @@
 #import "UIButton+WebCache.h"
 #import <TMCache.h>
 #import "UIButton+WebCache.h"
-#import "UserInfoModel.h"
 
-#import "TestModel.h"
+#import "Userinfo.h"
+
+
 
 @interface PersonalSettingsViewController ()<UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate>
 {
@@ -135,16 +136,20 @@
     }
     
     
-#warning fake data //需要从接口取到相应数据
+
     //!!!:修改
-    UserInfoModel *userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+//    UserInfoModel *userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+    
+    NSError *error;
+    Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:&error];
+    NSLog(@"personSettingError:%@",[error localizedDescription]);
     
     if([userinfo.memberId length]){
     
         
-        UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
+//        UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
         
-        detailContentArray =[NSMutableArray arrayWithObjects:@"",userInfo.telphone,userInfo.nickName,@"",userInfo.telphone, nil];
+        detailContentArray =[NSMutableArray arrayWithObjects:@"",userinfo.telphone,userinfo.nickName,@"",userinfo.telphone, nil];
 
     }
     
@@ -566,8 +571,9 @@
             
             NSDictionary *parameters = nil;
             
-            UserInfoModel *userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+//            UserInfoModel *userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
             
+            Userinfo *userinfo = [Userinfo modelWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
             
             if([userinfo.memberId length]){
             
@@ -705,7 +711,8 @@
                 manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
                 
                 NSDictionary *parameters = nil;
-                UserInfoModel *userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+//                UserInfoModel *userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+                Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
                 if(userinfo.memberId){
                 
                     parameters = @{memberID:userinfo.memberId,api_memberName:name_input.text,QQ:qq_input.text,memberEmail:emial_input.text,memberRegion:address_input.text,memberAddress:addressDetail_input.text,memberZipCode:zipCode_input.text};
@@ -862,7 +869,9 @@
     //!!!:这个映射框架有问题，假如有字段为空，则会失效
     NSError *error;
 //    UserInfoModel *userInfo = [[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:&error];
-    TestModel *testModel =[TestModel modelWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:&error];
+//    TestModel *testModel =[TestModel modelWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:&error];
+    
+    Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
     
     
     NSLog(@"..error:%@",[error localizedDescription]);
@@ -871,21 +880,21 @@
    
     
     //用户头像显示
-    if([testModel.avatar length]){
+    if([userinfo.avatar length]){
         
-        [self.headerImage sd_setBackgroundImageWithURL:[NSURL URLWithString:testModel.avatar] forState:UIControlStateNormal];
+        [self.headerImage sd_setBackgroundImageWithURL:[NSURL URLWithString:userinfo.avatar] forState:UIControlStateNormal];
         
     }
     
     //用户昵称显示
     
     
-    if([testModel.nickName length]){
+    if([userinfo.nickName length]){
         
         if([detailContentArray count]){
             
             [detailContentArray removeObjectAtIndex:2];
-            [detailContentArray insertObject:testModel.nickName atIndex:2];
+            [detailContentArray insertObject:userinfo.nickName atIndex:2];
             [self.tableView reloadData];
         
         }
@@ -893,12 +902,12 @@
     
     //用户手机号码显示
     
-    if([testModel.telphone length]){
+    if([userinfo.telphone length]){
         
         if([detailContentArray count]){
         
             [detailContentArray removeObjectAtIndex:4];
-            [detailContentArray insertObject:testModel.telphone atIndex:4];
+            [detailContentArray insertObject:userinfo.telphone atIndex:4];
             [self.tableView reloadData];
 
         }

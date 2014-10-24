@@ -12,7 +12,7 @@
 #import <AFNetworking.h>
 #import "ProgressHUD.h"
 #import <TMCache.h>
-#import "UserInfoModel.h"
+#import "Userinfo.h"
 
 
 
@@ -93,12 +93,12 @@
 
             NSDictionary *parameters = nil;
             
-            UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
-            
+//            UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+            Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
         
-            if(userInfo.memberId){
+            if(userinfo.memberId){
             
-                parameters = @{memberID:userInfo.memberId,api_nickName:self.nickName_input.text};
+                parameters = @{memberID:userinfo.memberId,api_nickName:self.nickName_input.text};
 
             }
             

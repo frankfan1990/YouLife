@@ -16,7 +16,6 @@
 #import "ProgressHUD.h"
 #import "Reachability.h"
 #import <JSONModel.h>
-#import "UserInfoModel.h"
 #import <TMCache.h>
 #import "ForgetPasswordViewController.h"
 #import "EGOCache.h"

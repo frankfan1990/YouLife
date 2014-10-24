@@ -13,7 +13,8 @@
 #import "TPKeyboardAvoidingScrollView.h"
 #import "Email_Phone.h"
 #import <TMCache.h>
-#import "UserInfoModel.h"
+
+#import "Userinfo.h"
 
 @interface ModBindPhoneViewController ()<UITextFieldDelegate>
 {
@@ -150,10 +151,11 @@
             AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
             manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
 
-            UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+//            UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
             
+            Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
             
-            NSDictionary *parameters =@{memberID:userInfo.memberId,phoneNum:self.phoneNum_input.text};
+            NSDictionary *parameters =@{memberID:userinfo.memberId,phoneNum:self.phoneNum_input.text};
             
             [manager POST:API_GetSecurityCode parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
@@ -207,10 +209,13 @@
                 
                 
                 NSDictionary *parameters = nil;
-                UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
-                if(userInfo.memberId){
+//                UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
                 
-                    parameters = @{memberID:userInfo.memberId,phoneNum:self.phoneNum_input.text};
+                Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
+                
+                if(userinfo.memberId){
+                
+                    parameters = @{memberID:userinfo.memberId,phoneNum:self.phoneNum_input.text};
                 }
                 
                 

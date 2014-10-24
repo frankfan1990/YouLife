@@ -11,7 +11,7 @@
 #import "Reachability.h"
 #import "ProgressHUD.h"
 #import <TMCache.h>
-#import "UserInfoModel.h"
+#import "Userinfo.h"
 
 @interface ModifyPasswordViewController ()<UITextFieldDelegate>
 {
@@ -132,14 +132,17 @@
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
         
         NSDictionary *parameters = nil;
-        UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
-        if(userInfo.memberId){
+//        UserInfoModel *userInfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
+        Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
         
-            parameters = @{memberID:userInfo.memberId,userPassWord:newPassword_inout.text};
+        
+        if(userinfo.memberId){
+        
+            parameters = @{memberID:userinfo.memberId,userPassWord:newPassword_inout.text};
         }
         
         
-        [ProgressHUD show:@"修改中" Interaction:NO];
+        [ProgressHUD show:nil Interaction:NO];
         [manager POST:API_ModifyPassword parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             NSLog(@"responseOBJ:%@",responseObject);
