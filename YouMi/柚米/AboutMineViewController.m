@@ -16,8 +16,6 @@
 
 #import "ProgressHUD.h"
 #import <TMCache.h>
-
-#import "EGOCache.h"
 #import "Userinfo.h"
 
 
@@ -82,23 +80,7 @@
     self.userID.font = [UIFont systemFontOfSize:15];
     [headerImageView addSubview:self.userID];
 
-    
-//    userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
-//    
-//    if([userinfo.telphone length]){
-//    
-//        [];
-//        
-//    }else{
-//    
-//        self.userID.text = @"登录";
-//        
-//        UITapGestureRecognizer *tap =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumpToLandUI)];
-//        [self.userID addGestureRecognizer:tap];
-//        
-//
-//    }
-//    
+
     
     
     
@@ -147,48 +129,10 @@
 
 
 #pragma mark 读取用户头像
-/*
-- (void)viewDidAppear:(BOOL)animated{
-
-    [super viewDidAppear:animated];
-    
-    userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
-    
-    if([userinfo.avatar length]){
-        
-        NSURL *userHeaderImageURL = [NSURL URLWithString:userinfo.avatar];
-        [self.headerImage sd_setBackgroundImageWithURL:userHeaderImageURL forState:UIControlStateNormal];
-    
-    }else{
-    
-        [self.headerImage setBackgroundImage:nil forState:UIControlStateNormal];
-    }
-    
-    if([userinfo.telphone length]){
-    
-        [self.phoneNumber setTitle:userinfo.telphone forState:UIControlStateNormal];
-        self.phoneNumber.enabled = NO;
-        
-    }else{
-    
-        [self.phoneNumber setTitle:@"登陆" forState:UIControlStateNormal];
-        self.phoneNumber.enabled = YES;
-    
-    }
-    
-    
-}*/
-
-
-
-//???:这里是有问题的
 - (void)viewWillAppear:(BOOL)animated{
 
     [super viewWillAppear:animated];
-//    userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
     Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
-  
-    
     
     if([userinfo.avatar length]){
         
@@ -211,14 +155,7 @@
         self.phoneNumber.enabled = YES;
         
     }
-
-
-
 }
-
-
-
-
 
 
 #pragma mark 头像点击回调

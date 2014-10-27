@@ -562,7 +562,7 @@
         
         if([reachability isReachable]){//网络有链接
             
-            [ProgressHUD show:@"修改中..." Interaction:NO];
+            [ProgressHUD show:nil Interaction:NO];
             AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
             manager.requestSerializer =[AFHTTPRequestSerializer serializer];
             manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"text/html"];
@@ -571,7 +571,6 @@
             
             NSDictionary *parameters = nil;
             
-//            UserInfoModel *userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
             
             Userinfo *userinfo = [Userinfo modelWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
             
@@ -822,60 +821,19 @@
 
 
 #pragma mark viewDidAppear
-/*
-- (void)viewDidAppear:(BOOL)animated{
-
-   
-    UserInfoModel *userInfo = [[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
-    
-    NSLog(@"........<:%@",[[TMCache sharedCache]objectForKey:kUserInfo]);
-    
-    //用户头像显示
-    if([userInfo.avatar length]){
-    
-        [self.headerImage sd_setBackgroundImageWithURL:[NSURL URLWithString:userInfo.avatar] forState:UIControlStateNormal];
-    
-    }
-    
-    //用户昵称显示
-    if([userInfo.nickName length]){
-    
-        [detailContentArray removeObjectAtIndex:2];
-        [detailContentArray insertObject:userInfo.nickName atIndex:2];
-        [self.tableView reloadData];
-        
-    }
-    
-    //用户手机号码显示
-    
-    if([userInfo.telphone length]){
-        
-        [detailContentArray removeObjectAtIndex:4];
-        [detailContentArray insertObject:userInfo.telphone atIndex:4];
-        [self.tableView reloadData];
-    
-    }
-    
-  
-}*/
-
-//???:这里是有问题的
 
 - (void)viewWillAppear:(BOOL)animated{
 
     [super viewWillAppear:animated];
      NSLog(@"........<:%@",[[TMCache sharedCache]objectForKey:kUserInfo]);
     
-    //!!!:这个映射框架有问题，假如有字段为空，则会失效
+    
     NSError *error;
-//    UserInfoModel *userInfo = [[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:&error];
-//    TestModel *testModel =[TestModel modelWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:&error];
     
     Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
     
     
     NSLog(@"..error:%@",[error localizedDescription]);
-//    UserInfoModel *userInfo = [[UserInfoModel alloc]initWithDictionary:[[NSUserDefaults standardUserDefaults]objectForKey:kUserInfo] error:nil];
     
    
     

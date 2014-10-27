@@ -26,6 +26,10 @@
 
 #define kUserInfo @"userInfo"//用户账户基本信息
 
+#define kUserCity @"city"//用户当前城市
+
+
+
 
 /*系统相关*/
 #ifndef ___SystemConfig_h
@@ -83,8 +87,8 @@
     字段-----------意义--------------方法--post
     telphone     电话号码
  */
-//#define API_RegisterPhoneNum @"http://120.24.71.104:8080/youmi/member/validator"//提交电话号码
-#define API_RegisterPhoneNum @"http://88.88.3.109/youmi/member/validator"//提交电话号码
+#define API_RegisterPhoneNum @"http://120.24.71.104:8080/youmi/member/validator"//提交电话号码
+//#define API_RegisterPhoneNum @"http://88.88.3.109/youmi/member/validator"//提交电话号码
 
 
 
@@ -99,9 +103,9 @@
 
 
 //测试接口-测试接口地址每天会有变更
-#define API_RegisterCommit @"http://88.88.3.109/youmi/member/register"//注册提交_测试接口
+//#define API_RegisterCommit @"http://88.88.3.109/youmi/member/register"//注册提交_测试接口
 //正式接口
-//#define API_RegisterCommit @"http://120.24.71.104:8080/youmi/member/register"//注册提交
+#define API_RegisterCommit @"http://120.24.71.104:8080/youmi/member/register"//注册提交
 
 
 
@@ -111,9 +115,9 @@
  */
 
 //测试模式
-#define API_AploadImage @"http://88.88.3.109/youmi/member/upload/avatar"
+//#define API_AploadImage @"http://88.88.3.109/youmi/member/upload/avatar"
 //发布模式
-//#define API_AploadImage @"http://120.24.71.104:8080/youmi/member/upload/avatar"
+#define API_AploadImage @"http://120.24.71.104:8080/youmi/member/upload/avatar"
 
 
 
