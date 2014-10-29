@@ -19,6 +19,7 @@
 #import "PdownMenuViewController.h"
 #import <TMCache.h>
 #import "CityListSelectViewController.h"
+#import "MMLocationManager.h"
 
 @interface MainPageViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 {
@@ -232,10 +233,35 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     /*首页按钮图片名字数组*/
     self.images1 = @[@"美食.png",@"娱乐.png",@"教育.png",@"社区.png",@"健身.png",@"医疗.png",@"美容.png",@"酒店.png"];
 
-#pragma mark 添加下拉刷新
+#pragma mark - 添加下拉刷新
     
     [self.tableView addHeaderWithTarget:self action:@selector(pullDownCallBack)];
     
+#pragma mark - 添加上拉加载
+    
+    [self.tableView addFooterWithTarget:self action:@selector(pullUpCallBack)];
+    
+    
+    
+    /**
+     *  @Author frankfan, 14-10-27 23:10:49
+     *
+     *  定位
+     */
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        if([[[NSUserDefaults standardUserDefaults]objectForKey:kUserLocationCity] length]){
+            return;
+        }
+        
+        [[MMLocationManager shareLocation]getCity:^(NSString *addressString) {
+            
+            [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:kUserLocationCity];
+            
+        }];
+        
+    });
     
     
     
@@ -265,11 +291,6 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     
     self.titleString = [[NSUserDefaults standardUserDefaults]objectForKey:kUserCity];
 
-    if(![self.titleString length]){
-        
-        return;
-    }
-    
     /*动态根据文字长度调整对齐*/
     leftbarButton =[UIButton buttonWithType:UIButtonTypeCustom];
     leftbarButton.tag = 1001;
@@ -484,6 +505,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     }else if (indexPath.row==2){
     
         EducationViewController *educationController =[[EducationViewController alloc]init];
+        educationController.index =indexPath.row;
         [self.navigationController pushViewController:educationController animated:YES];
     }else if (indexPath.row==5){
     
@@ -495,6 +517,22 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         CConvenienceViewController *cconvenceView =[[CConvenienceViewController alloc]init];
         [self.navigationController pushViewController:cconvenceView animated:YES];
         
+    }else if (indexPath.row==4){
+        
+        SportsFitnessViewController *sportsViewCOntroller =[SportsFitnessViewController new];
+        sportsViewCOntroller.index = indexPath.row;
+        [self.navigationController pushViewController:sportsViewCOntroller animated:YES];
+    }else if (indexPath.row==6){
+        
+        BeautyViewController *beautyViewController =[BeautyViewController new];
+        beautyViewController.index = indexPath.row;
+        [self.navigationController pushViewController:beautyViewController animated:YES];
+        
+    }else{
+        
+        TuristhotelletViewController *turisthotel = [TuristhotelletViewController new];
+        turisthotel.index = indexPath.row;
+        [self.navigationController pushViewController:turisthotel animated:YES];
     }
     
 
@@ -551,7 +589,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
 
 
 
-#pragma mark 下拉刷新的回调方法
+#pragma mark - 下拉刷新的回调方法
 /*这个方法目前的实现是fake func 只是用来模拟网络请求的等待以及请求结束后的回调效果*/
 - (void)pullDownCallBack{
 
@@ -568,6 +606,19 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     });
 
 }
+
+#pragma mark - 上拉加载更多的回调方法
+- (void)pullUpCallBack{
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.tableView footerEndRefreshing];
+    });
+
+}
+
+
+
 
 #pragma mark 下拉刷新回调方法次级回调方法【上下抖】
 - (void)theButtonShake1{

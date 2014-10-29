@@ -15,7 +15,7 @@
 #import "BusinessInfoTableViewCell.h"
 #import "ShopAddressTableViewCell.h"
 #import "ContactInfoTableViewCell.h"
-
+#import "AppointmentDetailViewController.h"
 
 
 /*fake data*/
@@ -30,6 +30,8 @@
     /*项目名称*/
     NSArray *itemTitles;
 
+    /*分享按钮是否点击*/
+    BOOL isCollectioned;
 }
 
 
@@ -69,6 +71,8 @@
     sellerInfoState = NO;
     activityInfoState = NO;
     
+    //
+    isCollectioned = NO;
     //初始化名字
     itemTitles = @[@"店铺信息",@"商家资讯",@"特惠活动",@"用户评论"];
     
@@ -88,7 +92,7 @@
     UIBarButtonItem *leftitem =[[UIBarButtonItem alloc]initWithCustomView:searchButton0];
     self.navigationItem.leftBarButtonItem = leftitem;
     
-    
+
     /*右侧按钮*/
     UIButton *searchButton =[UIButton buttonWithType:UIButtonTypeCustom];
     searchButton.tag = 1000;
@@ -208,20 +212,43 @@
     // Do any additional setup after loading the view.
 }
 
-#pragma mark 导航栏按钮触发
+/**
+ *  @Author frankfan, 14-10-29 18:10:34
+ *
+ *  导航栏按钮触发
+ *
+ *  @return nil
+ */
+#pragma mark - 导航栏按钮触发
 
 - (void)buttonClicked:(UIButton *)sender{
-    if(sender.tag==1001){
+    if(sender.tag==1002){
         
-        NSLog(@"1001");
+        NSLog(@"1002");
     }else if (sender.tag==10006){
     
     
         [self.navigationController popViewControllerAnimated:YES];
+    }else{
+        
+        if(!isCollectioned){
+            
+            UIButton *button = (UIButton *)sender;
+            [button setImage:[UIImage imageNamed:@"已收藏"] forState:UIControlStateNormal];
+            
+            isCollectioned = YES;
+        }else{
+        
+            UIButton *button = (UIButton *)sender;
+            [button setImage:[UIImage imageNamed:@"收藏"] forState:UIControlStateNormal];
+            isCollectioned = NO;
+        }
+        
+    
+        NSLog(@"收藏");
     }
 
-    NSLog(@"clicked...");
-
+  
 }
 
 
@@ -518,14 +545,12 @@
 }
 
 
-#pragma mark ”预约“按钮触发点击
+#pragma mark - ”预约“按钮触发点击
 
 - (void)appointmentButtonClicked:(UIButton *)sender{
 
-
-    NSLog(@"appointmentButtonClicked...");
-
-
+    AppointmentDetailViewController *appointDetail =[AppointmentDetailViewController new];
+    [self.navigationController pushViewController:appointDetail animated:YES];
 }
 
 

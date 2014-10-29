@@ -7,11 +7,11 @@
 //美食饮茶
 
 #import "FoodDetailViewController.h"
+#import "ItemDetailController.h"
+
 #import "MainPageCustomTableViewCell.h"
 #import "MJRefresh/MJRefresh.h"
-#import "ItemDetailController.h"
 #import "PdownMenuViewController.h"
-
 #import <TMCache.h>
 #import "POP/POP.h"//用来处理“三大模块”的标示旋转动画
 
@@ -89,7 +89,7 @@
  
     
     /*创建tableView105-----114*/
-    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 45, self.view.bounds.size.width, self.view.bounds.size.height) style:UITableViewStylePlain];
+    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 45, self.view.bounds.size.width, self.view.bounds.size.height-100) style:UITableViewStylePlain];
     self.tableView.rowHeight = commomCellHeight;
     self.tableView.tag = 3003;
     self.tableView.delegate =self;
@@ -99,7 +99,8 @@
     #pragma mark 添加下拉刷新
     [self.tableView addHeaderWithTarget:self action:@selector(pullDownToReferesh)];
 
-
+#pragma mark - 添加上拉加载
+    [self.tableView addFooterWithTarget:self action:@selector(pullUpCallBack)];
     
     
     /*创建3按钮*/
@@ -350,7 +351,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
 
-    return 10+2;/*fake date*/
+    return 10;/*fake date*/
 }
 
 
@@ -389,6 +390,15 @@
 
 }
 
+#pragma mark - 上拉加载更多的回调方法
+- (void)pullUpCallBack{
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.tableView footerEndRefreshing];
+    });
+    
+}
 
 
 

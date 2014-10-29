@@ -13,7 +13,9 @@
 #import "MedicalViewController.h"
 #import "BusinessCircleViewController.h"
 #import "CConvenienceViewController.h"
-
+#import "SportsFitnessViewController.h"
+#import "BeautyViewController.h"
+#import "TuristhotelletViewController.h"
 
 #ifndef ___ViewControllers_h
 #define ___ViewControllers_h

@@ -123,7 +123,12 @@
         whichButton =[readFlag[1] integerValue];
     }
     
-    if(whichModel==0 || whichModel==1 || whichModel==5){
+    /**
+     *  @Author frankfan, 14-10-28 11:10:01
+     *
+     *  这里需要添加whichModel
+     */
+    if(whichModel==0 || whichModel==1 || whichModel==5 || whichModel==2 || whichModel==4 ||whichModel ==6 ||whichModel==7){
         
         if(whichButton==1001){
       #pragma mark 从缓存中读取“三大模块”的数据
@@ -198,7 +203,7 @@
     
     UITableViewCell *cell3 = nil;
     
-    if((whichModel==0 && whichButton ==1001 && tableView.tag ==10010) ||(whichModel==1 && whichButton==1001 && tableView.tag==10010) ||(whichModel==5 && whichButton==1001 && tableView.tag==10010)){
+    if((whichModel==0 && whichButton ==1001 && tableView.tag ==10010) ||(whichModel==1 && whichButton==1001 && tableView.tag==10010) ||(whichModel==5 && whichButton==1001 && tableView.tag==10010) || (whichModel==2 && whichButton==1001 && tableView.tag==10010) ||(whichModel==4 && whichButton==1001 && tableView.tag==10010)||(whichModel==6 && whichButton==1001 && tableView.tag==10010)||(whichModel==7 && whichButton==1001 && tableView.tag==10010)){
     
         cell1 =[tableView dequeueReusableCellWithIdentifier:cellName1];
         if(!cell1){
@@ -229,7 +234,7 @@
             return cell1;
     
     }
-    if((whichModel==0 && whichButton==1001 && tableView.tag==10011) ||(whichModel==1 && whichButton==1001 && tableView.tag==10011) ||(whichModel==5 && whichButton==1001 && tableView.tag==10011)){
+    if((whichModel==0 && whichButton==1001 && tableView.tag==10011) ||(whichModel==1 && whichButton==1001 && tableView.tag==10011) ||(whichModel==5 && whichButton==1001 && tableView.tag==10011) || (whichModel==2 && whichButton==1001 && tableView.tag==10011) ||(whichModel==4 && whichButton==1001 && tableView.tag==10011)||(whichModel==6 && whichButton==1001 && tableView.tag==10011)||(whichModel==7 && whichButton==1001 && tableView.tag==10011)){
     
         cell2 =[tableView dequeueReusableCellWithIdentifier:cellName2];
         if(!cell2){
@@ -247,7 +252,7 @@
         textLabel.text = [self._right_outPutSource objectAtIndex:whickRow][indexPath.row];
         return cell2;
     }
-    if((whichModel==0 &&whichButton==1002 && tableView.tag==10010) || (whichModel==1 && whichButton==1002 && tableView.tag==10010) || (whichModel==5 && whichButton==1002 && tableView.tag==10010)){
+    if((whichModel==0 &&whichButton==1002 && tableView.tag==10010) || (whichModel==1 && whichButton==1002 && tableView.tag==10010) || (whichModel==5 && whichButton==1002 && tableView.tag==10010) || (whichModel==2 && whichButton==1002 && tableView.tag==10010) || (whichModel==4 && whichButton==1002 && tableView.tag==10010)||(whichModel==6 && whichButton==1002 && tableView.tag==10010)||(whichModel==7 && whichButton==1002 && tableView.tag==10010)){
     
         cell3 =[tableView dequeueReusableCellWithIdentifier:cellName3];
         if(!cell3){

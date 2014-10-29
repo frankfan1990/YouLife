@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "ViewControllers.h"
 #import "ADNavigationControllerDelegate.h"
+#import "MMLocationManager.h"
 
 @interface AppDelegate ()
 {
@@ -26,6 +27,17 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    /**
+     定位
+     */
+    [[MMLocationManager shareLocation]getCity:^(NSString *addressString) {
+        
+      
+        [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:kUserLocationCity];
+        
+    }];
+    
     
     MainPageViewController *mainPageView =[[MainPageViewController alloc]init];
     ClassificationViewController *classificationView =[[ClassificationViewController alloc]init];

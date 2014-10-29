@@ -11,4 +11,5 @@
 @interface EducationViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic,strong)UITableView *tableView;
+@property (nonatomic,assign)NSInteger index;//接受传进来的index，用以区别不同数据的加载
 @end

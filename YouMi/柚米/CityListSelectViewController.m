@@ -101,7 +101,16 @@
 
     if(![self.currentCity length]){
     
-        [self.cityLists insertObject:@[@"无法定位当前所在城市"] atIndex:0];
+        if([[NSUserDefaults standardUserDefaults]objectForKey:kUserLocationCity]){
+            
+            NSString *city = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocationCity];
+            
+            [self.cityLists insertObject:@[city] atIndex:0];
+
+        }else{
+        
+            [self.cityLists insertObject:@[@"无法定位当前所在城市"] atIndex:0];
+        }
         
     }else{
     
@@ -195,6 +204,10 @@
     
         NSArray *tmpArray = self.cityLists[indexPath.section];
         cell.textLabel.text = tmpArray[indexPath.row];
+        if(indexPath.section==0){
+            cell.selectionStyle = NO;
+        }
+        
     }
     
     
@@ -256,12 +269,16 @@
         NSArray *tempArray = self.cityLists[indexPath.section];
         NSString *city = tempArray[indexPath.row];
         
+        if(indexPath.section==0){
+        
+            return;
+        }
+        
         [[NSUserDefaults standardUserDefaults]setObject:city forKey:kUserCity];
 
         if(![city length]){
             return;
         }
-        
         
         [self.navigationController popViewControllerAnimated:YES];
         
@@ -269,6 +286,18 @@
         NSLog(@"city:%@",city);
     }else{
 
+        
+        NSString *city = searchResults[indexPath.row];
+        
+        if(![city length]){
+            return;
+        }
+     
+        [[NSUserDefaults standardUserDefaults]setObject:city forKey:kUserCity];
+        
+        [self.navigationController popViewControllerAnimated:YES];
+
+        
         NSLog(@"%@",searchResults[indexPath.row]);
     }
     

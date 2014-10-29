@@ -89,7 +89,7 @@
     
     /*modul-begin*////
     /*创建tableView*/
-    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 45, self.view.bounds.size.width, self.view.bounds.size.height-64) style:UITableViewStylePlain];
+    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 45, self.view.bounds.size.width, self.view.bounds.size.height-90) style:UITableViewStylePlain];
     self.tableView.tag = 3003;
     [self.tableView addHeaderWithTarget:self action:@selector(pullDownRefresh)];
     self.tableView.rowHeight = commomCellHeight;
@@ -112,6 +112,9 @@
     [self.button_meter addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.button_meter];
     /*创建指示器*/
+    /**
+     注意！应该添加tag!
+     */
     self.arrow1 =[[UIImageView alloc]initWithFrame:CGRectMake(65, 76, 20, 23)];
     self.arrow1.tag = 2001;
     self.arrow1.image =[UIImage imageNamed:@"向下箭头icon"];
@@ -164,6 +167,9 @@
     [self.view addSubview:headerLine];
     /*modul_end*////
 
+    
+#pragma mark - 添加上拉加载
+    [self.tableView addFooterWithTarget:self action:@selector(pullUpCallBack)];
     
     
     
@@ -381,6 +387,20 @@
     });
 
 }
+
+#pragma mark - 上拉加载更多的回调方法
+- (void)pullUpCallBack{
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.tableView footerEndRefreshing];
+    });
+    
+}
+
+
+
+
 
 - (void)clearArray{
     

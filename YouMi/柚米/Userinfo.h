@@ -8,6 +8,13 @@
 
 #import "MTLModel.h"
 
+/**
+ *  @Author frankfan, 14-10-29 17:10:44
+ *
+ *  个人信息数据层类
+ */
+
+
 @interface Userinfo : MTLModel
 
 @property (nonatomic,copy)NSString *memberId;//会员编号

@@ -10,6 +10,9 @@
 #import  "CycleScrollView.h"
 #import "UIImageView+WebCache.h"
 #import "MainPageCustomTableViewCell.h"
+#import "MJRefresh.h"
+#import "POP.h"
+#import "PdownMenuViewController.h"
 
 /*fake data*/
 #define arrayCount 10
@@ -18,7 +21,11 @@
 {
     
     NSString *_metereString;
-
+    
+    /*modul_begin*///
+    NSMutableArray *statuRecode_array;
+    /*modul_end*////
+    NSMutableArray *storeTheTag;//存储点击的tag
 
 }
 
@@ -34,6 +41,8 @@
 @property (nonatomic,strong)NSMutableArray *imagesArray;/*装载图片*/
 @property (nonatomic,strong)NSMutableArray *titlesArray;/*装载菜名*/
 @property (nonatomic,strong)CycleScrollView *mainScrillerView;/*轮播图片*/
+
+@property (nonatomic,strong)PdownMenuViewController *downMenu;
 @end
 
 @implementation MallViewController
@@ -51,6 +60,15 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor =[UIColor whiteColor];
+    
+    self.index = 11;
+    
+    //
+    storeTheTag =[NSMutableArray array];//存放被点击的tag
+    statuRecode_array =[NSMutableArray array];
+    
+
+    
     /*搜索按钮*/
     UIButton *searchButton =[UIButton buttonWithType:UIButtonTypeCustom];
     searchButton.frame = CGRectMake(0, 0, 30, 30);
@@ -76,6 +94,7 @@
     /*创建指示器*/
     self.arrow1 =[[UIImageView alloc]initWithFrame:CGRectMake(65, 76, 20, 23)];
     self.arrow1.image =[UIImage imageNamed:@"向下箭头icon"];
+    self.arrow1.tag=2001;
     [self.view addSubview:self.arrow1];
 
     
@@ -91,6 +110,7 @@
     /*创建指示器*/
     self.arrow2 =[[UIImageView alloc]initWithFrame:CGRectMake(175, 76, 20, 23)];
     self.arrow2.image =[UIImage imageNamed:@"向下箭头icon"];
+    self.arrow2.tag = 2002;
     [self.view addSubview:self.arrow2];
     
     
@@ -106,6 +126,7 @@
     /*创建指示器*/
     self.arrow3 =[[UIImageView alloc]initWithFrame:CGRectMake(288, 76, 20, 23)];
     self.arrow3.image =[UIImage imageNamed:@"向下箭头icon"];
+    self.arrow3.tag = 2003;
     [self.view addSubview:self.arrow3];
     
 #warning fake data 假数据
@@ -179,17 +200,207 @@
     
     
     
+    /**
+     *  @Author frankfan, 14-10-28 14:10:38
+     *
+     *  添加下拉刷新和上拉加载
+     *
+     *  @return nil
+     */
+    [self.tableView addHeaderWithTarget:self action:@selector(pullDownToRefresh)];
+    [self.tableView addFooterWithTarget:self action:@selector(pullUpToReferesh)];
+    
+    
+    
     // Do any additional setup after loading the view.
 }
+
+
+#pragma mark - 下拉刷新回调方法
+- (void)pullDownToRefresh{
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.tableView footerEndRefreshing];
+    });
+
+}
+
+
+#pragma mark - 上拉加载
+- (void)pullUpToReferesh{
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self.tableView footerEndRefreshing];
+    });
+
+}
+
+
+
 
 #pragma mark 3个按钮触发事件
 
 - (void)buttonClicked:(UIButton *)sender{
+    /*动画模块_begin*/
+    NSInteger whichTag;
     if(sender.tag==1001){
         
-        NSLog(@"1001");
+        whichTag = 2001;
+    }else if (sender.tag==1002){
+        
+        whichTag = 2002;
+    }else{
+        
+        whichTag = 2003;
     }
+    
+    
+    if([storeTheTag count]<3){
+        
+        if([storeTheTag count]==2){
+            
+            [storeTheTag removeObjectAtIndex:0];
+            [storeTheTag addObject:[NSNumber numberWithInteger:whichTag]];
+            
+        }else{
+            
+            [storeTheTag addObject:[NSNumber numberWithInteger:whichTag]];
+        }
+        
+    }
+    
+    if([storeTheTag count]==2){
+        
+        if([storeTheTag[0]integerValue] == [storeTheTag[1]integerValue]){
+            
+            UIImageView *arrow = (UIImageView *)[self.view viewWithTag:[storeTheTag[0]integerValue]];
+            
+            POPSpringAnimation *rotate_animation =[POPSpringAnimation animationWithPropertyNamed:kPOPLayerRotation];
+            rotate_animation.toValue = @(0);
+            [arrow.layer pop_addAnimation:rotate_animation forKey:@"1"];
+            [storeTheTag removeAllObjects];
+            
+        }else{
+            
+            UIImageView *arrow_old = (UIImageView *)[self.view viewWithTag:[storeTheTag[0]integerValue]];
+            UIImageView *arrow_new =(UIImageView *)[self.view viewWithTag:[storeTheTag[1]integerValue]];
+            
+            POPSpringAnimation *arrow_oldAniamtion =[POPSpringAnimation animationWithPropertyNamed:kPOPLayerRotation];
+            arrow_oldAniamtion.toValue = @(0);
+            [arrow_old.layer pop_addAnimation:arrow_oldAniamtion forKey:@"2"];
 
+            
+            POPSpringAnimation *arrow_newAnimation =[POPSpringAnimation animationWithPropertyNamed:kPOPLayerRotation];
+            arrow_newAnimation.toValue = @(M_PI);
+            [arrow_new.layer pop_addAnimation:arrow_newAnimation forKey:@"3"];
+
+           
+        }
+        
+    }else{
+        
+        UIImageView *arrow =(UIImageView *)[self.view viewWithTag:[storeTheTag[0]integerValue]];
+        
+        POPSpringAnimation *rorate_animation =[POPSpringAnimation animationWithPropertyNamed:kPOPLayerRotation];
+        rorate_animation.toValue = @(M_PI);
+        [arrow.layer pop_addAnimation:rorate_animation forKey:@"4"];
+        
+        
+    }
+    /*动画模块_end*/
+    
+    
+    
+    ////////////////////
+    /*状态机 begin*/
+    if([statuRecode_array count]<3){
+        
+        if([statuRecode_array count]==2){
+            
+            [statuRecode_array removeObjectAtIndex:0];
+            [statuRecode_array addObject:[NSNumber numberWithInteger:sender.tag]];
+            
+        }else{
+            
+            [statuRecode_array addObject:[NSNumber numberWithInteger:sender.tag]];
+        }
+        
+    }
+    /*状态机 end*/
+    
+    
+    if([statuRecode_array count]==2){
+        
+        if([statuRecode_array[0]integerValue]==[statuRecode_array[1]integerValue]){
+            
+            if(self.downMenu.theLoadView.frame.origin.y>0){
+                
+                self.downMenu.view = nil;
+                self.downMenu = nil;
+                [statuRecode_array removeAllObjects];
+                
+            }else{
+                
+                [UIView animateWithDuration:0.35 animations:^{
+                    
+                    self.downMenu.theLoadView.frame = CGRectMake(0, 114, self.view.bounds.size.width, 300);
+                }];
+            }
+            
+            
+            
+        }else{
+            
+            self.downMenu.view = nil;
+            self.downMenu = nil;
+            self.downMenu =[[PdownMenuViewController alloc]init];
+            self.downMenu.selectedTag = sender.tag;
+            
+            //            [self.view insertSubview:self.downMenu.view belowSubview:self.tableView];
+            [self.view insertSubview:self.downMenu.view aboveSubview:self.tableView];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.005 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                [UIView animateWithDuration:0.35 animations:^{
+                    
+                    self.downMenu.theLoadView.frame = CGRectMake(0, 114, self.view.bounds.size.width, 300);
+                }];
+                
+            });
+            
+            
+        }
+    }else{
+        
+        
+        self.downMenu.view = nil;
+        self.downMenu = nil;
+        self.downMenu =[[PdownMenuViewController alloc]init];
+        self.downMenu.selectedTag = sender.tag;
+        
+        //        [self.view insertSubview:self.downMenu.view belowSubview:self.tableView];
+        [self.view insertSubview:self.downMenu.view aboveSubview:self.tableView];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.005 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            [UIView animateWithDuration:0.35 animations:^{
+                
+                self.downMenu.theLoadView.frame = CGRectMake(0, 114, self.view.bounds.size.width, 300);
+            }];
+            
+        });
+        
+        
+    }
+    
+    //if(self.downMenu && sender.tag==1001)
+    if(self.downMenu){
+        
+        
+        NSArray *flag = @[[NSNumber numberWithInteger:self.index],[NSNumber numberWithInteger:sender.tag]];//将两个标志[首页按钮,三个按钮]传过去，区别的加载数据
+        [[NSNotificationCenter defaultCenter]postNotificationName:kPassLeftData_0 object:flag];
+    }
+    
 
 
 }

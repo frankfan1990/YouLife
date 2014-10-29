@@ -333,10 +333,19 @@
 
 
 
-#pragma mark 回退按钮触发
+#pragma mark - 导航栏按钮触发
+/**
+ *  @Author frankfan, 14-10-29 18:10:17
+ *
+ *  导航栏上得按钮触发
+ *
+ *  @param sender 传过来的button
+ */
 
 - (void)buttonClicked:(UIButton *)sender{
 
+    
+    
     [self.navigationController popViewControllerAnimated:YES];
 
 
