@@ -158,13 +158,7 @@
     self.mainScrillerView =[[CycleScrollView alloc]initWithFrame:CGRectMake(0, 64, self.view.bounds.size.width, 180) animationDuration:3];
     __weak ItemDetailController *_self = self;
     
-//    
-//    float sizeOfContent = 0;
-//    UIView *lLast = [self.mainScrillerView.scrollView.subviews lastObject];
-//    NSInteger wd = lLast.frame.origin.y;
-//    NSInteger ht = lLast.frame.size.height;
-//    
-//    sizeOfContent = wd+ht;
+
     
     self.mainScrillerView.scrollView.contentSize = CGSizeMake(self.mainScrillerView.frame.size.width, 0);
 

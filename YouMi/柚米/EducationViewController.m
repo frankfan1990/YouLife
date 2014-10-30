@@ -12,6 +12,8 @@
 #import "POP.h"
 #import "PdownMenuViewController.h"
 
+#import "CourseDetailsViewController.h"
+
 
 @interface EducationViewController ()
 {
@@ -173,6 +175,13 @@
 }
 
 #pragma mark - 三个按钮回调
+/**
+ *  @Author frankfan, 14-10-30 15:10:36
+ *
+ *  3个下拉菜单的处理
+ *
+ *  @param sender 当前点击的button
+ */
 
 - (void)buttonClicked:(UIButton *)sender{
 
@@ -380,6 +389,30 @@
 
     return cell;
 }
+
+
+#pragma mark - cell点击回调函数
+/**
+ *  @Author frankfan, 14-10-30 15:10:04
+ *
+ *  cell被点击回调，在这里处理push到下一页面
+ *
+ *  @param tableView 当前tableView
+ *  @param indexPath tableView参数
+ */
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    CourseDetailsViewController *courseDetail =[CourseDetailsViewController new];
+    [self.navigationController pushViewController:courseDetail animated:YES];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+}
+
+
+
+
+
+
 
 
 #pragma mark 下拉刷新回调 fake Func

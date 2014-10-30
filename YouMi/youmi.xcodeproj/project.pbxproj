@@ -13,6 +13,7 @@
 		6317A57219F6A1F7009E332F /* 确定.png in Resources */ = {isa = PBXBuildFile; fileRef = 6317A57119F6A1F7009E332F /* 确定.png */; };
 		6325D8D71A020F73001DA5BD /* MyUBiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8D61A020F73001DA5BD /* MyUBiViewController.m */; };
 		6325D8DA1A021514001DA5BD /* MyCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8D91A021514001DA5BD /* MyCommentViewController.m */; };
+		6325D8DE1A022481001DA5BD /* CourseDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8DD1A022481001DA5BD /* CourseDetailsViewController.m */; };
 		633E456F19AD7A7C001D8F75 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633E456D19AD7A7C001D8F75 /* InfoPlist.strings */; };
 		633E457119AD7A7C001D8F75 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E457019AD7A7C001D8F75 /* main.m */; };
 		633E457519AD7A7C001D8F75 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E457419AD7A7C001D8F75 /* AppDelegate.m */; };
@@ -283,6 +284,8 @@
 		6325D8D61A020F73001DA5BD /* MyUBiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyUBiViewController.m; sourceTree = "<group>"; };
 		6325D8D81A021514001DA5BD /* MyCommentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCommentViewController.h; sourceTree = "<group>"; };
 		6325D8D91A021514001DA5BD /* MyCommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCommentViewController.m; sourceTree = "<group>"; };
+		6325D8DC1A022481001DA5BD /* CourseDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CourseDetailsViewController.h; sourceTree = "<group>"; };
+		6325D8DD1A022481001DA5BD /* CourseDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CourseDetailsViewController.m; sourceTree = "<group>"; };
 		6335B89D19AE39BE00F37A5F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		633E456119AD7A7C001D8F75 /* youmi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = youmi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		633E456419AD7A7C001D8F75 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -666,7 +669,6 @@
 		63BCD38219FDE1F200092C05 /* citys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = citys.plist; sourceTree = "<group>"; };
 		63BCD38319FDE1F200092C05 /* citys.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = citys.sqlite; sourceTree = "<group>"; };
 		63BCD38619FDF5F300092C05 /* 热门城市@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "热门城市@2x.png"; sourceTree = "<group>"; };
-		63C60BF719C6E35A002FEBB9 /* ----以上为美食part----.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "----以上为美食part----.h"; sourceTree = "<group>"; };
 		63C60BFB19C6F06E002FEBB9 /* 分享@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "分享@2x.png"; sourceTree = "<group>"; };
 		63C60BFD19C6F082002FEBB9 /* 收藏@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "收藏@2x.png"; sourceTree = "<group>"; };
 		63D1C25F19F4FEBC00697F08 /* ModifyNicknameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifyNicknameViewController.h; sourceTree = "<group>"; };
@@ -739,6 +741,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6325D8DB1A02241E001DA5BD /* Curltrue&Education */ = {
+			isa = PBXGroup;
+			children = (
+				63901DCB19C150A5006C4158 /* EducationViewController.h */,
+				63901DCC19C150A5006C4158 /* EducationViewController.m */,
+				6325D8DC1A022481001DA5BD /* CourseDetailsViewController.h */,
+				6325D8DD1A022481001DA5BD /* CourseDetailsViewController.m */,
+			);
+			name = "Curltrue&Education";
+			sourceTree = "<group>";
+		};
 		633E455819AD7A7C001D8F75 = {
 			isa = PBXGroup;
 			children = (
@@ -1494,11 +1507,9 @@
 				63A5A9051A0105120015A49B /* BusinessInformationViewController.m */,
 				637B40F719F0B22600A63BC6 /* AboutAcount */,
 				63541B2319FF9885001EC683 /* Food */,
-				63C60BF719C6E35A002FEBB9 /* ----以上为美食part----.h */,
 				63F780CC19C050C200DF7585 /* EntertainmentDetailViewController.h */,
 				63F780CD19C050C200DF7585 /* EntertainmentDetailViewController.m */,
-				63901DCB19C150A5006C4158 /* EducationViewController.h */,
-				63901DCC19C150A5006C4158 /* EducationViewController.m */,
+				6325D8DB1A02241E001DA5BD /* Curltrue&Education */,
 				63901DCE19C17A3E006C4158 /* MedicalViewController.h */,
 				63901DCF19C17A3E006C4158 /* MedicalViewController.m */,
 				63541B1A19FF47D9001EC683 /* SportsFitnessViewController.h */,
@@ -1795,6 +1806,7 @@
 				633E457519AD7A7C001D8F75 /* AppDelegate.m in Sources */,
 				6397101D19B451CB00793A3D /* POPGeometry.mm in Sources */,
 				63B915B019B99D55006F09EC /* SDImageCache.m in Sources */,
+				6325D8DE1A022481001DA5BD /* CourseDetailsViewController.m in Sources */,
 				63541B2219FF60C2001EC683 /* TuristhotelletViewController.m in Sources */,
 				63F780CE19C050C200DF7585 /* EntertainmentDetailViewController.m in Sources */,
 				633E46DB19AE28C8001D8F75 /* ADFlipTransition.m in Sources */,
