@@ -121,7 +121,38 @@
             UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, 44, cell2.bounds.size.width, 1)];
             line.backgroundColor = customGrayColor;
             [cell2.contentView addSubview:line];
+            
         }
+        
+        if(indexPath.row==1 || indexPath.row==2){
+        
+            UILabel *lanchTitle = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 100, cell2.bounds.size.height)];
+            lanchTitle.font =[UIFont systemFontOfSize:14];
+            lanchTitle.textColor = baseTextColor;
+            [cell2.contentView addSubview:lanchTitle];
+            
+            UILabel *lanchTimeInfo =[[UILabel alloc]initWithFrame:CGRectMake(cell2.bounds.size.width-220, 0, 180, cell2.bounds.size.height)];
+            lanchTimeInfo.font =[UIFont systemFontOfSize:14];
+            lanchTimeInfo.textColor = baseTextColor;
+            lanchTimeInfo.textAlignment = NSTextAlignmentRight;
+            [cell2.contentView addSubview:lanchTimeInfo];
+            
+            
+            if(indexPath.row==1){
+            
+                lanchTitle.text = @"中餐";
+                lanchTimeInfo.text = @"2014-10-6";
+            }else{
+            
+                lanchTitle.text = @"晚餐";
+                lanchTimeInfo.text = @"2014-11-6";
+            }
+            
+            
+            
+        }
+        
+        
         
         /**
          处理label的多行显示

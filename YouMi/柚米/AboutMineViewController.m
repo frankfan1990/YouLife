@@ -18,6 +18,12 @@
 #import <TMCache.h>
 #import "Userinfo.h"
 
+#import "ShoppingCartViewController.h"
+#import "OrderFormViewController.h"
+#import "MyAttentionViewController.h"
+#import "MyUBiViewController.h"
+#import "MyCommentViewController.h"
+
 
 @interface AboutMineViewController ()<UIAlertViewDelegate>
 {
@@ -275,7 +281,38 @@
 #pragma mark cell被选择回调方法
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-
+    
+    if(indexPath.row==1){
+        
+        ShoppingCartViewController *shopCart =[ShoppingCartViewController new];
+        [self.navigationController pushViewController:shopCart animated:YES];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+    }else if (indexPath.row==2){
+    
+        OrderFormViewController *orderForm =[OrderFormViewController new];
+        [self.navigationController pushViewController:orderForm animated:YES];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+    }else if (indexPath.row==4){
+    
+        MyAttentionViewController *attentionView =[MyAttentionViewController new];
+        [self.navigationController pushViewController:attentionView animated:YES];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+    }else if (indexPath.row==3){
+        
+        MyUBiViewController *UBiView =[MyUBiViewController new];
+        [self.navigationController pushViewController:UBiView animated:YES];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    }else if (indexPath.row==5){
+    
+        MyCommentViewController *mycommitView =[MyCommentViewController new];
+        [self.navigationController pushViewController:mycommitView animated:YES];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    }
     
     NSLog(@"indexPath.row:%ld",(long)indexPath.row);
 }
