@@ -16,6 +16,7 @@
 #import "ShopAddressTableViewCell.h"
 #import "ContactInfoTableViewCell.h"
 #import "AppointmentDetailViewController.h"
+#import "BusinessInformationViewController.h"
 
 
 /*fake data*/
@@ -543,6 +544,27 @@
 
     return backView;
 }
+
+
+#pragma mark - tableView点击触发
+/**
+ *  @Author frankfan, 14-10-29 23:10:58
+ *
+ *  tableView点击触发
+ *
+ *  @return nil
+ */
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(indexPath.row==1){
+    
+        BusinessInformationViewController *businessDetailInfo =[BusinessInformationViewController new];
+        [self.navigationController pushViewController:businessDetailInfo animated:YES];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
+}
+
+
 
 
 #pragma mark - ”预约“按钮触发点击
