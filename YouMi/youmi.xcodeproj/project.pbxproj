@@ -261,6 +261,12 @@
 		63F780CB19C0496000DF7585 /* EntertainmentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F780CA19C0496000DF7585 /* EntertainmentTableViewCell.m */; };
 		63F780CE19C050C200DF7585 /* EntertainmentDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F780CD19C050C200DF7585 /* EntertainmentDetailViewController.m */; };
 		9D1FD9DAB83643BBBD451A8D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D1FF5C7C08246569BC2D9CD /* libPods.a */; settings = {ATTRIBUTES = (Required, ); }; };
+		AD4EB9A01A03341A00795A81 /* MyUbinTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AD4EB99F1A03341A00795A81 /* MyUbinTableViewCell.m */; };
+		AD4EB9A41A03653000795A81 /* ShoppingCartTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AD4EB9A31A03653000795A81 /* ShoppingCartTableViewCell.m */; };
+		AD4EB9A61A036B6000795A81 /* 选中.png in Resources */ = {isa = PBXBuildFile; fileRef = AD4EB9A51A036B6000795A81 /* 选中.png */; };
+		AD4EB9A81A036C4600795A81 /* 110.png in Resources */ = {isa = PBXBuildFile; fileRef = AD4EB9A71A036C4600795A81 /* 110.png */; };
+		AD4EB9AA1A03760F00795A81 /* 测试图片.png in Resources */ = {isa = PBXBuildFile; fileRef = AD4EB9A91A03760F00795A81 /* 测试图片.png */; };
+		AD4EB9AC1A03771700795A81 /* 完成.png in Resources */ = {isa = PBXBuildFile; fileRef = AD4EB9AB1A03771700795A81 /* 完成.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -714,6 +720,14 @@
 		82A7D0C43FD308F9DE8A4C7A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		879606343DB7A7B905A262D5 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9D1FF5C7C08246569BC2D9CD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD4EB99E1A03341A00795A81 /* MyUbinTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyUbinTableViewCell.h; sourceTree = "<group>"; };
+		AD4EB99F1A03341A00795A81 /* MyUbinTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyUbinTableViewCell.m; sourceTree = "<group>"; };
+		AD4EB9A21A03653000795A81 /* ShoppingCartTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShoppingCartTableViewCell.h; sourceTree = "<group>"; };
+		AD4EB9A31A03653000795A81 /* ShoppingCartTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShoppingCartTableViewCell.m; sourceTree = "<group>"; };
+		AD4EB9A51A036B6000795A81 /* 选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "选中.png"; sourceTree = "<group>"; };
+		AD4EB9A71A036C4600795A81 /* 110.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 110.png; sourceTree = "<group>"; };
+		AD4EB9A91A03760F00795A81 /* 测试图片.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "测试图片.png"; sourceTree = "<group>"; };
+		AD4EB9AB1A03771700795A81 /* 完成.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "完成.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1149,10 +1163,13 @@
 		63970FD619B415F700793A3D /* images */ = {
 			isa = PBXGroup;
 			children = (
+				AD4EB9A91A03760F00795A81 /* 测试图片.png */,
 				63A5A90B1A01E7310015A49B /* 购物车@2x.png */,
 				63541B471A0086C8001EC683 /* 时间我的预定.png */,
 				63541B451A00862B001EC683 /* 人数.png */,
 				63541B2719FFC57D001EC683 /* 日历.png */,
+				AD4EB9AB1A03771700795A81 /* 完成.png */,
+				AD4EB9A51A036B6000795A81 /* 选中.png */,
 				63BCD38619FDF5F300092C05 /* 热门城市@2x.png */,
 				6317A57119F6A1F7009E332F /* 确定.png */,
 				637B40F819F0B2EB00A63BC6 /* 编辑@2x.png */,
@@ -1176,6 +1193,7 @@
 				63F780C719C023E400DF7585 /* 底部红线@2x.png */,
 				63F780BB19BEADC200DF7585 /* 左箭头@2x.png */,
 				63B9163419BE9DCA006F09EC /* 头像啊.png */,
+				AD4EB9A71A036C4600795A81 /* 110.png */,
 				63B9163019BE9771006F09EC /* bg.png */,
 				63B915C219B9B34C006F09EC /* page_state_highlight.png */,
 				63B915C319B9B34C006F09EC /* page_state_highlight@2x.png */,
@@ -1406,6 +1424,10 @@
 				6360745B19D8E9A200AE6298 /* PdownMenuViewController.m */,
 				63BCD37F19FDDB1500092C05 /* CityListSelectViewController.h */,
 				63BCD38019FDDB1500092C05 /* CityListSelectViewController.m */,
+				AD4EB99E1A03341A00795A81 /* MyUbinTableViewCell.h */,
+				AD4EB99F1A03341A00795A81 /* MyUbinTableViewCell.m */,
+				AD4EB9A21A03653000795A81 /* ShoppingCartTableViewCell.h */,
+				AD4EB9A31A03653000795A81 /* ShoppingCartTableViewCell.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1616,6 +1638,7 @@
 				63EE69AF19B43EF000CC7540 /* 美容.png in Resources */,
 				63970FD219B415E200793A3D /* 我的选中@2x.png in Resources */,
 				63EE69B319B43EF000CC7540 /* 娱乐.png in Resources */,
+				AD4EB9AC1A03771700795A81 /* 完成.png in Resources */,
 				63EE69A119B4245400CC7540 /* 51路.png in Resources */,
 				63B915C419B9B34C006F09EC /* page_state_highlight.png in Resources */,
 				63541B5E1A00CA38001EC683 /* checkmark_icon_white@2x.png in Resources */,
@@ -1685,17 +1708,20 @@
 				63B9157819B96AEA006F09EC /* 更多未选中.png in Resources */,
 				63970FCB19B415E200793A3D /* 商城选中@2x.png in Resources */,
 				63B2834919B805F20049A7FB /* 2级分类箭头.png in Resources */,
+				AD4EB9A61A036B6000795A81 /* 选中.png in Resources */,
 				63541B5D1A00CA38001EC683 /* checkmark_icon_white.png in Resources */,
 				63B9157B19B96AEA006F09EC /* 商城选中.png in Resources */,
 				63970FBE19B415E200793A3D /* 分类未选中@2x.png in Resources */,
 				63970FBF19B415E200793A3D /* 分类选中@2x.png in Resources */,
 				635C3A5C19EE6B700090DE16 /* ProgressHUD.bundle in Resources */,
+				AD4EB9AA1A03760F00795A81 /* 测试图片.png in Resources */,
 				633E457719AD7A7C001D8F75 /* Images.xcassets in Resources */,
 				63541B481A0086C8001EC683 /* 时间我的预定.png in Resources */,
 				63541B461A00862B001EC683 /* 人数.png in Resources */,
 				63541B611A00CA38001EC683 /* picker_wheel_ip4@2x.png in Resources */,
 				63B915C019B9B345006F09EC /* page_state_normal@2x.png in Resources */,
 				6356262F19C82CCF0011B926 /* star-template@2x.png in Resources */,
+				AD4EB9A81A036C4600795A81 /* 110.png in Resources */,
 				63B9163519BE9DCA006F09EC /* 头像啊.png in Resources */,
 				63EE69AE19B43EF000CC7540 /* 酒店.png in Resources */,
 				63541B601A00CA38001EC683 /* picker_wheel_ip4.png in Resources */,
@@ -1882,7 +1908,9 @@
 				6397101819B451CB00793A3D /* POPAnimator.mm in Sources */,
 				6397101C19B451CB00793A3D /* POPDecayAnimation.mm in Sources */,
 				633E469419AE270B001D8F75 /* MainPageViewController.m in Sources */,
+				AD4EB9A41A03653000795A81 /* ShoppingCartTableViewCell.m in Sources */,
 				63A5A90F1A01EA350015A49B /* OrderFormViewController.m in Sources */,
+				AD4EB9A01A03341A00795A81 /* MyUbinTableViewCell.m in Sources */,
 				63A5A90A1A01E3700015A49B /* ShoppingCartViewController.m in Sources */,
 				63B915B419B99D55006F09EC /* SDWebImageDownloaderOperation.m in Sources */,
 				63B915B619B99D55006F09EC /* SDWebImagePrefetcher.m in Sources */,

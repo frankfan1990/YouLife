@@ -5,48 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>4CE2AF5D-D52E-4768-B1CD-03AF3032B012</string>
+	<string>D9B63665-DCDD-4458-970E-DB12F920E238</string>
 	<key>IDESourceControlProjectName</key>
 	<string>youmi</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>583A457C-1198-4953-ADEA-C0A097B89E7B</key>
-		<string>https://github.com/frankfan1990/-.git</string>
-		<key>59357970-7A7B-489E-87BD-8541DDB123FB</key>
-		<string>http://dns1.rching.com:8080/scm/git/YouMi_ios</string>
+		<key>6698F3FCAE8D049989B2D6333AC32394836CB244</key>
+		<string>https://github.com/frankfan1990/YouLife.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>youmi.xcworkspace</string>
+	<string>YouMi/youmi.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>583A457C-1198-4953-ADEA-C0A097B89E7B</key>
-		<string>../柚米</string>
-		<key>59357970-7A7B-489E-87BD-8541DDB123FB</key>
-		<string>..</string>
+		<key>6698F3FCAE8D049989B2D6333AC32394836CB244</key>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>http://dns1.rching.com:8080/scm/git/YouMi_ios</string>
+	<string>https://github.com/frankfan1990/YouLife.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>59357970-7A7B-489E-87BD-8541DDB123FB</string>
+	<string>6698F3FCAE8D049989B2D6333AC32394836CB244</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>583A457C-1198-4953-ADEA-C0A097B89E7B</string>
+			<string>6698F3FCAE8D049989B2D6333AC32394836CB244</string>
 			<key>IDESourceControlWCCName</key>
-			<string>柚米</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>59357970-7A7B-489E-87BD-8541DDB123FB</string>
-			<key>IDESourceControlWCCName</key>
-			<string>YouMi</string>
+			<string>YouLife</string>
 		</dict>
 	</array>
 </dict>
