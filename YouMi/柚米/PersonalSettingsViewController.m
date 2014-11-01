@@ -46,6 +46,8 @@
     //
     NSData *imageData;//用户头像全局变量
     
+    NSDictionary *globalDict;//从网络上拉去的全局数据
+    
 }
 
 @property (nonatomic,strong)NSArray *outPutData;
@@ -386,10 +388,10 @@
             zipCode_input.tag = 2006;
             zipCode_input.returnKeyType = UIReturnKeyDone;
             
-            if([[NSUserDefaults standardUserDefaults]objectForKey:@"k_zipCode"]){
+            Userinfo *userInfo =[Userinfo modelWithDictionary:globalDict error:nil];
             
-                zipCode_input.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"k_zipCode"];
-            }
+            zipCode_input.text =userInfo.postalCode;
+
             
             [cell.contentView addSubview:zipCode_input];
         
@@ -664,6 +666,39 @@
 
             
             
+            Userinfo *userInfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
+            if(userInfo){
+            
+            
+                name_input.text = userInfo.memberName;
+                
+                
+                qq_input.text =userInfo.qq;
+                
+                
+                emial_input.text = userInfo.email;
+                
+                
+                if(userInfo.regionId==0){
+                    
+                    address_input.text = nil;
+                }else{
+                    
+                    address_input.text = [NSString stringWithFormat:@"%d",userInfo.regionId];
+                    
+                }
+                
+                
+                addressDetail_input.text =userInfo.address;
+                
+                
+                zipCode_input.text =userInfo.postalCode;
+
+            }
+                
+            
+            
+            
 #pragma mark这里有警告
 #warning 这里是处理用户详细信息的修改
         }else{//这里是详细信息的提交
@@ -713,9 +748,24 @@
 //                UserInfoModel *userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
                 Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
                 if(userinfo.memberId){
+                    
+                    /**
+                     *  @Author frankfan, 14-11-01 18:11:15
+                     *
+                     *  这里的判断为fix bug 原因还没有找
+                     */
+                    if([zipCode_input.text length]){
+                    
+                        parameters = @{memberID:userinfo.memberId,api_memberName:name_input.text,QQ:qq_input.text,memberEmail:emial_input.text,memberRegion:address_input.text,memberAddress:addressDetail_input.text,memberZipCode:zipCode_input.text};
+                        
+
+                    }else{
+                   
+                        parameters = @{memberID:userinfo.memberId,api_memberName:name_input.text,QQ:qq_input.text,memberEmail:emial_input.text,memberRegion:address_input.text,memberAddress:addressDetail_input.text};
+                    
+                    }
                 
-                    parameters = @{memberID:userinfo.memberId,api_memberName:name_input.text,QQ:qq_input.text,memberEmail:emial_input.text,memberRegion:address_input.text,memberAddress:addressDetail_input.text,memberZipCode:zipCode_input.text};
-                
+                    
                 }
           
                 [ProgressHUD show:nil Interaction:NO];
@@ -726,6 +776,9 @@
                     
                         [ProgressHUD showSuccess:@"修改成功" Interaction:NO];
                         [[TMCache sharedCache]setObject:responseObject[@"data"] forKey:kUserInfo];
+                        
+                        Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
+                        
                         
                         
                     }else{

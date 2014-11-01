@@ -128,9 +128,9 @@
 #define userAcount @"userAccount"
 #define userPassWord @"passWord"
  //测试模式
-#define API_UserLogin @"http://88.88.3.138:8080/youmi/member/login"
+//#define API_UserLogin @"http://88.88.3.138:8080/youmi/member/login"
 //发布模式
-//#define API_UserLogin @"http://120.24.71.104:8080/youmi/member/login"
+#define API_UserLogin @"http://120.24.71.104:8080/youmi/member/login"
 
 /*
  *修改昵称
@@ -177,7 +177,7 @@
 #define api_memberName @"memberName"//用户姓名
 #define QQ @"qq"//用户QQ号码
 #define memberEmail @"email"//用户邮箱
-#define memberRegion @"regionId"//用户所在区
+#define memberRegion @"regionName"//用户所在区
 #define memberAddress @"address"//用户详细住所
 #define memberZipCode @"postalCode"//用户所在地邮编
 
