@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ *  @Author frankfan, 14-11-02 19:11:35
+ *
+ *  我的购物车
+ */
+
+
 @interface ShoppingCartTableViewCell : UITableViewCell
 @property(nonatomic,strong)UILabel *labelOfPrice;
 @property(nonatomic,strong)UILabel *labelOfNumber;

@@ -98,6 +98,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
+    self.tableView.separatorStyle = NO;
     self.tableView.backgroundColor = customGrayColor;
     
     UIView *footerView =[[UIView alloc]initWithFrame:CGRectZero];
