@@ -46,7 +46,7 @@
     
     segment.tintColor = baseRedColor;
     [segment setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:18],UITextAttributeFont,nil] forState:UIControlStateNormal];
-//    [segment addTarget:segment action:@selector(didsegment:) forControlEvents:UIControlEventValueChanged];
+    [segment addTarget:self action:@selector(didsegment:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:segment];
 }
 

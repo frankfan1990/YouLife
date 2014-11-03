@@ -7,6 +7,9 @@
 //
 
 #import "CourseDetailsViewController.h"
+#import "CycleScrollView.h"
+#import "UIImageView+WebCache.h"
+#import "BuyNowViewController.h"
 
 #define defaultCellHeight 44
 
@@ -28,9 +31,15 @@
      */
     
     NSMutableArray *UserCommentsArray;//用户评论
+    CycleScrollView *cyclePlayImage;//轮播控件
+    
+    UIView *bottomView;//底部的bottom
+    
 
 }
 @property (nonatomic,strong)UITableView *tableView;
+@property (nonatomic,strong)NSMutableArray *cycleImageArrayURLs;//轮播图片的URL
+@property (nonatomic,strong)NSMutableArray *iamgeViewArrays;//轮播图片
 @end
 
 @implementation CourseDetailsViewController
@@ -47,7 +56,8 @@
      */
     
     UserCommentsArray = [NSMutableArray array];
-    
+    self.cycleImageArrayURLs =[NSMutableArray array];
+    self.iamgeViewArrays =[NSMutableArray array];
     
     /*title*/
     UILabel *title =[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 30, 40)];
@@ -100,12 +110,145 @@
     [self.view addSubview:self.tableView];
     self.tableView.separatorStyle = NO;
     self.tableView.backgroundColor = customGrayColor;
+    self.tableView.showsVerticalScrollIndicator = NO;
     
     UIView *footerView =[[UIView alloc]initWithFrame:CGRectZero];
     self.tableView.tableFooterView = footerView;
+ 
+    
+    /**
+     *  @Author frankfan, 14-11-03 09:11:51
+     *
+     *  创建轮播
+     *
+     *  @param NSInteger nil
+     *
+     *  @return nil
+     */
+    
+#warning fake data
+    self.cycleImageArrayURLs = [@[@"http://vip.biznav.cn/20090615162541/pic/20090701134141962.jpg",@"http://a3.att.hudong.com/10/45/01300001024098130129454552574.jpg",@"http://qic.tw/upload/school/MID_20110503003627550.jpg",@"http://img5.imgtn.bdimg.com/it/u=2127817408,3685587629&fm=23&gp=0.jpg",@"http://image.3607.com/2012/03/31/20120320180128640.jpg"]mutableCopy];
+    
+    /*保证图片数组里元素不大于5个*/
+    NSArray *imageArrays = nil;
+    if([self.cycleImageArrayURLs count]){
+        
+        if([self.cycleImageArrayURLs count]>5){
+            
+            imageArrays =[self.cycleImageArrayURLs subarrayWithRange:NSMakeRange(0, 5)];
+        
+        }
+    
+    }
+
+    if(!imageArrays){
+    
+        for (NSString *urlString in self.cycleImageArrayURLs) {
+            
+            NSURL *imageURL =[NSURL URLWithString:urlString];
+            
+            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)];
+            [imageView sd_setImageWithURL:imageURL placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];
+            [self.iamgeViewArrays addObject:imageView];
+            
+        }
+        
+    }else{
+    
+        
+        for (NSString *urlString in imageArrays) {
+            
+            NSURL *imageURL =[NSURL URLWithString:urlString];
+            
+            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)];
+            [imageView sd_setImageWithURL:imageURL placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];
+            [self.iamgeViewArrays addObject:imageView];
+
+        }
+        
+    
+    }
+    
+    
+    
+    
+    cyclePlayImage =[[CycleScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)
+                                                         animationDuration:2.8];
+    __weak CourseDetailsViewController *_self = self;
+    cyclePlayImage.totalPagesCount = ^NSInteger{
+    
+        return [_self.iamgeViewArrays count];
+    };
+    
+    cyclePlayImage.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
+    
+        return _self.iamgeViewArrays[pageIndex];
+    };
+    
+    
+    
+    /**
+     *  @Author frankfan, 14-11-03 15:11:17
+     *
+     *  创建下端2个button
+     *
+     *  @param NSInteger nil
+     *
+     *  @return nil
+     */
+    
+    bottomView =[[UIView alloc]initWithFrame:CGRectMake(10, self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
+    [self.view addSubview:bottomView];
+    
+    UIButton *payNow =[UIButton buttonWithType:UIButtonTypeCustom];
+    payNow.tag = 1001;
+    payNow.frame = CGRectMake(0, 0, self.view.bounds.size.width/2.0, 40);
+    [payNow setTitle:@"立即购买" forState:UIControlStateNormal];
+    [payNow setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    payNow.titleLabel.font =[UIFont systemFontOfSize:14];
+    [payNow addTarget:self action:@selector(bottomButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [payNow setBackgroundColor:[UIColor colorWithRed:239/255.0 green:118/255.0 blue:109/255.0 alpha:1]];
+    [payNow setTitleColor:baseRedColor forState:UIControlStateHighlighted];
+    [bottomView addSubview:payNow];
+    
+    
+    UIButton *courseAppoint =[UIButton buttonWithType:UIButtonTypeCustom];
+    courseAppoint.tag = 1002;
+    courseAppoint.frame = CGRectMake(self.view.bounds.size.width/2.0, 0, self.view.bounds.size.width/2.0-20, 40);
+    [courseAppoint setTitle:@"预约课程" forState:UIControlStateNormal];
+    [courseAppoint setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    courseAppoint.titleLabel.font =[UIFont systemFontOfSize:14];
+    [courseAppoint addTarget:self action:@selector(bottomButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [courseAppoint setBackgroundColor:baseRedColor];
+    [courseAppoint setTitleColor:[UIColor colorWithRed:239/255.0 green:118/255.0 blue:109/255.0 alpha:1] forState:UIControlStateHighlighted];
+    [bottomView addSubview:courseAppoint];
+
+    
+    
+    
     
     
     // Do any additional setup after loading the view.
+}
+
+
+#pragma mark - 底部按钮点击触发方法
+- (void)bottomButtonClicked:(UIButton *)sender{
+
+    if(sender.tag==1001){//立即购买
+    
+        BuyNowViewController *buyNow =[BuyNowViewController new];
+        buyNow.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:buyNow animated:YES];
+        
+    
+    }else{//预约课程
+    
+    
+    
+    }
+
+
 }
 
 
@@ -138,8 +281,158 @@
     UITableViewCell *othersCourseCell =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];//同校其他课程
     UITableViewCell *userCommentsCell =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];//用户评论
     
+    if(indexPath.row==0){
+    
+        [headerImageCell.contentView addSubview:cyclePlayImage];
+        
+        headerImageCell.selectionStyle = NO;
+        return headerImageCell;
+    }
+    
+    if(indexPath.row==1 || indexPath.row==4 || indexPath.row==6 ||indexPath.row==8){
+    
+        UIImageView *flagImageView =[[UIImageView alloc]initWithFrame:CGRectMake(0, 2, 25, 25)];
+        flagImageView.image =[UIImage imageNamed:@"竖标签"];
+        [infoItemCell.contentView addSubview:flagImageView];
+        
+        infoItemCell.backgroundColor =customGrayColor;
+        
+        UILabel *detialInfoLabel =[[UILabel alloc]initWithFrame:CGRectMake(30, 0, 100, 30)];
+        detialInfoLabel.font = [UIFont systemFontOfSize:14];
+        detialInfoLabel.textColor = baseTextColor;
+        [infoItemCell.contentView addSubview:detialInfoLabel];
+        
+        infoItemCell.selectionStyle = NO;
+        
+        if(indexPath.row==1){
+        
+            detialInfoLabel.text = @"学校信息";
+            
+        }
+        
+        if(indexPath.row==4){
+        
+            detialInfoLabel.text = @"课程详情";
+            
+            UIButton *moreContent =[UIButton buttonWithType:UIButtonTypeCustom];
+            moreContent.frame = CGRectMake(245, 1, 30, 30);
+            moreContent.titleLabel.font =[UIFont systemFontOfSize:14];
+            [moreContent setTitle:@"更多" forState:UIControlStateNormal];
+            [moreContent setTitleColor:baseTextColor forState:UIControlStateNormal];
+            [infoItemCell.contentView addSubview:moreContent];
+            
+            infoItemCell.selectionStyle = NO;
+            infoItemCell.accessoryType =UITableViewCellAccessoryDisclosureIndicator;
+
+        }
+        
+        if(indexPath.row==6){
+        
+            detialInfoLabel.text = @"同校其他课程";
+        }
+        
+        if(indexPath.row==8){
+            
+            detialInfoLabel.text = @"用户评论";
+        }
+        
+        
+        return infoItemCell;
+       
+    }
+    
+    if(indexPath.row==2){
+    
+        /*学校*/
+        UILabel *schoolabel =[[UILabel alloc]initWithFrame:CGRectMake(10, 0, 215, 40)];
+        schoolabel.adjustsFontSizeToFitWidth = YES;
+        schoolabel.textAlignment = NSTextAlignmentCenter;
+        schoolabel.font =[UIFont systemFontOfSize:16];
+        schoolabel.textColor = baseTextColor;
+        [shcoolInfoCell.contentView addSubview:schoolabel];
+        
+        /*专业*/
+        UILabel *specialtyLabel =[[UILabel alloc]initWithFrame:CGRectMake(10, 40, 215, 40)];
+        specialtyLabel.adjustsFontSizeToFitWidth = YES;
+        specialtyLabel.font =[UIFont systemFontOfSize:16];
+        specialtyLabel.textAlignment = NSTextAlignmentCenter;
+        specialtyLabel.textColor = baseTextColor;
+        [shcoolInfoCell.contentView addSubview:specialtyLabel];
+        
+        
+        UIView *line =[[UIView alloc]initWithFrame:CGRectMake(215, 0, 1, 80)];
+        line.backgroundColor =customGrayColor;
+        [shcoolInfoCell.contentView addSubview:line];
+        
+        /*学费*/
+        UILabel *tuitionfeeLabel =[[UILabel alloc]initWithFrame:CGRectMake(215, 0, 85, 40)];
+        tuitionfeeLabel.adjustsFontSizeToFitWidth = YES;
+        tuitionfeeLabel.font =[UIFont systemFontOfSize:19];
+        tuitionfeeLabel.textColor = baseTextColor;
+        tuitionfeeLabel.textAlignment = NSTextAlignmentCenter;
+        [shcoolInfoCell.contentView addSubview:tuitionfeeLabel];
+        tuitionfeeLabel.text = @"学费";
+        
+        
+        /*费用*/
+        UILabel *pay =[[UILabel alloc]initWithFrame:CGRectMake(215, 40, 85, 40)];
+        pay.adjustsFontSizeToFitWidth = YES;
+        pay.textAlignment = NSTextAlignmentCenter;
+        pay.font = [UIFont boldSystemFontOfSize:18];
+        pay.textColor = baseTextColor;
+        pay.adjustsFontSizeToFitWidth = YES;
+        [shcoolInfoCell.contentView addSubview:pay];
+        
+        shcoolInfoCell.selectionStyle = NO;
+        return shcoolInfoCell;
+        
+        
+    }
+    
+    if(indexPath.row==3){
+    
+        UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width-20, 1)];
+        line.backgroundColor =customGrayColor;
+        [addressInfoCell.contentView addSubview:line];
+        
+        UIImageView *imageView =[[UIImageView alloc]initWithFrame:CGRectMake(10, 3, 20, 22)];
+        imageView.image =[UIImage imageNamed:@"地标"];
+        [addressInfoCell.contentView addSubview:imageView];
+        
+        /*地址*/
+        UILabel *addressLabel =[[UILabel alloc]initWithFrame:CGRectMake(33, 0, 200, 30)];
+        addressLabel.font =[UIFont systemFontOfSize:14];
+        addressLabel.textColor =baseTextColor;
+        addressLabel.adjustsFontSizeToFitWidth = YES;
+        [addressInfoCell.contentView addSubview:addressLabel];
+        
+        addressInfoCell.selectionStyle = NO;
+        return addressInfoCell;
+    }
+ 
+    if(indexPath.row==5){
+    
+        courseDetialCell.selectionStyle = NO;
+        return courseDetialCell;
+    
+    }
+    
+    if(indexPath.row==7){
     
     
+        othersCourseCell.selectionStyle = NO;
+        return othersCourseCell;
+    
+    }
+    
+    
+    
+    
+    if(indexPath.row>8){
+    
+        userCommentsCell.selectionStyle = NO;
+        return userCommentsCell;
+    }
     
     
     
@@ -166,8 +459,47 @@
      *  @return cell的高度
      */
     
+    if(indexPath.row==0){
+    
+        return 180;
+    }
+    
+    if(indexPath.row==1 || indexPath.row==4 || indexPath.row==6 ||indexPath.row==8){
+    
+        
+        return 30;
+    }
+    
+    if(indexPath.row==2){
+    
+        return 80;
+    }
+    
+    if(indexPath.row==3){
+    
+        return 30;
+    }
+    
+    if(indexPath.row==5){
+    
+        return 130;
+    }
     
     
+    if(indexPath.row==7)
+    {
+    
+    
+        return 50;
+    }
+    
+    
+    if(indexPath.row>7){
+    
+#warning fake data
+    
+        return 50;
+    }
     
     /*暂时先去掉错误提示*/
     return 0;

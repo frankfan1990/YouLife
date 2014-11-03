@@ -403,6 +403,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 
     CourseDetailsViewController *courseDetail =[CourseDetailsViewController new];
+    courseDetail.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:courseDetail animated:YES];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 
