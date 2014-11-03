@@ -13,7 +13,7 @@
 
 #define defaultCellHeight 44
 
-@interface CourseDetailsViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface CourseDetailsViewController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
 {
 
     /*分享按钮是否点击*/
@@ -35,6 +35,10 @@
     
     UIView *bottomView;//底部的bottom
     
+    
+    UIView *courseAppointLoadView;//创建底部loadView
+    UITextField *memberField;//显示购物的数量
+    NSInteger gloabalAcount;
 
 }
 @property (nonatomic,strong)UITableView *tableView;
@@ -48,6 +52,8 @@
     [super viewDidLoad];
     self.view.backgroundColor = customGrayColor;
     
+    
+    gloabalAcount = 1;
     /*分享按钮是否点击*/
     isCollectioned = NO;
     
@@ -244,12 +250,251 @@
     
     }else{//预约课程
     
-    
+        courseAppointLoadView =[[UIView alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 200)];
+        courseAppointLoadView.backgroundColor = [UIColor whiteColor];
+        
+        UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 1)];
+        line.backgroundColor = baseRedColor;
+        [courseAppointLoadView addSubview:line];
+        
+        /*商品图像*/
+        UIImageView *theGoodsImage =[[UIImageView alloc]initWithFrame:CGRectMake(20, 10, 65, 65)];
+        theGoodsImage.layer.cornerRadius = 3;
+        theGoodsImage.layer.masksToBounds = YES;
+        [courseAppointLoadView addSubview:theGoodsImage];
+        
+        theGoodsImage.backgroundColor =[UIColor blackColor];
+        
+
+        /*商品名*/
+        UILabel *goodsname =[[UILabel alloc]initWithFrame:CGRectMake(90, -7, 123, 50)];
+        goodsname.font =[UIFont boldSystemFontOfSize:16];
+        goodsname.textAlignment = NSTextAlignmentLeft;
+        goodsname.adjustsFontSizeToFitWidth = YES;
+        goodsname.textColor = baseTextColor;
+#warning fake data
+        goodsname.text = @"商品名";
+        [courseAppointLoadView addSubview:goodsname];
+        
+        /*价格*/
+        UILabel *price =[[UILabel alloc]initWithFrame:CGRectMake(90, 55, 60, 30)];
+        price.font =[UIFont boldSystemFontOfSize:14];
+        price.textColor = baseTextColor;
+        price.textAlignment = NSTextAlignmentLeft;
+        price.adjustsFontSizeToFitWidth = YES;
+#warning fake data
+        price.text = @"价格";
+        [courseAppointLoadView addSubview:price];
+        
+        
+        /*购买数*/
+        UILabel *payAcount =[[UILabel alloc]initWithFrame:CGRectMake(20, 70, 123, 50)];
+        payAcount.font =[UIFont boldSystemFontOfSize:16];
+        payAcount.textAlignment = NSTextAlignmentLeft;
+        payAcount.adjustsFontSizeToFitWidth = YES;
+        payAcount.textColor = baseTextColor;
+        [courseAppointLoadView addSubview:payAcount];
+        payAcount.text = @"购买数";
+        
+        UIView *line2 =[[UIView alloc]initWithFrame:CGRectMake(0, 112, self.view.bounds.size.width, 1)];
+        line2.backgroundColor = customGrayColor;
+        [courseAppointLoadView addSubview:line2];
+        
+        /*确定按钮*/
+        UIButton *button =[UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = CGRectMake(10, 130, self.view.bounds.size.width-20, 35);
+        button.backgroundColor = baseRedColor;
+        [button setTitle:@"确定" forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor colorWithWhite:0.75 alpha:1] forState:UIControlStateHighlighted];
+        [button addTarget:self action:@selector(payForButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        button.layer.cornerRadius = 3;
+        [courseAppointLoadView addSubview:button];
+        
+        
+        UIView *line3 =[[UIView alloc]initWithFrame:CGRectMake(0, 175, self.view.bounds.size.width, 1)];
+        line3.backgroundColor = baseRedColor;
+        [courseAppointLoadView addSubview:line3];
+        
+        UIButton *cancelButton =[UIButton buttonWithType:UIButtonTypeCustom];
+        cancelButton.frame = CGRectMake(280, 10, 25, 25);
+        [cancelButton setImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
+        [cancelButton addTarget:self action:@selector(cancelBottomView) forControlEvents:UIControlEventTouchUpInside];
+        [courseAppointLoadView addSubview:cancelButton];
+        
+        
+        [self.view addSubview:courseAppointLoadView];
+        [self addStepperToView];
+        
+        
+        [self.view bringSubviewToFront:courseAppointLoadView];
+        [UIView animateWithDuration:0.35 animations:^{
+            
+            courseAppointLoadView.frame = CGRectMake(0, self.view.bounds.size.height-courseAppointLoadView.bounds.size.height, self.view.bounds.size.width, courseAppointLoadView.bounds.size.height);
+        }];
+        
+        
     
     }
 
 
 }
+
+
+
+#pragma mark - 取消
+- (void)cancelBottomView{
+
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        courseAppointLoadView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, courseAppointLoadView.bounds.size.height);
+        courseAppointLoadView = nil;
+        
+    }];
+    
+    [memberField resignFirstResponder];
+    
+}
+
+
+#pragma mark - 确定预定按钮触发
+- (void)payForButtonClicked:(UIButton *)sender{
+
+    NSLog(@"预定");
+
+}
+
+
+
+#pragma mark - 创建步进器
+/**
+ *  @Author frankfan, 14-11-03 23:11:23
+ *
+ *  创建步进器
+ *
+ *  @param NSInteger nil
+ *
+ *  @return nil
+ */
+
+- (void)addStepperToView{
+
+    /**
+     *  @Author frankfan, 14-11-03 18:11:50
+     *
+     *  创建步进器
+     */
+    UIButton *stepButton =[UIButton buttonWithType:UIButtonTypeCustom];
+    stepButton.frame = CGRectMake(190, 80-10, 95+20, 30+10);
+    stepButton.layer.borderWidth = 2;
+    stepButton.layer.borderColor = [UIColor colorWithWhite:0.85 alpha:1].CGColor;
+    stepButton.layer.cornerRadius = 3;
+    [courseAppointLoadView addSubview:stepButton];
+    
+    UIButton *subButton =[UIButton buttonWithType:UIButtonTypeCustom];
+    subButton.frame = CGRectMake(191, 84-4, 22+4, 22+4);
+    [subButton setBackgroundImage:[UIImage imageNamed:@"减"] forState:UIControlStateNormal];
+    [subButton setTitleColor:[UIColor colorWithWhite:0.85 alpha:1] forState:UIControlStateNormal];
+    [subButton setTitleColor:[UIColor colorWithWhite:0.65 alpha:1] forState:UIControlStateHighlighted];
+    [courseAppointLoadView addSubview:subButton];
+    subButton.tag = 1003;
+    [subButton addTarget:self action:@selector(stepperValueChanged:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *plus =[UIButton buttonWithType:UIButtonTypeCustom];
+    plus.frame = CGRectMake(255+4+13, 84-4, 22+4, 22+1);
+    [plus setBackgroundImage:[UIImage imageNamed:@"加"] forState:UIControlStateNormal];
+    [plus setTitleColor:[UIColor colorWithWhite:0.85 alpha:1] forState:UIControlStateNormal];
+    [plus setTitleColor:[UIColor colorWithWhite:0.65 alpha:1] forState:UIControlStateHighlighted];
+    [courseAppointLoadView addSubview:plus];
+    plus.tag = 1004;
+    [plus addTarget:self action:@selector(stepperValueChanged:) forControlEvents:UIControlEventTouchUpInside];
+    
+    /*显示数量*/
+    memberField =[[UITextField alloc]initWithFrame:CGRectMake(220+2, 84-6, 30+15, 23+3)];
+    memberField.delegate = self;
+    memberField.keyboardType = UIKeyboardTypeNumberPad;
+    memberField.textAlignment = NSTextAlignmentCenter;
+    memberField.backgroundColor = customGrayColor;
+    memberField.textColor = baseTextColor;
+    [courseAppointLoadView addSubview:memberField];
+    memberField.text = [NSString stringWithFormat:@"%ld",(long)gloabalAcount];
+    
+    /**
+     创建完成
+     */
+
+
+}
+
+
+#pragma mark - textField 代理方法
+- (void)textFieldDidEndEditing:(UITextField *)textField{
+    
+    
+    [textField resignFirstResponder];
+    if(![textField.text length] || [textField.text integerValue]==0){
+        
+        textField.text = @"1";
+    }
+    
+    
+}
+
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+
+    
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:500.0f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
+        
+        
+        courseAppointLoadView.frame = CGRectMake(0, self.view.bounds.size.height-courseAppointLoadView.bounds.size.height-216, self.view.bounds.size.width, courseAppointLoadView.bounds.size.height);
+        
+    } completion:^(BOOL finished) {
+        
+        
+    }];
+
+}
+
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    return YES;
+}
+
+
+
+#pragma mark - 步进器触发
+- (void)stepperValueChanged:(UIButton *)sender{
+    
+    if(sender.tag==1003){
+        
+        NSInteger tempacount = [memberField.text integerValue];
+        if(tempacount>1){
+            
+            memberField.text =[NSString stringWithFormat:@"%ld",tempacount-1];
+            
+        }
+    }else{
+        
+        NSInteger tempacount = [memberField.text integerValue];
+        memberField.text =[NSString stringWithFormat:@"%ld",tempacount+1];
+        
+    }
+    
+    
+    
+}
+
+
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
+
+
+    [memberField resignFirstResponder];
+}
+
 
 
 
@@ -396,7 +641,7 @@
         [addressInfoCell.contentView addSubview:line];
         
         UIImageView *imageView =[[UIImageView alloc]initWithFrame:CGRectMake(10, 3, 20, 22)];
-        imageView.image =[UIImage imageNamed:@"地标"];
+        imageView.image =[UIImage imageNamed:@"红色地标"];
         [addressInfoCell.contentView addSubview:imageView];
         
         /*地址*/

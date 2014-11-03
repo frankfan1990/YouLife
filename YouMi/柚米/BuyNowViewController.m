@@ -14,6 +14,7 @@
  
     UITextField *memberField;//显示购物的数量
     NSInteger gloabalAcount;
+    UILabel *allPrice;//总价
 }
 
 @property (nonatomic,strong)UITableView *tableView;
@@ -60,10 +61,41 @@
     self.tableView.userInteractionEnabled = YES;
     
     
+    /**
+     *  @Author frankfan, 14-11-03 22:11:58
+     *
+     *  实时监测uitextField内容的变化
+     *
+     *  @param textFieldDidChanged: nil
+     *
+     *  @return nil
+     */
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChanged:) name:@"UITextFieldTextDidChangeNotification" object:memberField];
+    
     
     
     // Do any additional setup after loading the view.
 }
+
+
+
+
+
+/**
+ *  @Author frankfan, 14-11-03 22:11:24
+ *
+ *  接受textField发来的通知 实时监测uitextField内容的变化
+ *
+ *  @param notification nil
+ */
+
+- (void)textFieldDidChanged:(NSNotification *)notification{
+
+    UITextField *textfield =[notification object];
+    NSLog(@"...String:%@",textfield.text);
+    
+}
+
 
 
 
@@ -99,6 +131,8 @@
     /*商品单价*/
     if(indexPath.row==0){
     
+        /*商品名*/
+#warning fake data
         UILabel *nameOfCommodity =[[UILabel alloc]initWithFrame:CGRectMake(10, 5, 123, 40)];
         nameOfCommodity.font =[UIFont boldSystemFontOfSize:15];
         nameOfCommodity.textColor = baseTextColor;
@@ -166,8 +200,6 @@
         [cell2.contentView addSubview:plus];
         plus.tag = 1004;
         [plus addTarget:self action:@selector(stepperValueChanged:) forControlEvents:UIControlEventTouchUpInside];
-
-
         
         /*显示数量*/
         memberField =[[UITextField alloc]initWithFrame:CGRectMake(220, 14, 30, 23)];
@@ -179,6 +211,9 @@
         [cell2.contentView addSubview:memberField];
         memberField.text = [NSString stringWithFormat:@"%ld",(long)gloabalAcount];
 
+        /**
+         创建完成
+         */
         
         
         UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, 50, cell2.bounds.size.width, 1)];
@@ -198,7 +233,7 @@
         priceLabel.text = @"总价";
         
         /*总价*/
-        UILabel *allPrice =[[UILabel alloc]initWithFrame:CGRectMake(270, 20, 123, 40)];
+        allPrice =[[UILabel alloc]initWithFrame:CGRectMake(270, 20, 123, 40)];
         allPrice.font =[UIFont boldSystemFontOfSize:14];
         allPrice.textColor = baseTextColor;
         [cell3.contentView addSubview:allPrice];
@@ -258,13 +293,19 @@
 }
 
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+
+    [textField resignFirstResponder];
+    return YES;
+}
+
 
 
 
 #pragma mark - 订单按钮触发
 - (void)orderCommit:(UIButton *)sender{
 
-
+    NSLog(@"提交订单");
 }
 
 
@@ -322,6 +363,9 @@
 
 
 }
+
+#pragma mark - textField的实时动态
+
 
 
 
