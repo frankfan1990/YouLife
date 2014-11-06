@@ -79,7 +79,7 @@
 @property (nonatomic,strong) UIImageView *sunImage;
 @property (nonatomic,strong) UIImageView *moonImage;
 @property (nonatomic,strong) UILabel *dayLabel;
-@property (nonatomic,strong) UILabel *clockLabel;
+
 
 /* Private Properties*/
 

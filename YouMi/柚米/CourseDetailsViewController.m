@@ -317,7 +317,7 @@
         [courseAppointLoadView addSubview:line3];
         
         UIButton *cancelButton =[UIButton buttonWithType:UIButtonTypeCustom];
-        cancelButton.frame = CGRectMake(280, 10, 25, 25);
+        cancelButton.frame = CGRectMake(280, 10, 30, 30);
         [cancelButton setImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
         [cancelButton addTarget:self action:@selector(cancelBottomView) forControlEvents:UIControlEventTouchUpInside];
         [courseAppointLoadView addSubview:cancelButton];
@@ -392,7 +392,7 @@
     [courseAppointLoadView addSubview:stepButton];
     
     UIButton *subButton =[UIButton buttonWithType:UIButtonTypeCustom];
-    subButton.frame = CGRectMake(191, 84-4, 22+4, 22+4);
+    subButton.frame = CGRectMake(191, 84-5, 22+4, 22+4);
     [subButton setBackgroundImage:[UIImage imageNamed:@"减"] forState:UIControlStateNormal];
     [subButton setTitleColor:[UIColor colorWithWhite:0.85 alpha:1] forState:UIControlStateNormal];
     [subButton setTitleColor:[UIColor colorWithWhite:0.65 alpha:1] forState:UIControlStateHighlighted];
@@ -410,7 +410,7 @@
     [plus addTarget:self action:@selector(stepperValueChanged:) forControlEvents:UIControlEventTouchUpInside];
     
     /*显示数量*/
-    memberField =[[UITextField alloc]initWithFrame:CGRectMake(220+2, 84-6, 30+15, 23+3)];
+    memberField =[[UITextField alloc]initWithFrame:CGRectMake(220+3, 84-7, 30+15, 23+3)];
     memberField.delegate = self;
     memberField.keyboardType = UIKeyboardTypeNumberPad;
     memberField.textAlignment = NSTextAlignmentCenter;

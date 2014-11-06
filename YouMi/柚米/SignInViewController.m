@@ -243,9 +243,9 @@
                     if([responseObject[@"success"]integerValue]==1){
                         
                         [ProgressHUD showSuccess:@"登陆成功" Interaction:NO];
-                        //!!!:如果登陆成功就将用户信息存储配置文件
+                        /*!!!:如果登陆成功就将用户信息存储配置文件*/
                         NSDictionary *data = responseObject[@"data"];
-                        //!!!:这里不能直接存自定义的类对象，应该先将data缓存，然后利用改缓存对象去映射为model层
+                        /*!!!:这里不能直接存自定义的类对象，应该先将data缓存，然后利用改缓存对象去映射为model层*/
                         [[TMCache sharedCache]setObject:data forKey:kUserInfo];
                         
                         

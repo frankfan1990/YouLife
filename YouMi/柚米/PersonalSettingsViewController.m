@@ -138,10 +138,6 @@
     }
     
     
-
-    //!!!:修改
-//    UserInfoModel *userinfo =[[UserInfoModel alloc]initWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:nil];
-    
     NSError *error;
     Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache] objectForKey:kUserInfo] error:&error];
     NSLog(@"personSettingError:%@",[error localizedDescription]);

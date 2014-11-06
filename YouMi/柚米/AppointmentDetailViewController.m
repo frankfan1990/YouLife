@@ -353,14 +353,16 @@
 #pragma mark - 获取选择的时间time
 -(void)timePicker:(KPTimePicker*)timePicker selectedDate:(NSDate *)date{
 
-    NSString *tempTime = [date descriptionWithLocale:[NSLocale currentLocale]];
-    
-    NSLog(@"timer:%@",[self transformTheTimerFormat:tempTime]);
+
+    NSLog(@">>>%@",timePicker.clockLabel.text);
+
     [timePicker removeFromSuperview];
     
 }
 
-
+#warning 这是一个错误方法
+#if 0
+/*以下为错误方法*/
 /**
  *  @Author frankfan, 14-10-29 17:10:53
  *
@@ -375,7 +377,7 @@
 - (NSString *)transformTheTimerFormat:(NSString *)timerString{
     
     NSArray *timeArray =[timerString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@",at"]];
-    NSString *tempTimerString = timeArray[6];
+    NSString *tempTimerString = timeArray[5];
     NSString *realTimer = [tempTimerString substringWithRange:NSMakeRange(0, 12)];
     NSArray *tempArray1 = [realTimer componentsSeparatedByString:@" "];
     
@@ -419,7 +421,7 @@
   
 }
 
-
+#endif
 
 #pragma mark - 日历对象创建
 /**

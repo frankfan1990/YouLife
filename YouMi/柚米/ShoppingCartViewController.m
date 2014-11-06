@@ -88,6 +88,7 @@
     tableView.dataSource = self;
     tableView.showsVerticalScrollIndicator= NO;
     [tableView reloadData];
+    
     [self.view addSubview:tableView];
     
 }
@@ -136,6 +137,7 @@
     cell.labelOfNumber.text = [NSString stringWithFormat:@"数量:%@",arrOfnumber[indexPath.section]];
     cell.imageOfGoods.image = [UIImage imageNamed:@"测试图片.png"];
     [cell.btnOfSelected addTarget:self action:@selector(didBtn:) forControlEvents:UIControlEventTouchUpInside];
+    cell.selectionStyle = NO;
     return cell;
 }
 -(void)didBtn:(UIButton *)sender

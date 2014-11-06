@@ -232,6 +232,7 @@
 		63B915C519B9B34C006F09EC /* page_state_highlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B915C319B9B34C006F09EC /* page_state_highlight@2x.png */; };
 		63B9163119BE9771006F09EC /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B9163019BE9771006F09EC /* bg.png */; };
 		63B9163519BE9DCA006F09EC /* 头像啊.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B9163419BE9DCA006F09EC /* 头像啊.png */; };
+		63BB99C91A09BD4E00E22E84 /* 我的系列白色图标.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BB99C81A09BD4E00E22E84 /* 我的系列白色图标.png */; };
 		63BCD30419FA8BA200092C05 /* Userinfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD30319FA8BA200092C05 /* Userinfo.m */; };
 		63BCD38119FDDB1500092C05 /* CityListSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD38019FDDB1500092C05 /* CityListSelectViewController.m */; };
 		63BCD38419FDE1F200092C05 /* citys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 63BCD38219FDE1F200092C05 /* citys.plist */; };
@@ -239,6 +240,7 @@
 		63BCD38719FDF5F300092C05 /* 热门城市@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BCD38619FDF5F300092C05 /* 热门城市@2x.png */; };
 		63C60BFC19C6F06E002FEBB9 /* 分享@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C60BFB19C6F06E002FEBB9 /* 分享@2x.png */; };
 		63C60BFE19C6F082002FEBB9 /* 收藏@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C60BFD19C6F082002FEBB9 /* 收藏@2x.png */; };
+		63CE1FC51A09FF2100D4831F /* 完成@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63CE1FC41A09FF2100D4831F /* 完成@2x.png */; };
 		63D1C26119F4FEBC00697F08 /* ModifyNicknameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D1C26019F4FEBC00697F08 /* ModifyNicknameViewController.m */; };
 		63D1C26419F54D5600697F08 /* ModifyPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D1C26319F54D5600697F08 /* ModifyPasswordViewController.m */; };
 		63E378D719EF94C100C0D02A /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E378D619EF94C100C0D02A /* Reachability.m */; };
@@ -272,7 +274,6 @@
 		AD4EB9A41A03653000795A81 /* ShoppingCartTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AD4EB9A31A03653000795A81 /* ShoppingCartTableViewCell.m */; };
 		AD4EB9A61A036B6000795A81 /* 选中.png in Resources */ = {isa = PBXBuildFile; fileRef = AD4EB9A51A036B6000795A81 /* 选中.png */; };
 		AD4EB9AA1A03760F00795A81 /* 测试图片.png in Resources */ = {isa = PBXBuildFile; fileRef = AD4EB9A91A03760F00795A81 /* 测试图片.png */; };
-		AD4EB9AC1A03771700795A81 /* 完成.png in Resources */ = {isa = PBXBuildFile; fileRef = AD4EB9AB1A03771700795A81 /* 完成.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -682,6 +683,7 @@
 		63B915C319B9B34C006F09EC /* page_state_highlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "page_state_highlight@2x.png"; sourceTree = "<group>"; };
 		63B9163019BE9771006F09EC /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg.png; sourceTree = "<group>"; };
 		63B9163419BE9DCA006F09EC /* 头像啊.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "头像啊.png"; sourceTree = "<group>"; };
+		63BB99C81A09BD4E00E22E84 /* 我的系列白色图标.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "我的系列白色图标.png"; sourceTree = "<group>"; };
 		63BCD30219FA8BA200092C05 /* Userinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Userinfo.h; sourceTree = "<group>"; };
 		63BCD30319FA8BA200092C05 /* Userinfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Userinfo.m; sourceTree = "<group>"; };
 		63BCD37F19FDDB1500092C05 /* CityListSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityListSelectViewController.h; sourceTree = "<group>"; };
@@ -691,6 +693,7 @@
 		63BCD38619FDF5F300092C05 /* 热门城市@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "热门城市@2x.png"; sourceTree = "<group>"; };
 		63C60BFB19C6F06E002FEBB9 /* 分享@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "分享@2x.png"; sourceTree = "<group>"; };
 		63C60BFD19C6F082002FEBB9 /* 收藏@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "收藏@2x.png"; sourceTree = "<group>"; };
+		63CE1FC41A09FF2100D4831F /* 完成@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "完成@2x.png"; sourceTree = "<group>"; };
 		63D1C25F19F4FEBC00697F08 /* ModifyNicknameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifyNicknameViewController.h; sourceTree = "<group>"; };
 		63D1C26019F4FEBC00697F08 /* ModifyNicknameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModifyNicknameViewController.m; sourceTree = "<group>"; };
 		63D1C26219F54D5600697F08 /* ModifyPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifyPasswordViewController.h; sourceTree = "<group>"; };
@@ -740,7 +743,6 @@
 		AD4EB9A31A03653000795A81 /* ShoppingCartTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShoppingCartTableViewCell.m; sourceTree = "<group>"; };
 		AD4EB9A51A036B6000795A81 /* 选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "选中.png"; sourceTree = "<group>"; };
 		AD4EB9A91A03760F00795A81 /* 测试图片.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "测试图片.png"; sourceTree = "<group>"; };
-		AD4EB9AB1A03771700795A81 /* 完成.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "完成.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1178,6 +1180,7 @@
 		63970FD619B415F700793A3D /* images */ = {
 			isa = PBXGroup;
 			children = (
+				63BB99C81A09BD4E00E22E84 /* 我的系列白色图标.png */,
 				6341300E1A07E33B00ED5273 /* cancel@2x.png */,
 				6341300C1A07E04200ED5273 /* 红色地标.png */,
 				634130071A07913A00ED5273 /* 加.png */,
@@ -1189,8 +1192,8 @@
 				63541B471A0086C8001EC683 /* 时间我的预定.png */,
 				63541B451A00862B001EC683 /* 人数.png */,
 				63541B2719FFC57D001EC683 /* 日历.png */,
-				AD4EB9AB1A03771700795A81 /* 完成.png */,
 				AD4EB9A51A036B6000795A81 /* 选中.png */,
+				63CE1FC41A09FF2100D4831F /* 完成@2x.png */,
 				63BCD38619FDF5F300092C05 /* 热门城市@2x.png */,
 				6317A57119F6A1F7009E332F /* 确定.png */,
 				637B40F819F0B2EB00A63BC6 /* 编辑@2x.png */,
@@ -1658,19 +1661,20 @@
 				63EE69AF19B43EF000CC7540 /* 美容.png in Resources */,
 				63970FD219B415E200793A3D /* 我的选中@2x.png in Resources */,
 				63EE69B319B43EF000CC7540 /* 娱乐.png in Resources */,
-				AD4EB9AC1A03771700795A81 /* 完成.png in Resources */,
 				63EE69A119B4245400CC7540 /* 51路.png in Resources */,
 				63B915C419B9B34C006F09EC /* page_state_highlight.png in Resources */,
 				63541B5E1A00CA38001EC683 /* checkmark_icon_white@2x.png in Resources */,
 				63B2834A19B805F20049A7FB /* 三级分类箭头.png in Resources */,
 				63B9158119B98C7A006F09EC /* 向下箭头icon.png in Resources */,
 				63B9157F19B96AEA006F09EC /* 我的选中.png in Resources */,
+				63CE1FC51A09FF2100D4831F /* 完成@2x.png in Resources */,
 				63B915C119B9B345006F09EC /* page_state_normal.png in Resources */,
 				63EE69A319B4245400CC7540 /* 商圈.png in Resources */,
 				63EE69B219B43EF000CC7540 /* 医疗.png in Resources */,
 				63B9163119BE9771006F09EC /* bg.png in Resources */,
 				635C3A5119EE55A20090DE16 /* weibo.png in Resources */,
 				63541B621A00CA38001EC683 /* round_backarrow_big-high.png in Resources */,
+				63BB99C91A09BD4E00E22E84 /* 我的系列白色图标.png in Resources */,
 				63EE69AD19B43EF000CC7540 /* 教育.png in Resources */,
 				6356262D19C82CCF0011B926 /* star-highlighted-template@2x.png in Resources */,
 				63541B631A00CA38001EC683 /* round_backarrow_big-high@2x.png in Resources */,

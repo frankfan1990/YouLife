@@ -309,6 +309,7 @@
     }else if (indexPath.row==5){
     
         MyCommentViewController *mycommitView =[MyCommentViewController new];
+        mycommitView.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:mycommitView animated:YES];
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     

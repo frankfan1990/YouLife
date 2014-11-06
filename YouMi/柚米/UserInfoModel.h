@@ -12,7 +12,7 @@
 
 @property (nonatomic,copy)NSString *memberId;//会员编号
 
-//!!!:jsonModel这个框架要注意的是，自定义类的属性里面属性个数可以比接受到的实体类字段属性要少，但不能多
+/*!!:jsonModel这个框架要注意的是，自定义类的属性里面属性个数可以比接受到的实体类字段属性要少，但不能多*/
 //@property (nonatomic,copy)NSString *memberAccount;//会员查询号
 @property (nonatomic,copy)NSString *nickName;//昵称
 @property (nonatomic,copy)NSString *memberName;//会员姓名

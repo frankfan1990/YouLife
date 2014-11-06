@@ -31,5 +31,9 @@
 
 @property (nonatomic) BOOL hideIcons;
 
+//bug fix
+
+@property (nonatomic,strong) UILabel *clockLabel;
+
 -(void)forwardGesture:(UIPanGestureRecognizer*)sender;
 @end
