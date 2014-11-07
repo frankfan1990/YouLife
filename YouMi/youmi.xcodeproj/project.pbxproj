@@ -131,6 +131,8 @@
 		635C3A6319EEA5710090DE16 /* RegisterAcount2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 635C3A6219EEA5710090DE16 /* RegisterAcount2ViewController.m */; };
 		6360745C19D8E9A200AE6298 /* PdownMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6360745B19D8E9A200AE6298 /* PdownMenuViewController.m */; };
 		6360A98519AF1A9D0013809B /* DataAboutTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 6360A98419AF1A9D0013809B /* DataAboutTitle.m */; };
+		636A98581A0C98620014F9ED /* FBShimmeringLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 636A98551A0C98620014F9ED /* FBShimmeringLayer.m */; };
+		636A98591A0C98620014F9ED /* FBShimmeringView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636A98571A0C98620014F9ED /* FBShimmeringView.m */; };
 		637B40F919F0B2EB00A63BC6 /* 编辑@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637B40F819F0B2EB00A63BC6 /* 编辑@2x.png */; };
 		637B40FC19F0B32500A63BC6 /* PersonalSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 637B40FB19F0B32500A63BC6 /* PersonalSettingsViewController.m */; };
 		63901DCD19C150A5006C4158 /* EducationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63901DCC19C150A5006C4158 /* EducationViewController.m */; };
@@ -502,6 +504,11 @@
 		6360745B19D8E9A200AE6298 /* PdownMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PdownMenuViewController.m; sourceTree = "<group>"; };
 		6360A98319AF1A9D0013809B /* DataAboutTitle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataAboutTitle.h; sourceTree = "<group>"; };
 		6360A98419AF1A9D0013809B /* DataAboutTitle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataAboutTitle.m; sourceTree = "<group>"; };
+		636A98531A0C98620014F9ED /* FBShimmering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmering.h; sourceTree = "<group>"; };
+		636A98541A0C98620014F9ED /* FBShimmeringLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmeringLayer.h; sourceTree = "<group>"; };
+		636A98551A0C98620014F9ED /* FBShimmeringLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBShimmeringLayer.m; sourceTree = "<group>"; };
+		636A98561A0C98620014F9ED /* FBShimmeringView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmeringView.h; sourceTree = "<group>"; };
+		636A98571A0C98620014F9ED /* FBShimmeringView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBShimmeringView.m; sourceTree = "<group>"; };
 		637B40F819F0B2EB00A63BC6 /* 编辑@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "编辑@2x.png"; sourceTree = "<group>"; };
 		637B40FA19F0B32500A63BC6 /* PersonalSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonalSettingsViewController.h; sourceTree = "<group>"; };
 		637B40FB19F0B32500A63BC6 /* PersonalSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalSettingsViewController.m; sourceTree = "<group>"; };
@@ -964,6 +971,7 @@
 		633E46EE19AE292A001D8F75 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				636A985A1A0C98680014F9ED /* Shime */,
 				63A5A9011A00F8BF0015A49B /* ZSYPopView */,
 				63541B491A00CA38001EC683 /* KPTimePicker */,
 				63541B2B19FFF17B001EC683 /* PMCalendar */,
@@ -1141,6 +1149,18 @@
 				635C3A5B19EE6B700090DE16 /* ProgressHUD.m */,
 			);
 			path = ProgressHUD;
+			sourceTree = "<group>";
+		};
+		636A985A1A0C98680014F9ED /* Shime */ = {
+			isa = PBXGroup;
+			children = (
+				636A98531A0C98620014F9ED /* FBShimmering.h */,
+				636A98541A0C98620014F9ED /* FBShimmeringLayer.h */,
+				636A98551A0C98620014F9ED /* FBShimmeringLayer.m */,
+				636A98561A0C98620014F9ED /* FBShimmeringView.h */,
+				636A98571A0C98620014F9ED /* FBShimmeringView.m */,
+			);
+			name = Shime;
 			sourceTree = "<group>";
 		};
 		637B40F719F0B22600A63BC6 /* AboutAcount */ = {
@@ -1858,6 +1878,7 @@
 				633E46E719AE28C8001D8F75 /* ADTransformTransition.m in Sources */,
 				63E78C0219D003B5002755E9 /* Village2DynamicTableViewCell.m in Sources */,
 				6397101519B451CB00793A3D /* POPAnimationExtras.mm in Sources */,
+				636A98591A0C98620014F9ED /* FBShimmeringView.m in Sources */,
 				63BCD38119FDDB1500092C05 /* CityListSelectViewController.m in Sources */,
 				633E457519AD7A7C001D8F75 /* AppDelegate.m in Sources */,
 				6397101D19B451CB00793A3D /* POPGeometry.mm in Sources */,
@@ -1939,6 +1960,7 @@
 				6397101C19B451CB00793A3D /* POPDecayAnimation.mm in Sources */,
 				633E469419AE270B001D8F75 /* MainPageViewController.m in Sources */,
 				AD4EB9A41A03653000795A81 /* ShoppingCartTableViewCell.m in Sources */,
+				636A98581A0C98620014F9ED /* FBShimmeringLayer.m in Sources */,
 				63A5A90F1A01EA350015A49B /* OrderFormViewController.m in Sources */,
 				AD4EB9A01A03341A00795A81 /* MyUbinTableViewCell.m in Sources */,
 				63A5A90A1A01E3700015A49B /* ShoppingCartViewController.m in Sources */,

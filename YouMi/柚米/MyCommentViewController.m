@@ -9,14 +9,22 @@
 #import "MyCommentViewController.h"
 #import "TPKeyboardAvoidingScrollView.h"
 #import "EDStarRating.h"
-#import "POP.h"
+#import "FBShimmering.h"
+#import "FBShimmeringView.h"
 
 
-@interface MyCommentViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate,EDStarRatingProtocol,UITextViewDelegate,UIActionSheetDelegate>
+@interface MyCommentViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate,EDStarRatingProtocol,UITextViewDelegate,UIActionSheetDelegate,UICollectionViewDelegateFlowLayout,UICollectionViewDataSource>
 {
     
     NSArray *commitTitleArray;
-    NSMutableArray *recodeImageButton;//记录点击图片获取按钮
+    
+    NSMutableArray *cellArray;
+    
+    NSMutableArray *placeHolderCellArray;//占位cell
+    NSMutableArray *recodeDeletedCell;//记录可能要删除的cell
+    
+    int stateFlag;//记录actionSheet的模式
+
 }
 @property (nonatomic,strong)TPKeyboardAvoidingScrollView *theLoadView;
 @property (nonatomic,strong)UIImageView *headerImageView;
@@ -28,6 +36,9 @@
 @property (nonatomic,strong)UILabel *environmentalCommentLabel;
 
 @property (nonatomic,strong)UITextView *commentInput;
+
+@property (nonatomic,strong)UICollectionView *collectionView;//图片按钮
+@property (nonatomic,strong)UIImageView *imageView;//cell上得图片
 @end
 
 @implementation MyCommentViewController
@@ -36,18 +47,20 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     //
-    
-    recodeImageButton =[NSMutableArray array];
-    //
+    cellArray = [NSMutableArray array];
+    placeHolderCellArray =[NSMutableArray array];
+    recodeDeletedCell =[NSMutableArray array];
+     //
     commitTitleArray = @[@"非常不满意",@"不满意",@"满意",@"比较满意",@"非常满意"];
     
     /*创建loadView*/
     self.theLoadView =[[TPKeyboardAvoidingScrollView alloc]initWithFrame:self.view.bounds];
     [self.view addSubview:self.theLoadView];
+    self.theLoadView.showsVerticalScrollIndicator = NO;
     
     if(self.view.bounds.size.height<=480){
     
-        self.theLoadView.contentSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height*2);
+        self.theLoadView.contentSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height*1.2);
         
     }
     self.theLoadView.scrollEnabled = YES;
@@ -225,46 +238,61 @@
     self.commentInput.layer.borderWidth = 1;
     self.commentInput.layer.borderColor = [UIColor colorWithWhite:0.85 alpha:1].CGColor;
     
+  
     
     /**
-     *  @Author frankfan, 14-11-06 15:11:11
+     *  @Author frankfan, 14-11-07 10:11:43
      *
-     *  创建拍照框
+     *  创建collectionView
      *
      *  @return nil
      */
     
-    UIButton *imageButton1 = [self create4BuutonWithFrame:CGRectMake(10, 355, 70, 70) andTag:4000];
-    [self.theLoadView addSubview:imageButton1];
-//    UIButton *imageButton2 = [self create4BuutonWithFrame:CGRectMake(87, 355, 70, 70) andTag:4001];
-//    imageButton2.alpha = YES;
-//    UIButton *imageButton3 = [self create4BuutonWithFrame:CGRectMake(165, 355, 70, 70) andTag:4002];
-//
-//    UIButton *imageButtin4 = [self create4BuutonWithFrame:CGRectMake(242, 355, 70, 70) andTag:4003];
+    UICollectionViewFlowLayout *flowlayout =[[UICollectionViewFlowLayout alloc]init];
+    flowlayout.itemSize = CGSizeMake(60, 60);
+    
+
+    
+    self.collectionView =[[UICollectionView alloc]initWithFrame:CGRectMake(10, 360, self.view.bounds.size.width-20, 80) collectionViewLayout:flowlayout];
+    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
+    [self.theLoadView addSubview:self.collectionView];
+    self.collectionView.backgroundColor =[UIColor whiteColor];
+    
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    self.collectionView.scrollEnabled = NO;
     
     
+    //staticView fix bug
+    /**
+     用来挡住多出的那个cellItem
+     */
+    UIView *staticView =[[UIView alloc]initWithFrame:CGRectMake(10, 430, 100, 20)];
+    staticView.backgroundColor =[UIColor whiteColor];
+    [self.theLoadView addSubview:staticView];
     
+    
+#pragma mark - 提交按钮
+    UIButton *commitButton =[UIButton buttonWithType:UIButtonTypeCustom];
+    commitButton.frame = CGRectMake(10, 450, self.view.bounds.size.width-20, 40);
+    commitButton.backgroundColor = baseRedColor;
+    [commitButton setTitle:@"提交评论" forState:UIControlStateNormal];
+    [commitButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    commitButton.layer.cornerRadius = 3;
+    commitButton.layer.masksToBounds = YES;
+    [commitButton addTarget:self action:@selector(commitButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.theLoadView addSubview:commitButton];
     
     // Do any additional setup after loading the view.
 }
 
-#pragma mark - 创建拍照按钮
-- (UIButton *)create4BuutonWithFrame:(CGRect)frame andTag:(NSInteger)tag{
+#pragma mark - 提交按钮触发
+- (void)commitButtonClicked:(UIButton *)sender{
 
-    UIButton *imageButton1 =[UIButton buttonWithType:UIButtonTypeCustom];
-    imageButton1.tag = tag;
-    imageButton1.backgroundColor = customGrayColor;
-    imageButton1.frame = frame;
-    imageButton1.layer.borderWidth = 1;
-    imageButton1.layer.borderColor = [UIColor colorWithWhite:0.85 alpha:1].CGColor;
-    [self.theLoadView addSubview:imageButton1];
-    [imageButton1 setTitle:@"图片上传" forState:UIControlStateNormal];
-    [imageButton1 setTitleColor:baseTextColor forState:UIControlStateNormal];
-    imageButton1.titleLabel.font =[UIFont systemFontOfSize:14];
-    [imageButton1 addTarget:self action:@selector(photoingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-   
-    return imageButton1;
+
+    NSLog(@"button clicked");
 }
+
 
 
 
@@ -277,17 +305,25 @@
  *
  *  @return nil
  */
-- (void)photoingButtonClicked:(UIButton *)sender{
+- (void)photoingButtonClicked:(UICollectionViewCell *)sender{
     
-    UIActionSheet *actionSheet =[[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"相册" otherButtonTitles:@"照相机", nil];
+    UIActionSheet *actionSheet = nil;
+    if([sender.backgroundView isKindOfClass:[UIImageView class]]){
+    
+        actionSheet =[[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"相册" otherButtonTitles:@"照相机",@"删除", nil];
+        [recodeDeletedCell addObject:sender];
+        stateFlag = 1;
+        
+    }else{
+    
+        actionSheet =[[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"相册" otherButtonTitles:@"照相机", nil];
+        stateFlag = 2;
+    
+    }
+    
     
     [actionSheet showInView:self.view];
-    
-    
-    NSNumber *buttonTag = [NSNumber numberWithInteger:sender.tag];
-    [recodeImageButton addObject:buttonTag];
-    
-
+   
 }
 
 
@@ -304,11 +340,8 @@
         imagePicker.delegate = self;
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         
-       
         
     }else if(buttonIndex==1){//照相机
-    
-
         
         UIImagePickerController *imagePicker2 =[[UIImagePickerController alloc]init];
         imagePicker2.delegate = self;
@@ -325,15 +358,45 @@
         
         }
         
-    
-    }else{
-
-        if([recodeImageButton count]){
-        
-            [recodeImageButton removeLastObject];
-        }
-        NSLog(@"取消");
     }
+    
+    if(stateFlag ==1){
+    
+        if(buttonIndex==2){
+        
+            
+            UICollectionViewCell *tempCell =[recodeDeletedCell lastObject];
+            NSIndexPath *indexPath =[self.collectionView indexPathForCell:tempCell];
+            
+           
+            
+            if([placeHolderCellArray count]){
+            
+                 [placeHolderCellArray removeLastObject];
+                [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
+            }
+            
+            
+            
+            
+            NSLog(@"删除");
+
+        }else if (buttonIndex ==3){
+        
+            NSLog(@"取消");
+        }
+    
+    }else if (stateFlag==2){
+    
+        if(buttonIndex==2){
+        
+            NSLog(@"取消");
+        }
+    
+    }
+    
+    
+ 
 
 }
 
@@ -351,48 +414,32 @@
     
     if(originImage){
     
-        if([recodeImageButton count]){
+        if([cellArray count]){
         
-            NSNumber *buttonTag = [recodeImageButton lastObject];
-            UIButton *button =(UIButton *)[self.view viewWithTag:[buttonTag integerValue]];
+            UICollectionViewCell *cell = [cellArray lastObject];
+            UIImageView *imageView = [[UIImageView alloc]initWithFrame:cell.bounds];
+            imageView.image = resizeImage;
+         
+            if([placeHolderCellArray count]<4){
             
-            
-            
-            if(![button currentImage]){
                 
-                
-                
-                
-            }
-            
-            
-            
-            
-            
-            
-            
-            [button setImage:resizeImage forState:UIControlStateNormal];
-            [button setTitle:nil forState:UIControlStateNormal];
-            
-        
 
-            
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                
-                POPSpringAnimation *springAnimation =[POPSpringAnimation animationWithPropertyNamed:kPOPLayerPositionX];
-                springAnimation.springSpeed = 15;
-                springAnimation.springBounciness = 16;
-                
-                
-            });
-            
+                if([cell.backgroundView isKindOfClass:[FBShimmeringView class]]){
+                    
+                    NSIndexPath *preIndexPath =[self.collectionView indexPathForCell:cell];
+                    NSIndexPath *nowIndexPath =[NSIndexPath indexPathForItem:preIndexPath.row+1 inSection:0];
+                    [placeHolderCellArray addObject:@""];
+                    [self.collectionView insertItemsAtIndexPaths:@[nowIndexPath]];
+                    
+                    
+                   
+                }
+                            
+            }
+            cell.backgroundView = imageView;
             
         }
         
-        
-        
-    
     
     }
     
@@ -400,7 +447,11 @@
         
         
     }];
+    
+    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];//fix bug 否则状态栏会恢复到黑色文字
+
 }
+
 
 
 #pragma mark -取消获取照片
@@ -412,12 +463,68 @@
         
         
     }];
-    
-    if([recodeImageButton count]){
-    
-        [recodeImageButton removeLastObject];
-    }
+    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];//fix bug 否则状态栏会恢复到黑色文字
+
+
 }
+
+#pragma mark - 处理collectionView代理
+/**
+ *  @Author frankfan, 14-11-07 10:11:11
+ *
+ *  处理collectionView
+ *
+ *  @return nil
+ */
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+
+    return [placeHolderCellArray count]+1;
+}
+
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+
+    UICollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    cell.backgroundColor =customGrayColor;
+    cell.layer.borderWidth = 1;
+    cell.layer.borderColor = [UIColor colorWithWhite:0.9 alpha:1].CGColor;
+    
+    
+    FBShimmeringView *shimeView =[[FBShimmeringView alloc]initWithFrame:cell.bounds];
+    cell.backgroundView = shimeView;
+    
+    
+    
+    UILabel *title = [[UILabel alloc]initWithFrame:cell.bounds];
+    title.font = [UIFont systemFontOfSize:14];
+    title.textColor = [UIColor blackColor];
+    title.textAlignment = NSTextAlignmentCenter;
+    title.text = @"上传照片";
+//     cell.backgroundView = title;
+    shimeView.contentView = title;
+    shimeView.shimmering = YES;
+    shimeView.shimmeringSpeed = 50;
+       
+    return cell;
+}
+
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+
+    
+    [self photoingButtonClicked:[collectionView cellForItemAtIndexPath:indexPath]];
+    
+    UICollectionViewCell *cell =[collectionView cellForItemAtIndexPath:indexPath];
+    [cellArray addObject:cell];
+    
+}
+
+
+
+
+
+
+
 
 
 
