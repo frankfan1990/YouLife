@@ -9,11 +9,14 @@
 #import "MyCommentViewController.h"
 #import "TPKeyboardAvoidingScrollView.h"
 #import "EDStarRating.h"
+#import "POP.h"
+
 
 @interface MyCommentViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate,EDStarRatingProtocol,UITextViewDelegate,UIActionSheetDelegate>
 {
     
     NSArray *commitTitleArray;
+    NSMutableArray *recodeImageButton;//记录点击图片获取按钮
 }
 @property (nonatomic,strong)TPKeyboardAvoidingScrollView *theLoadView;
 @property (nonatomic,strong)UIImageView *headerImageView;
@@ -32,7 +35,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    //
     
+    recodeImageButton =[NSMutableArray array];
     //
     commitTitleArray = @[@"非常不满意",@"不满意",@"满意",@"比较满意",@"非常满意"];
     
@@ -251,13 +256,13 @@
     imageButton1.backgroundColor = customGrayColor;
     imageButton1.frame = frame;
     imageButton1.layer.borderWidth = 1;
-    imageButton1.layer.borderColor = [UIColor colorWithWhite:0.75 alpha:1].CGColor;
+    imageButton1.layer.borderColor = [UIColor colorWithWhite:0.85 alpha:1].CGColor;
     [self.theLoadView addSubview:imageButton1];
     [imageButton1 setTitle:@"图片上传" forState:UIControlStateNormal];
     [imageButton1 setTitleColor:baseTextColor forState:UIControlStateNormal];
     imageButton1.titleLabel.font =[UIFont systemFontOfSize:14];
     [imageButton1 addTarget:self action:@selector(photoingButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    
+   
     return imageButton1;
 }
 
@@ -279,6 +284,9 @@
     [actionSheet showInView:self.view];
     
     
+    NSNumber *buttonTag = [NSNumber numberWithInteger:sender.tag];
+    [recodeImageButton addObject:buttonTag];
+    
 
 }
 
@@ -295,7 +303,8 @@
         }];
         imagePicker.delegate = self;
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-
+        
+       
         
     }else if(buttonIndex==1){//照相机
     
@@ -318,7 +327,11 @@
         
     
     }else{
-    
+
+        if([recodeImageButton count]){
+        
+            [recodeImageButton removeLastObject];
+        }
         NSLog(@"取消");
     }
 
@@ -326,13 +339,56 @@
 
 
 #pragma mark - imagePickerController代理
-
+/*获取照片*/
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
     
     UIImage *originImage = info[UIImagePickerControllerOriginalImage];
+    UIImage *resizeImage = [self scaleImage:originImage toSize:CGSizeMake(originImage.size.width*0.3, originImage.size.height*0.3)];
+    
+    //留作上传至服务器源数据
+    NSData *imagedata = UIImageJPEGRepresentation(resizeImage, 0.8);
+    
+    
     if(originImage){
     
+        if([recodeImageButton count]){
         
+            NSNumber *buttonTag = [recodeImageButton lastObject];
+            UIButton *button =(UIButton *)[self.view viewWithTag:[buttonTag integerValue]];
+            
+            
+            
+            if(![button currentImage]){
+                
+                
+                
+                
+            }
+            
+            
+            
+            
+            
+            
+            
+            [button setImage:resizeImage forState:UIControlStateNormal];
+            [button setTitle:nil forState:UIControlStateNormal];
+            
+        
+
+            
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                POPSpringAnimation *springAnimation =[POPSpringAnimation animationWithPropertyNamed:kPOPLayerPositionX];
+                springAnimation.springSpeed = 15;
+                springAnimation.springBounciness = 16;
+                
+                
+            });
+            
+            
+        }
         
         
         
@@ -340,14 +396,27 @@
     
     }
     
-    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        
+    }];
 }
 
+
+#pragma mark -取消获取照片
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
 
 
 
-
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        
+    }];
+    
+    if([recodeImageButton count]){
+    
+        [recodeImageButton removeLastObject];
+    }
 }
 
 
@@ -389,6 +458,20 @@
     }
     
  }
+
+
+
+
+
+#pragma mark 图片缩放-该方法用来减小图片尺寸优化性能
+-(UIImage *)scaleImage:(UIImage *)image toSize:(CGSize)newSize
+{
+    UIGraphicsBeginImageContext(newSize);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
 
 
 
