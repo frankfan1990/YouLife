@@ -13,6 +13,7 @@
  */
 
 
+#pragma mark - 全局常量
 /*全局常量*/
 #define kThreePartData_0 @"threePartData"//“三大模块”的缓存key
 #define kPassLeftData_0 @"leftData_0" //用作通知的key
@@ -81,7 +82,7 @@
 
 
 
-
+#pragma mark - 注册接口
 /*注册部分接口*/
 /*
     字段-----------意义--------------方法--post
@@ -109,7 +110,7 @@
 
 
 
-
+#pragma mark - 用户头像上传接口
 /*
  *图片上传，用于上传用户头像等
  */
@@ -120,6 +121,7 @@
 #define API_AploadImage @"http://120.24.71.104:8080/youmi/member/upload/avatar"
 
 
+#pragma mark - 登陆接口
 
 /*
  *登陆接口
@@ -132,6 +134,7 @@
 //发布模式
 #define API_UserLogin @"http://120.24.71.104:8080/youmi/member/login"
 
+#pragma mark - 修改昵称接口
 /*
  *修改昵称
  */
@@ -140,6 +143,7 @@
 //#define API_ModifyNickname @"http://88.88.3.109/youmi/member"
 #define api_nickName @"nickName"//会员昵称字段
 
+#pragma mark - 修改密码接口
 
 /*
  *修改密码
@@ -149,6 +153,7 @@
 
 
 
+#pragma mark - 获取验证码接口
 /*
  *获取验证码
  */
@@ -156,6 +161,7 @@
 #define API_GetSecurityCode @"http://120.24.71.104:8080/youmi/member/validator"
 
 
+#pragma mark - 修改绑定手机接口
 /*
  *修改手机绑定
  */
@@ -169,6 +175,7 @@
 #define isSuccess @"success"
 
 
+#pragma mark - 完善个人信息接口
 /*
  *用户个人信息完善
  */
@@ -180,6 +187,18 @@
 #define memberRegion @"regionName"//用户所在区
 #define memberAddress @"address"//用户详细住所
 #define memberZipCode @"postalCode"//用户所在地邮编
+
+
+#pragma mark - 关于优米接口
+/**
+ *  @Author frankfan, 14-11-10 16:11:13
+ *
+ *  关于优米
+ */
+//接口
+#define API_AboutYouMi @"http://88.88.3.102:8080/youmi/about"
+//发布模式
+//#define API_AboutYouMi @"http://120.24.71.104:8080/youmi/about"
 
 
 

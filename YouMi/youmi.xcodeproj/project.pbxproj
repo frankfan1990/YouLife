@@ -133,6 +133,13 @@
 		6360A98519AF1A9D0013809B /* DataAboutTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 6360A98419AF1A9D0013809B /* DataAboutTitle.m */; };
 		636A98581A0C98620014F9ED /* FBShimmeringLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 636A98551A0C98620014F9ED /* FBShimmeringLayer.m */; };
 		636A98591A0C98620014F9ED /* FBShimmeringView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636A98571A0C98620014F9ED /* FBShimmeringView.m */; };
+		636A99031A104B4C0014F9ED /* MyCommentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636A99021A104B4C0014F9ED /* MyCommentListViewController.m */; };
+		636A99061A106B130014F9ED /* MyAppointmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636A99051A106B130014F9ED /* MyAppointmentViewController.m */; };
+		636A990A1A106C420014F9ED /* 未处理.png in Resources */ = {isa = PBXBuildFile; fileRef = 636A99071A106C420014F9ED /* 未处理.png */; };
+		636A990B1A106C420014F9ED /* ok.png in Resources */ = {isa = PBXBuildFile; fileRef = 636A99081A106C420014F9ED /* ok.png */; };
+		636A990C1A106C420014F9ED /* x.png in Resources */ = {isa = PBXBuildFile; fileRef = 636A99091A106C420014F9ED /* x.png */; };
+		636A99101A108FD40014F9ED /* ModifyAppointmentPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636A990F1A108FD40014F9ED /* ModifyAppointmentPhoneViewController.m */; };
+		636A99141A10BAE30014F9ED /* AboutYouMiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636A99131A10BAE30014F9ED /* AboutYouMiViewController.m */; };
 		637B40F919F0B2EB00A63BC6 /* 编辑@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637B40F819F0B2EB00A63BC6 /* 编辑@2x.png */; };
 		637B40FC19F0B32500A63BC6 /* PersonalSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 637B40FB19F0B32500A63BC6 /* PersonalSettingsViewController.m */; };
 		63901DCD19C150A5006C4158 /* EducationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63901DCC19C150A5006C4158 /* EducationViewController.m */; };
@@ -509,6 +516,17 @@
 		636A98551A0C98620014F9ED /* FBShimmeringLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBShimmeringLayer.m; sourceTree = "<group>"; };
 		636A98561A0C98620014F9ED /* FBShimmeringView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmeringView.h; sourceTree = "<group>"; };
 		636A98571A0C98620014F9ED /* FBShimmeringView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBShimmeringView.m; sourceTree = "<group>"; };
+		636A99011A104B4C0014F9ED /* MyCommentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCommentListViewController.h; sourceTree = "<group>"; };
+		636A99021A104B4C0014F9ED /* MyCommentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCommentListViewController.m; sourceTree = "<group>"; };
+		636A99041A106B130014F9ED /* MyAppointmentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAppointmentViewController.h; sourceTree = "<group>"; };
+		636A99051A106B130014F9ED /* MyAppointmentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAppointmentViewController.m; sourceTree = "<group>"; };
+		636A99071A106C420014F9ED /* 未处理.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "未处理.png"; sourceTree = "<group>"; };
+		636A99081A106C420014F9ED /* ok.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ok.png; sourceTree = "<group>"; };
+		636A99091A106C420014F9ED /* x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = x.png; sourceTree = "<group>"; };
+		636A990E1A108FD40014F9ED /* ModifyAppointmentPhoneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifyAppointmentPhoneViewController.h; sourceTree = "<group>"; };
+		636A990F1A108FD40014F9ED /* ModifyAppointmentPhoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModifyAppointmentPhoneViewController.m; sourceTree = "<group>"; };
+		636A99121A10BAE20014F9ED /* AboutYouMiViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutYouMiViewController.h; sourceTree = "<group>"; };
+		636A99131A10BAE30014F9ED /* AboutYouMiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutYouMiViewController.m; sourceTree = "<group>"; };
 		637B40F819F0B2EB00A63BC6 /* 编辑@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "编辑@2x.png"; sourceTree = "<group>"; };
 		637B40FA19F0B32500A63BC6 /* PersonalSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonalSettingsViewController.h; sourceTree = "<group>"; };
 		637B40FB19F0B32500A63BC6 /* PersonalSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalSettingsViewController.m; sourceTree = "<group>"; };
@@ -835,7 +853,6 @@
 				63B7AA0819AED24B00AAE30A /* Model */,
 				63B7AA3819AEFFCE00AAE30A /* View */,
 				633E46A119AE287E001D8F75 /* Controller */,
-				63970FD619B415F700793A3D /* images */,
 				633E46EE19AE292A001D8F75 /* Vendors */,
 				633E456B19AD7A7C001D8F75 /* Supporting Files */,
 			);
@@ -903,9 +920,9 @@
 				6356261F19C7E5E60011B926 /* MallViewController.h */,
 				6356262019C7E5E60011B926 /* MallViewController.m */,
 				63A5A9071A01E2260015A49B /* AboutMine */,
-				633E469E19AE2876001D8F75 /* AboutMoreViewController.h */,
-				633E469F19AE2876001D8F75 /* AboutMoreViewController.m */,
+				636A99111A10B4920014F9ED /* AboutMore */,
 				633E457619AD7A7C001D8F75 /* Images.xcassets */,
+				63970FD619B415F700793A3D /* images */,
 				635C3A5619EE6AED0090DE16 /* Utils */,
 			);
 			name = Controller;
@@ -1163,6 +1180,39 @@
 			name = Shime;
 			sourceTree = "<group>";
 		};
+		636A99001A104B2A0014F9ED /* MyComment */ = {
+			isa = PBXGroup;
+			children = (
+				636A99011A104B4C0014F9ED /* MyCommentListViewController.h */,
+				636A99021A104B4C0014F9ED /* MyCommentListViewController.m */,
+				6325D8D81A021514001DA5BD /* MyCommentViewController.h */,
+				6325D8D91A021514001DA5BD /* MyCommentViewController.m */,
+			);
+			name = MyComment;
+			sourceTree = "<group>";
+		};
+		636A990D1A108FB20014F9ED /* MyAppointment */ = {
+			isa = PBXGroup;
+			children = (
+				636A99041A106B130014F9ED /* MyAppointmentViewController.h */,
+				636A99051A106B130014F9ED /* MyAppointmentViewController.m */,
+				636A990E1A108FD40014F9ED /* ModifyAppointmentPhoneViewController.h */,
+				636A990F1A108FD40014F9ED /* ModifyAppointmentPhoneViewController.m */,
+			);
+			name = MyAppointment;
+			sourceTree = "<group>";
+		};
+		636A99111A10B4920014F9ED /* AboutMore */ = {
+			isa = PBXGroup;
+			children = (
+				633E469E19AE2876001D8F75 /* AboutMoreViewController.h */,
+				633E469F19AE2876001D8F75 /* AboutMoreViewController.m */,
+				636A99121A10BAE20014F9ED /* AboutYouMiViewController.h */,
+				636A99131A10BAE30014F9ED /* AboutYouMiViewController.m */,
+			);
+			name = AboutMore;
+			sourceTree = "<group>";
+		};
 		637B40F719F0B22600A63BC6 /* AboutAcount */ = {
 			isa = PBXGroup;
 			children = (
@@ -1200,6 +1250,9 @@
 		63970FD619B415F700793A3D /* images */ = {
 			isa = PBXGroup;
 			children = (
+				636A99071A106C420014F9ED /* 未处理.png */,
+				636A99081A106C420014F9ED /* ok.png */,
+				636A99091A106C420014F9ED /* x.png */,
 				63BB99C81A09BD4E00E22E84 /* 我的系列白色图标.png */,
 				6341300E1A07E33B00ED5273 /* cancel@2x.png */,
 				6341300C1A07E04200ED5273 /* 红色地标.png */,
@@ -1402,8 +1455,8 @@
 				6325D8D61A020F73001DA5BD /* MyUBiViewController.m */,
 				63A5A9101A02068D0015A49B /* MyAttentionViewController.h */,
 				63A5A9111A02068D0015A49B /* MyAttentionViewController.m */,
-				6325D8D81A021514001DA5BD /* MyCommentViewController.h */,
-				6325D8D91A021514001DA5BD /* MyCommentViewController.m */,
+				636A99001A104B2A0014F9ED /* MyComment */,
+				636A990D1A108FB20014F9ED /* MyAppointment */,
 			);
 			name = AboutMine;
 			sourceTree = "<group>";
@@ -1696,9 +1749,11 @@
 				63541B621A00CA38001EC683 /* round_backarrow_big-high.png in Resources */,
 				63BB99C91A09BD4E00E22E84 /* 我的系列白色图标.png in Resources */,
 				63EE69AD19B43EF000CC7540 /* 教育.png in Resources */,
+				636A990C1A106C420014F9ED /* x.png in Resources */,
 				6356262D19C82CCF0011B926 /* star-highlighted-template@2x.png in Resources */,
 				63541B631A00CA38001EC683 /* round_backarrow_big-high@2x.png in Resources */,
 				63541B681A00CA38001EC683 /* schedule_image_sun-high.png in Resources */,
+				636A990B1A106C420014F9ED /* ok.png in Resources */,
 				6317A57219F6A1F7009E332F /* 确定.png in Resources */,
 				6356262E19C82CCF0011B926 /* star-template.png in Resources */,
 				63EE69AC19B43EF000CC7540 /* 健身.png in Resources */,
@@ -1722,6 +1777,7 @@
 				6397101019B451CB00793A3D /* InfoPlist.strings in Resources */,
 				63970FC119B415E200793A3D /* 更多未选中@2x.png in Resources */,
 				63970FD019B415E200793A3D /* 搜索icon@2x.png in Resources */,
+				636A990A1A106C420014F9ED /* 未处理.png in Resources */,
 				6356262319C816110011B926 /* 竖标签@2x.png in Resources */,
 				63EE69B119B43EF000CC7540 /* 社区.png in Resources */,
 				6397103519B45A6800793A3D /* MJRefresh.bundle in Resources */,
@@ -1889,6 +1945,7 @@
 				633E46DB19AE28C8001D8F75 /* ADFlipTransition.m in Sources */,
 				63B915AF19B99D55006F09EC /* NSData+ImageContentType.m in Sources */,
 				6360A98519AF1A9D0013809B /* DataAboutTitle.m in Sources */,
+				636A99031A104B4C0014F9ED /* MyCommentListViewController.m in Sources */,
 				633E46E019AE28C8001D8F75 /* ADNavigationControllerDelegate.m in Sources */,
 				6397103719B45A6800793A3D /* MJRefreshConst.m in Sources */,
 				63541B1819FE3DFC001EC683 /* MMLocationManager.m in Sources */,
@@ -1969,9 +2026,11 @@
 				63541B1F19FF4B3D001EC683 /* BeautyViewController.m in Sources */,
 				63B915B319B99D55006F09EC /* SDWebImageDownloader.m in Sources */,
 				633E46D819AE28C8001D8F75 /* ADCubeTransition.m in Sources */,
+				636A99101A108FD40014F9ED /* ModifyAppointmentPhoneViewController.m in Sources */,
 				63541B0F19FE2103001EC683 /* PinyinHelper.m in Sources */,
 				63B915B719B99D55006F09EC /* UIButton+WebCache.m in Sources */,
 				63B9158B19B992CE006F09EC /* NSTimer+Addition.m in Sources */,
+				636A99061A106B130014F9ED /* MyAppointmentViewController.m in Sources */,
 				6356262719C82C4D0011B926 /* EDStarRating.m in Sources */,
 				6397102219B451CB00793A3D /* POPVector.mm in Sources */,
 				63E78BFF19D001D5002755E9 /* VillageDynamicTableViewCell.m in Sources */,
@@ -1980,6 +2039,7 @@
 				6356263819C83CAB0011B926 /* BusinessInfoTableViewCell.m in Sources */,
 				63541B0B19FE2103001EC683 /* HanyuPinyinOutputFormat.m in Sources */,
 				633E46EB19AE28C8001D8F75 /* ADTransitioningViewController.m in Sources */,
+				636A99141A10BAE30014F9ED /* AboutYouMiViewController.m in Sources */,
 				63A09C8119C7E2DB00655A92 /* ItemDetailController.m in Sources */,
 				63541B0C19FE2103001EC683 /* NSString+PinYin4Cocoa.m in Sources */,
 				63BCD30419FA8BA200092C05 /* Userinfo.m in Sources */,

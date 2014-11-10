@@ -7,6 +7,7 @@
 //
 
 #import "AboutMoreViewController.h"
+#import "AboutYouMiViewController.h"
 
 @interface AboutMoreViewController ()
 {
@@ -75,7 +76,7 @@
     
     /**/
     itemNames1 = @[@"仅wifi下显示图片",@"分享设置",@"新手帮助"];
-    itemNames2 = @[@"意见反馈",@"版本更新",@"关于优生活",@"告诉朋友"];
+    itemNames2 = @[@"意见反馈",@"版本更新",@"关于优米",@"告诉朋友"];
     itemNames3 = @[@"评分",@"清空缓存"];
     
     ///
@@ -196,6 +197,27 @@
 
 }
 
+
+#pragma mark - cell被选中触发
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if(indexPath.section==1){
+    
+        if(indexPath.row==2){
+            
+            AboutYouMiViewController *aboutYouMi =[AboutYouMiViewController new];
+            aboutYouMi.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:aboutYouMi animated:YES];
+            
+        }
+        
+    
+    }
+    
+
+
+
+}
 
 
 

@@ -23,6 +23,8 @@
 #import "MyAttentionViewController.h"
 #import "MyUBiViewController.h"
 #import "MyCommentViewController.h"
+#import "MyCommentListViewController.h"
+#import "MyAppointmentViewController.h"
 
 
 @interface AboutMineViewController ()<UIAlertViewDelegate>
@@ -119,6 +121,7 @@
     self.tableView.backgroundColor =customGrayColor;
     self.tableView.separatorStyle = NO;
     [self.view addSubview:self.tableView];
+    self.tableView.showsVerticalScrollIndicator = NO;
     
     
     /**/
@@ -308,9 +311,16 @@
     
     }else if (indexPath.row==5){
     
-        MyCommentViewController *mycommitView =[MyCommentViewController new];
+        MyCommentListViewController *mycommitView =[MyCommentListViewController new];
         mycommitView.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:mycommitView animated:YES];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    }else if (indexPath.row==6){
+    
+        MyAppointmentViewController *myAppoint =[MyAppointmentViewController new];
+        myAppoint.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:myAppoint animated:YES];
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     }

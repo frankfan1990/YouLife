@@ -39,6 +39,8 @@
 
 @property (nonatomic,strong)UICollectionView *collectionView;//图片按钮
 @property (nonatomic,strong)UIImageView *imageView;//cell上得图片
+
+@property (nonatomic,strong)UILabel *headerTitleLabel;//显示店铺名
 @end
 
 @implementation MyCommentViewController
@@ -82,15 +84,7 @@
     self.navigationItem.leftBarButtonItem = barButtonItem;
     
 
-    NSArray *itemname = @[@"已点评",@"未点评"];
-    UISegmentedControl *segements =[[UISegmentedControl alloc]initWithItems:itemname];
-    segements.frame = CGRectMake(10, 5, self.view.bounds.size.width-20, 40);
-    segements.tintColor = baseRedColor;
-    segements.backgroundColor = [UIColor whiteColor];
-    segements.selectedSegmentIndex = 0;
-    [self.theLoadView addSubview:segements];
-    segements.layer.masksToBounds = YES;
-    segements.layer.cornerRadius = 3;
+ 
     
     
     /**
@@ -282,6 +276,31 @@
     commitButton.layer.masksToBounds = YES;
     [commitButton addTarget:self action:@selector(commitButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.theLoadView addSubview:commitButton];
+    
+    
+    
+    
+    /**
+     *  @Author frankfan, 14-11-10 10:11:20
+     *
+     *  显示店铺名
+     *
+     *  @return nil
+     */
+    
+    self.headerTitleLabel =[[UILabel alloc]initWithFrame:CGRectMake(10, 5, self.view.bounds.size.width-20, 35)];
+    self.headerTitleLabel.backgroundColor = baseRedColor;
+    self.headerTitleLabel.font = [UIFont systemFontOfSize:16];
+    self.headerTitleLabel.textColor = [UIColor whiteColor];
+    self.headerTitleLabel.layer.cornerRadius = 3;
+    self.headerTitleLabel.layer.masksToBounds = YES;
+    self.headerTitleLabel.textAlignment = NSTextAlignmentCenter;
+    [self.theLoadView addSubview:self.headerTitleLabel];
+    self.headerTitleLabel.adjustsFontSizeToFitWidth = YES;
+    
+#warning fake data
+    self.headerTitleLabel.text = @"这里是标题";
+    
     
     // Do any additional setup after loading the view.
 }
