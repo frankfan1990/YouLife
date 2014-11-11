@@ -12,7 +12,10 @@
 #import <TMCache.h>
 
 @interface AboutYouMiViewController ()
+{
 
+}
+@property (nonatomic,strong)UITextView *textView;
 @end
 
 @implementation AboutYouMiViewController
@@ -37,9 +40,44 @@
     
     UIBarButtonItem *barButtonItem =[[UIBarButtonItem alloc]initWithCustomView:leftbarButton];
     self.navigationItem.leftBarButtonItem = barButtonItem;
-
-    //
     
+    //创建textView
+    self.textView =[[UITextView alloc]initWithFrame:self.view.bounds];
+    self.textView.textColor = baseTextColor;
+    self.textView.font =[UIFont systemFontOfSize:14];
+    [self.view addSubview:self.textView];
+    
+    
+
+    //如果本地没有‘关于优米’的简介，那么就从网络上请求数据，否则，从本地取
+    if(![[[TMCache sharedCache]objectForKey:@"kAboutYoumi"] length]){
+    
+        AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
+        
+        [ProgressHUD show:nil];
+        [manager GET:API_AboutYouMi parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            [ProgressHUD dismiss];
+#warning 在这里进行持久化
+            NSLog(@"responseObject");
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            [ProgressHUD dismiss];
+            NSLog(@"error:%@",[error localizedDescription]);
+            
+        }];
+    
+    }else{
+    
+        
+#warning 在这里进行数据处理
+    
+    
+    
+    
+    }
     
     
     
@@ -50,6 +88,18 @@
     
     // Do any additional setup after loading the view.
 }
+
+
+- (void)viewWillDisappear:(BOOL)animated{
+
+    [super viewWillDisappear:animated];
+    if([ProgressHUD shared]){
+        
+        [ProgressHUD dismiss];
+    
+    }
+}
+
 
 
 //回退

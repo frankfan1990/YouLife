@@ -14,6 +14,7 @@
 #import "PdownMenuViewController.h"
 #import <TMCache.h>
 #import "POP/POP.h"//用来处理“三大模块”的标示旋转动画
+#import "ShopDetailViewController.h"
 
 
 @interface FoodDetailViewController ()
@@ -370,9 +371,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 
     
-    ItemDetailController *foodShop =[[ItemDetailController alloc]init];
-    
-    [self.navigationController pushViewController:foodShop animated:YES];
+//    ItemDetailController *foodShop =[[ItemDetailController alloc]init];
+    ShopDetailViewController *shopDetail =[ShopDetailViewController new];
+    [self.navigationController pushViewController:shopDetail animated:YES];
 }
 
 

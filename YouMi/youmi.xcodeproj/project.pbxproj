@@ -140,6 +140,7 @@
 		636A990C1A106C420014F9ED /* x.png in Resources */ = {isa = PBXBuildFile; fileRef = 636A99091A106C420014F9ED /* x.png */; };
 		636A99101A108FD40014F9ED /* ModifyAppointmentPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636A990F1A108FD40014F9ED /* ModifyAppointmentPhoneViewController.m */; };
 		636A99141A10BAE30014F9ED /* AboutYouMiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636A99131A10BAE30014F9ED /* AboutYouMiViewController.m */; };
+		636A99171A1104A50014F9ED /* ShopDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636A99161A1104A50014F9ED /* ShopDetailViewController.m */; };
 		637B40F919F0B2EB00A63BC6 /* 编辑@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637B40F819F0B2EB00A63BC6 /* 编辑@2x.png */; };
 		637B40FC19F0B32500A63BC6 /* PersonalSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 637B40FB19F0B32500A63BC6 /* PersonalSettingsViewController.m */; };
 		63901DCD19C150A5006C4158 /* EducationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63901DCC19C150A5006C4158 /* EducationViewController.m */; };
@@ -247,6 +248,7 @@
 		63BCD38419FDE1F200092C05 /* citys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 63BCD38219FDE1F200092C05 /* citys.plist */; };
 		63BCD38519FDE1F200092C05 /* citys.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 63BCD38319FDE1F200092C05 /* citys.sqlite */; };
 		63BCD38719FDF5F300092C05 /* 热门城市@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BCD38619FDF5F300092C05 /* 热门城市@2x.png */; };
+		63C5017B1A12673600B5BCF5 /* ActivityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C5017A1A12673600B5BCF5 /* ActivityDetailViewController.m */; };
 		63C60BFC19C6F06E002FEBB9 /* 分享@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C60BFB19C6F06E002FEBB9 /* 分享@2x.png */; };
 		63C60BFE19C6F082002FEBB9 /* 收藏@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C60BFD19C6F082002FEBB9 /* 收藏@2x.png */; };
 		63CE1FC51A09FF2100D4831F /* 完成@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63CE1FC41A09FF2100D4831F /* 完成@2x.png */; };
@@ -527,6 +529,8 @@
 		636A990F1A108FD40014F9ED /* ModifyAppointmentPhoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModifyAppointmentPhoneViewController.m; sourceTree = "<group>"; };
 		636A99121A10BAE20014F9ED /* AboutYouMiViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutYouMiViewController.h; sourceTree = "<group>"; };
 		636A99131A10BAE30014F9ED /* AboutYouMiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutYouMiViewController.m; sourceTree = "<group>"; };
+		636A99151A1104A50014F9ED /* ShopDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopDetailViewController.h; sourceTree = "<group>"; };
+		636A99161A1104A50014F9ED /* ShopDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopDetailViewController.m; sourceTree = "<group>"; };
 		637B40F819F0B2EB00A63BC6 /* 编辑@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "编辑@2x.png"; sourceTree = "<group>"; };
 		637B40FA19F0B32500A63BC6 /* PersonalSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonalSettingsViewController.h; sourceTree = "<group>"; };
 		637B40FB19F0B32500A63BC6 /* PersonalSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalSettingsViewController.m; sourceTree = "<group>"; };
@@ -716,6 +720,8 @@
 		63BCD38219FDE1F200092C05 /* citys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = citys.plist; sourceTree = "<group>"; };
 		63BCD38319FDE1F200092C05 /* citys.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = citys.sqlite; sourceTree = "<group>"; };
 		63BCD38619FDF5F300092C05 /* 热门城市@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "热门城市@2x.png"; sourceTree = "<group>"; };
+		63C501791A12673600B5BCF5 /* ActivityDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityDetailViewController.h; sourceTree = "<group>"; };
+		63C5017A1A12673600B5BCF5 /* ActivityDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityDetailViewController.m; sourceTree = "<group>"; };
 		63C60BFB19C6F06E002FEBB9 /* 分享@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "分享@2x.png"; sourceTree = "<group>"; };
 		63C60BFD19C6F082002FEBB9 /* 收藏@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "收藏@2x.png"; sourceTree = "<group>"; };
 		63CE1FC41A09FF2100D4831F /* 完成@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "完成@2x.png"; sourceTree = "<group>"; };
@@ -1619,10 +1625,14 @@
 		63F780C019BFDE2A00DF7585 /* PublicSubViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				636A99151A1104A50014F9ED /* ShopDetailViewController.h */,
+				636A99161A1104A50014F9ED /* ShopDetailViewController.m */,
 				63541B2419FF9A32001EC683 /* AppointmentDetailViewController.h */,
 				63541B2519FF9A32001EC683 /* AppointmentDetailViewController.m */,
 				63A5A9041A0105120015A49B /* BusinessInformationViewController.h */,
 				63A5A9051A0105120015A49B /* BusinessInformationViewController.m */,
+				63C501791A12673600B5BCF5 /* ActivityDetailViewController.h */,
+				63C5017A1A12673600B5BCF5 /* ActivityDetailViewController.m */,
 				637B40F719F0B22600A63BC6 /* AboutAcount */,
 				63541B2319FF9885001EC683 /* Food */,
 				63F780CC19C050C200DF7585 /* EntertainmentDetailViewController.h */,
@@ -1913,6 +1923,7 @@
 				63541B3F19FFF17B001EC683 /* PMCalendarBackgroundView.m in Sources */,
 				6397103C19B45A6800793A3D /* UIView+Extension.m in Sources */,
 				63901E0519C19DC7006C4158 /* BusinessCircleViewController.m in Sources */,
+				63C5017B1A12673600B5BCF5 /* ActivityDetailViewController.m in Sources */,
 				63B7AA3719AEFF9F00AAE30A /* MainPageCustomTableViewCell.m in Sources */,
 				6397103A19B45A6800793A3D /* UIScrollView+Extension.m in Sources */,
 				6397101919B451CB00793A3D /* POPBasicAnimation.mm in Sources */,
@@ -2032,6 +2043,7 @@
 				63B9158B19B992CE006F09EC /* NSTimer+Addition.m in Sources */,
 				636A99061A106B130014F9ED /* MyAppointmentViewController.m in Sources */,
 				6356262719C82C4D0011B926 /* EDStarRating.m in Sources */,
+				636A99171A1104A50014F9ED /* ShopDetailViewController.m in Sources */,
 				6397102219B451CB00793A3D /* POPVector.mm in Sources */,
 				63E78BFF19D001D5002755E9 /* VillageDynamicTableViewCell.m in Sources */,
 				63970F7119B0609600793A3D /* CCSegmentedControl.m in Sources */,

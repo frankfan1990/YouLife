@@ -556,6 +556,8 @@
         textView.text = nil;
         
     }
+    
+    self.theLoadView.scrollEnabled = NO;
 
 }
 

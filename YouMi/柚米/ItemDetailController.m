@@ -156,6 +156,7 @@
     /*创建轮播效果控件*/
     
     self.mainScrillerView =[[CycleScrollView alloc]initWithFrame:CGRectMake(0, 64, self.view.bounds.size.width, 180) animationDuration:3];
+    self.mainScrillerView.userInteractionEnabled = YES;
     __weak ItemDetailController *_self = self;
     
 
@@ -200,7 +201,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
-    
+    self.tableView.userInteractionEnabled = YES;
     
     
     
