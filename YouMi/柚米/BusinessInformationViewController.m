@@ -33,7 +33,7 @@
     
 #warning fake data
     //fake data
-    restaurantFeatures = @"餐征特征特征特征特餐馆特征特征特征特征特征特餐馆特征特征特征特征特征特餐馆特征特征特征特征特征特征特征特征特征特征特征特征特征";
+    restaurantFeatures = @"餐征特征特征特征特特征特征特征特征特征特征特征特征特征特征特征";
     busInformation = @"公交信息信息信信息信息信息信";
     shopInfo = @[@"营业时间",@"",@"",@"餐厅特色",restaurantFeatures,@"公交信息",busInformation];
     
@@ -152,8 +152,6 @@
             
         }
         
-        
-        
         /**
          处理label的多行显示
          */
@@ -167,7 +165,7 @@
             labelHeight = [self caculateTheTextHeight:shopInfo[4] andFontSize:14];
         }
         
-        detailInfoLabel =[[UILabel alloc]initWithFrame:CGRectMake(0, 0, cell2.bounds.size.width-4, labelHeight)];
+        detailInfoLabel =[[UILabel alloc]initWithFrame:CGRectMake(10, 5, cell2.bounds.size.width-30, labelHeight)];
         detailInfoLabel.font =[UIFont systemFontOfSize:14];
         detailInfoLabel.textColor = baseTextColor;
         detailInfoLabel.numberOfLines = 0;
@@ -212,7 +210,7 @@
             CGFloat height = MAX([self caculateTheTextHeight:text andFontSize:14], 44.0f);
             
             
-            return height + 1;
+            return height + 10;
 
         
         }

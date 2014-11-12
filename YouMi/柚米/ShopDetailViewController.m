@@ -13,6 +13,9 @@
 #import "BusinessInformationViewController.h"
 #import "AppointmentDetailViewController.h"
 #import "ActivityDetailViewController.h"
+#import "BusinessMenInfoViewController.h"
+#import "UserCommentTableViewCell.h"
+#import "UserCommentListViewController.h"
 
 
 @interface ShopDetailViewController ()<UITableViewDelegate,UITableViewDataSource,EDStarRatingProtocol>
@@ -27,6 +30,8 @@
     
     CycleScrollView *cyclePlayImage;//轮播控件
     EDStarRating *star1;//星级评分控件
+    
+    NSString *userComment;//用户评论
 }
 
 @property (nonatomic,strong)UITableView *tableView;//骨架
@@ -67,7 +72,7 @@
     
     string1 = @"查看更多优惠";
     string2 = @"查看更多优惠";
-    
+    userComment = @"这是一条用户评论，我必须要说的是，这家店真的很烂！我必须要说的是，这家店真的很烂！我必须要说的是，这家店真的很烂！！！真是真是真的烂擦擦擦擦擦！！！！！";
     self.cycleImageArrayURLs =[NSMutableArray array];
     self.iamgeViewArrays =[NSMutableArray array];
     
@@ -309,7 +314,7 @@
             return 1;
         }else{
         
-            return 0;
+            return 1;
         }
         
     }
@@ -368,10 +373,33 @@
     itemTitle.textColor = baseTextColor;
     itemTitle.text = itemTitles[section];
 
+    if(section==4){
+    
+        UIButton *button =[UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = CGRectMake(255, 0, 45, 30);
+        [button setTitleColor:[UIColor colorWithWhite:0.55 alpha:1] forState:UIControlStateNormal];
+        button.titleLabel.font =[UIFont systemFontOfSize:14];
+        //在这里显示一共有多少条评论
+        [button setTitle:[NSString stringWithFormat:@"%@条",@111] forState:UIControlStateNormal];
+        [backView addSubview:button];
+        [button addTarget:self action:@selector(commentButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+        
+    }
+    
     return backView;
 
-
 }
+
+
+#pragma mark - 跳转到评论
+- (void)commentButtonClicked{
+
+    UserCommentListViewController *userCommentList =[UserCommentListViewController new];
+    userCommentList.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:userCommentList animated:YES];
+}
+
+
 
 #pragma mark - footerView定义
 /**
@@ -385,23 +413,41 @@
  */
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
 
-    UIButton *button =[UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake(0, 0, self.view.bounds.size.width-20, 30);
-    button.backgroundColor = [UIColor whiteColor];
-    [button setTitleColor:baseTextColor forState:UIControlStateNormal];
-    button.titleLabel.font =[UIFont systemFontOfSize:14];
     
     if(section==2){
-    
+        UIButton *button =[UIButton buttonWithType:UIButtonTypeCustom];
+        button.tag = 4002;
+        button.frame = CGRectMake(0, 0, self.view.bounds.size.width-20, 30);
+        button.backgroundColor = [UIColor whiteColor];
+        [button setTitleColor:baseTextColor forState:UIControlStateNormal];
+        button.titleLabel.font =[UIFont systemFontOfSize:14];
+        
+        UIView *line1 =[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 1)];
+        line1.backgroundColor = customGrayColor;
+        [button addSubview:line1];
+        
         [button setTitle:string1 forState:UIControlStateNormal];
+        return button;
     }
     
     if(section==3){
-    
+        UIButton *button =[UIButton buttonWithType:UIButtonTypeCustom];
+        button.tag = 4003;
+        button.frame = CGRectMake(0, 0, self.view.bounds.size.width-20, 30);
+        button.backgroundColor = [UIColor whiteColor];
+        [button setTitleColor:baseTextColor forState:UIControlStateNormal];
+        button.titleLabel.font =[UIFont systemFontOfSize:14];
+        
+        UIView *line1 =[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 1)];
+        line1.backgroundColor = customGrayColor;
+        [button addSubview:line1];
+
+        
         [button setTitle:string2 forState:UIControlStateNormal];
+        return button;
     }
 
-    return button;
+    return nil;
 }
 
 
@@ -414,7 +460,7 @@
 
     if(section==2 || section==3){
     
-        return 30;
+        return 35;
     }
     
     return 0;
@@ -455,9 +501,17 @@
         return 70;
     }
     
-    if(indexPath.section==4){
-    
-        return 85;
+    if(indexPath.section==4){//用户评论
+
+        if([userComment length]){
+            
+            CGFloat commentContentHeight = [self caculateTheTextHeight:userComment andFontSize:14];
+            return commentContentHeight+35;
+        }else{
+        
+            return 10+35;
+        }
+
     }
     
     return 0;
@@ -500,6 +554,13 @@
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     }
+    
+    if(indexPath.section==2){//商家资讯
+    
+        BusinessMenInfoViewController *businessMenInfo =[BusinessMenInfoViewController new];
+        businessMenInfo.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:businessMenInfo animated:YES];
+    }
 
 
 }
@@ -538,11 +599,12 @@
     UITableViewCell *cell3 = nil;
     
     //section==4
-    UITableViewCell *cell4 = nil;
+//    UITableViewCell *cell4 = nil;
+    UserCommentTableViewCell *cell4 = nil;
     
     static NSString *cellName2 = @"cellName2";
     static NSString *cellName3 = @"cellName3";
-    static NSString *cellName4 = @"cellName4";
+//    static NSString *cellName4 = @"cellName4";
     
     if(indexPath.section==0){//第一段
         
@@ -765,11 +827,43 @@
         return cell3;
     }
     
+    if(indexPath.section==4){//第四段
+    
+        cell4 = [UserCommentTableViewCell cellWithTableView:tableView];
+        cell4.selectionStyle = NO;
+        
+        cell4.commentContent.text = userComment;
+       
+        CGFloat contentHeight;
+        if([cell4.commentContent.text length]){
+            
+            contentHeight = [self caculateTheTextHeight:cell4.commentContent.text andFontSize:14];
+        }else{
+            
+            contentHeight = 0;
+        }
+        
+        /**
+         *  @Author frankfan, 14-11-12 10:11:09
+         *  这里是必须要设置的！
+         */
+        cell4.commentContent.frame = CGRectMake(10, 36, self.view.bounds.size.width-40, contentHeight);
+        
+        //来自某用户评论
+        cell4.theCommenter.text = @"frankfan";
+        //评论时间
+        cell4.theDay.text = @"2014.12.28";
+        //评论时间time
+        cell4.theTime.text = @"12:22";
+        
+        return cell4;
+    
+    }
     
     
-    cell1_0 =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-    cell1_0.backgroundColor = [UIColor whiteColor];
-    return cell1_0;
+    
+    
+       return nil;
     
 }
 
@@ -829,6 +923,37 @@
 
 }
 
+
+
+
+/**
+ *  @Author frankfan, 14-11-12 10:11:28
+ *
+ *  动态计算给定文字的高度
+ *
+ *  @param string   输入文字
+ *  @param fontSize 文字font大小
+ *
+ *  @return 所占高度
+ */
+- (CGFloat)caculateTheTextHeight:(NSString *)string andFontSize:(int)fontSize{
+    
+    /*非彻底性封装,这里给定固定的宽度,后面的被减掉的阀值与高度成正比*/
+    CGSize constraint = CGSizeMake(self.view.bounds.size.width-60, CGFLOAT_MAX);
+    
+    NSDictionary * attributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:fontSize] forKey:NSFontAttributeName];
+    NSAttributedString *attributedText =
+    [[NSAttributedString alloc]
+     initWithString:string
+     attributes:attributes];
+    CGRect rect = [attributedText boundingRectWithSize:constraint
+                                               options:NSStringDrawingUsesLineFragmentOrigin
+                                               context:nil];
+    CGSize size = rect.size;
+    
+    
+    return size.height;
+}
 
 
 
