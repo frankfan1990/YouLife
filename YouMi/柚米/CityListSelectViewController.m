@@ -101,9 +101,9 @@
 
     if(![self.currentCity length]){
     
-        if([[NSUserDefaults standardUserDefaults]objectForKey:kUserLocationCity]){
+        if([[NSUserDefaults standardUserDefaults]objectForKey:@"gpsLocation"]){
             
-            NSString *city = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocationCity];
+            NSString *city = [[NSUserDefaults standardUserDefaults]objectForKey:@"gpsLocation"];
             
             [self.cityLists insertObject:@[city] atIndex:0];
 
@@ -282,7 +282,7 @@
         
         [self.navigationController popViewControllerAnimated:YES];
         
-        
+        [[NSUserDefaults standardUserDefaults]setObject:city forKey:kUserLocationCity];
         NSLog(@"city:%@",city);
     }else{
 

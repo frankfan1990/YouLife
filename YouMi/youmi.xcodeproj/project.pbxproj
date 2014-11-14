@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6304672A1A15D41C00D9B9E3 /* 绿色勾.png in Resources */ = {isa = PBXBuildFile; fileRef = 630467291A15D41C00D9B9E3 /* 绿色勾.png */; };
+		6304672D1A15E06500D9B9E3 /* MoreActivityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304672C1A15E06500D9B9E3 /* MoreActivityDetailViewController.m */; };
 		6312568019CABAD900436C39 /* 虚线.png in Resources */ = {isa = PBXBuildFile; fileRef = 6312567F19CABAD900436C39 /* 虚线.png */; };
 		6312572019CC270D00436C39 /* CommunityDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6312571F19CC270D00436C39 /* CommunityDetailsViewController.m */; };
 		6317A56819F63FCE009E332F /* ModBindPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6317A56719F63FCE009E332F /* ModBindPhoneViewController.m */; };
@@ -301,6 +303,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		630467291A15D41C00D9B9E3 /* 绿色勾.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "绿色勾.png"; sourceTree = "<group>"; };
+		6304672B1A15E06500D9B9E3 /* MoreActivityDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreActivityDetailViewController.h; sourceTree = "<group>"; };
+		6304672C1A15E06500D9B9E3 /* MoreActivityDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreActivityDetailViewController.m; sourceTree = "<group>"; };
 		6312567F19CABAD900436C39 /* 虚线.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "虚线.png"; sourceTree = "<group>"; };
 		6312571E19CC270C00436C39 /* CommunityDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommunityDetailsViewController.h; sourceTree = "<group>"; };
 		6312571F19CC270D00436C39 /* CommunityDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommunityDetailsViewController.m; sourceTree = "<group>"; };
@@ -1265,6 +1270,7 @@
 		63970FD619B415F700793A3D /* images */ = {
 			isa = PBXGroup;
 			children = (
+				630467291A15D41C00D9B9E3 /* 绿色勾.png */,
 				636A99071A106C420014F9ED /* 未处理.png */,
 				636A99081A106C420014F9ED /* ok.png */,
 				636A99091A106C420014F9ED /* x.png */,
@@ -1648,6 +1654,8 @@
 				63C5017A1A12673600B5BCF5 /* ActivityDetailViewController.m */,
 				63C501961A1350AA00B5BCF5 /* UserCommentListViewController.h */,
 				63C501971A1350AA00B5BCF5 /* UserCommentListViewController.m */,
+				6304672B1A15E06500D9B9E3 /* MoreActivityDetailViewController.h */,
+				6304672C1A15E06500D9B9E3 /* MoreActivityDetailViewController.m */,
 				637B40F719F0B22600A63BC6 /* AboutAcount */,
 				63541B2319FF9885001EC683 /* Food */,
 				63F780CC19C050C200DF7585 /* EntertainmentDetailViewController.h */,
@@ -1821,6 +1829,7 @@
 				63B9157D19B96AEA006F09EC /* 首页选中.png in Resources */,
 				6356263519C83C580011B926 /* 营业.png in Resources */,
 				63B9157C19B96AEA006F09EC /* 首页未选中.png in Resources */,
+				6304672A1A15D41C00D9B9E3 /* 绿色勾.png in Resources */,
 				63541B661A00CA38001EC683 /* schedule_image_moon-high.png in Resources */,
 				63A5A9031A01028D0015A49B /* 已收藏@2x.png in Resources */,
 				6397101119B451CB00793A3D /* pop-Info.plist in Resources */,
@@ -1937,6 +1946,7 @@
 				634130001A07740600ED5273 /* BuyNowViewController.m in Sources */,
 				63541B3F19FFF17B001EC683 /* PMCalendarBackgroundView.m in Sources */,
 				6397103C19B45A6800793A3D /* UIView+Extension.m in Sources */,
+				6304672D1A15E06500D9B9E3 /* MoreActivityDetailViewController.m in Sources */,
 				63901E0519C19DC7006C4158 /* BusinessCircleViewController.m in Sources */,
 				63C5017B1A12673600B5BCF5 /* ActivityDetailViewController.m in Sources */,
 				63B7AA3719AEFF9F00AAE30A /* MainPageCustomTableViewCell.m in Sources */,

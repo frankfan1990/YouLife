@@ -20,6 +20,7 @@
 #import <TMCache.h>
 #import "CityListSelectViewController.h"
 #import "MMLocationManager.h"
+#import "ProgressHUD.h"
 
 @interface MainPageViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 {
@@ -62,51 +63,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     /*我的收藏，初始化索引值*/
     myCollectionCurrentIndex = 0;
     //
-    
-    
-    /**
-     *  @Author frankfan, 14-10-27 17:10:41
-     *
-     *  以下代码为遗留代码【不可用】
-     */
-    
-    
-//    /*动态根据文字长度调整对齐*/
-//    leftbarButton =[UIButton buttonWithType:UIButtonTypeCustom];
-//    leftbarButton.tag = 1001;
-//    leftbarButton.frame = CGRectMake(0, 0, 123, 30);
-//    /*动态获取文字长度*/
-//    UIFont *tempFont =[UIFont systemFontOfSize:18];
-//    NSDictionary *userAttr = @{NSFontAttributeName:tempFont};
-//    CGSize cityTextSize = [self.titleString sizeWithAttributes:userAttr];
-//    /*动态设置icon位置*/
-//    UIImageView *arrowIcon =[[UIImageView alloc]initWithFrame:CGRectMake(cityTextSize.width-14, 2, 25, 25)];
-//    arrowIcon.image =[UIImage imageNamed:@"箭头icon.png"];
-//    [leftbarButton addSubview:arrowIcon];
-//    
-//    [leftbarButton setTitle:_titleString forState:UIControlStateNormal];
-//    if([_titleString length]==2){
-//        
-//        
-//        leftbarButton.titleEdgeInsets = UIEdgeInsetsMake(0, -115, 0, -10);
-//    }if([_titleString length]==3){
-//    
-//        leftbarButton.titleEdgeInsets = UIEdgeInsetsMake(0, -100, 0, -10);
-//    }if([_titleString length]==4){
-//    
-//        leftbarButton.titleEdgeInsets = UIEdgeInsetsMake(0, -85, 0, -10);
-//    }if([_titleString length]==5){
-//    
-//        leftbarButton.titleEdgeInsets = UIEdgeInsetsMake(0, -65, 0, -10);
-//    }
-//    
-//    [leftbarButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-//    [leftbarButton setTitleColor:baseTextColor forState:UIControlStateHighlighted];
-//    [leftbarButton addTarget:self action:@selector(barButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-//    leftbarButton.titleLabel.font = [UIFont systemFontOfSize:18];
-//    UIBarButtonItem *barButton =[[UIBarButtonItem alloc]initWithCustomView:leftbarButton];
-//    self.navigationItem.leftBarButtonItem = barButton;
-    
+
     
     //
     UIButton *rightButton1 =[UIButton buttonWithType:UIButtonTypeCustom];
@@ -249,19 +206,20 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
      *  定位
      */
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    [[MMLocationManager shareLocation]getCity:^(NSString *addressString) {
         
-        if([[[NSUserDefaults standardUserDefaults]objectForKey:kUserLocationCity] length]){
-            return;
-        }
+        [self setBarButtonTitle:addressString];
+     
+        [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:kUserLocationCity];
+        [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:@"gpsLocation"];
         
-        [[MMLocationManager shareLocation]getCity:^(NSString *addressString) {
-            
-            [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:kUserLocationCity];
-            
-        }];
+    } error:^(NSError *error) {
         
-    });
+        [self createBarButton];
+        [ProgressHUD showError:@"无法完成定位"];
+    }];
+    
+    
     
     
     
@@ -289,9 +247,19 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
 - (void)viewWillAppear:(BOOL)animated{
 
     
-    self.titleString = [[NSUserDefaults standardUserDefaults]objectForKey:kUserCity];
+    self.titleString = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocationCity];
 
-    /*动态根据文字长度调整对齐*/
+    
+    if([self.titleString length]){
+    
+         [self setBarButtonTitle:self.titleString];
+    }
+
+}
+
+- (void)setBarButtonTitle:(NSString *)title{
+
+    
     leftbarButton =[UIButton buttonWithType:UIButtonTypeCustom];
     leftbarButton.tag = 1001;
     leftbarButton.frame = CGRectMake(0, 0, 123, 30);
@@ -299,24 +267,24 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     /*动态获取文字长度*/
     UIFont *tempFont =[UIFont systemFontOfSize:18];
     NSDictionary *userAttr = @{NSFontAttributeName:tempFont};
-    CGSize cityTextSize = [self.titleString sizeWithAttributes:userAttr];
+    CGSize cityTextSize = [title sizeWithAttributes:userAttr];
     /*动态设置icon位置*/
     UIImageView *arrowIcon =[[UIImageView alloc]initWithFrame:CGRectMake(cityTextSize.width-14, 2, 25, 25)];
     arrowIcon.image =[UIImage imageNamed:@"箭头icon.png"];
     [leftbarButton addSubview:arrowIcon];
     
-    [leftbarButton setTitle:_titleString forState:UIControlStateNormal];
-    if([_titleString length]==2){
+    [leftbarButton setTitle:title forState:UIControlStateNormal];
+    if([title length]==2){
         
         
         leftbarButton.titleEdgeInsets = UIEdgeInsetsMake(0, -115, 0, -10);
-    }if([_titleString length]==3){
+    }if([title length]==3){
         
         leftbarButton.titleEdgeInsets = UIEdgeInsetsMake(0, -100, 0, -10);
-    }if([_titleString length]==4){
+    }if([title length]==4){
         
         leftbarButton.titleEdgeInsets = UIEdgeInsetsMake(0, -85, 0, -10);
-    }if([_titleString length]==5){
+    }if([title length]==5){
         
         leftbarButton.titleEdgeInsets = UIEdgeInsetsMake(0, -65, 0, -10);
     }
@@ -329,6 +297,26 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     self.navigationItem.leftBarButtonItem = barButton;
 
 }
+
+
+- (void)createBarButton{
+
+    leftbarButton =[UIButton buttonWithType:UIButtonTypeCustom];
+    leftbarButton.tag = 1001;
+    leftbarButton.frame = CGRectMake(0, 0, 123, 30);
+
+    UIImageView *arrowIcon =[[UIImageView alloc]initWithFrame:CGRectMake(0, 2, 25, 25)];
+    arrowIcon.image =[UIImage imageNamed:@"箭头icon.png"];
+    [leftbarButton addSubview:arrowIcon];
+
+    [leftbarButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [leftbarButton setTitleColor:baseTextColor forState:UIControlStateHighlighted];
+    [leftbarButton addTarget:self action:@selector(barButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    leftbarButton.titleLabel.font = [UIFont systemFontOfSize:18];
+    UIBarButtonItem *barButton =[[UIBarButtonItem alloc]initWithCustomView:leftbarButton];
+    self.navigationItem.leftBarButtonItem = barButton;
+}
+
 
 
 
@@ -664,6 +652,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     if(sender.tag==1001){
     
         CityListSelectViewController *cityListSelecter =[CityListSelectViewController new];
+        cityListSelecter.currentCity = [[NSUserDefaults standardUserDefaults]objectForKey:@"gpsLocation"];
         [self.navigationController pushViewController:cityListSelecter animated:YES];
     
     
