@@ -10,13 +10,14 @@
 #import "ViewControllers.h"
 #import "ADNavigationControllerDelegate.h"
 #import "MMLocationManager.h"
+#import <MAMapKit/MAMapKit.h>
 
 @interface AppDelegate ()
 {
-
-    ADNavigationControllerDelegate *delegate;
-
+  
+      ADNavigationControllerDelegate *delegate;
 }
+
 @end
 
 @implementation AppDelegate
@@ -27,6 +28,20 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    //
+    /**
+     *  @Author frankfan, 14-11-17 16:11:08
+     *
+     *  高德地图开始配置
+     *
+     *  @param addressString
+     *
+     *  @return
+     */
+    
+    [MAMapServices sharedServices].apiKey = @"461e3b5c277c297c4fd64ed54c9fa634";
+    
+    
     
     /**
      定位
@@ -49,25 +64,21 @@
     
     UINavigationController *main_navi =[[UINavigationController alloc]initWithRootViewController:mainPageView];
     
-//    ADNavigationControllerDelegate *mainDelegate =[[ADNavigationControllerDelegate alloc]init];
+
     delegate =[[ADNavigationControllerDelegate alloc]init];
-//    main_navi.delegate = delegate;
+
     
     UINavigationController *classification_navi =[[UINavigationController alloc]initWithRootViewController:classificationView];
-//    ADNavigationControllerDelegate *classDelegate =[[ADNavigationControllerDelegate alloc]init];
-//    classification_navi.delegate = delegate;
+
     
     UINavigationController *mall_navi =[[UINavigationController alloc]initWithRootViewController:mallView];
-//    ADNavigationControllerDelegate *malldelagate =[[ADNavigationControllerDelegate alloc]init];
-//    mall_navi.delegate = delegate;
+
     
     UINavigationController *mine_navi =[[UINavigationController alloc]initWithRootViewController:aboutMineView];
-//    ADNavigationControllerDelegate *minedelegate =[[ADNavigationControllerDelegate alloc]init];
-//    mine_navi.delegate = delegate;
+
     
     UINavigationController *more_navi =[[UINavigationController alloc]initWithRootViewController:aboutMoreView];
-//    ADNavigationControllerDelegate *moredelegate =[[ADNavigationControllerDelegate alloc]init];
-//    more_navi.delegate = delegate;
+
     
     NSArray *viewControllers =@[main_navi,classification_navi,mall_navi,mine_navi,more_navi];
     

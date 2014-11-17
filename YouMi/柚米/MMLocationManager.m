@@ -75,6 +75,8 @@
     self.cityBlock = [cityBlock copy];
     self.errorBlock = [errorBlock copy];
     [self startLocation];
+    
+    
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation

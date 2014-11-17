@@ -35,6 +35,7 @@
     //fake data
     restaurantFeatures = @"餐征特征特征特征特特征特征特征特征特征特征特征特征特征特征特征";
     busInformation = @"公交信息信息信信息信息信息信";
+    
     shopInfo = @[@"营业时间",@"",@"",@"餐厅特色",restaurantFeatures,@"公交信息",busInformation];
     
     /*title*/
@@ -64,6 +65,10 @@
     UIView *footerView = [[UIView alloc]initWithFrame:CGRectZero];
     footerView.backgroundColor = customGrayColor;
     self.tableView.tableFooterView = footerView;
+    
+    
+    
+    
     
     
     

@@ -773,7 +773,7 @@
                         [ProgressHUD showSuccess:@"修改成功" Interaction:NO];
                         [[TMCache sharedCache]setObject:responseObject[@"data"] forKey:kUserInfo];
                         
-                        Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
+//                        Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
                         
                         
                         

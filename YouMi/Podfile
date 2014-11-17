@@ -2,3 +2,5 @@ pod 'TMCache', '~> 1.2.1'
 pod 'JSONModel', '~> 1.0.1'
 pod 'AFNetworking', '~> 2.4.1'
 pod 'Mantle', '~> 1.5.1'
+pod 'AMap2DMap' #2D地图SDK
+pod 'AMapSearch' #搜索服务SDK

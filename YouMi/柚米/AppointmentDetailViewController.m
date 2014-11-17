@@ -13,7 +13,8 @@
 #import "Categories.h"
 #import "NSDate+Additions.h"
 #import "ZSYPopoverListView.h"
-
+#import "NSDate+Additions.h"
+#import "ProgressHUD/ProgressHUD.h"
 
 @interface AppointmentDetailViewController ()<PMCalendarControllerDelegate,KPTimePickerDelegate,ZSYPopoverListDelegate,ZSYPopoverListDatasource>
 {
@@ -29,6 +30,11 @@
     UILabel *label1;//选择日期
     UILabel *label2;//人数
     UILabel *label3;//时间
+    
+    
+    NSMutableArray *dateArray;//用以存放选择的日期
+    NSMutableArray *dateArray2;//用以存放特殊的日期
+    
     
 }
 @property (nonatomic, retain) NSIndexPath *selectedIndexPath;//选择人数控件的参数
@@ -46,6 +52,16 @@
     [super viewDidLoad];
     self.view.backgroundColor =[UIColor whiteColor];
     //
+    /**
+     *  @Author frankfan, 14-11-15 01:11:06
+     *
+     *  变量初始化地方
+     */
+    
+    dateArray =[NSMutableArray array];
+    dateArray2 =[NSMutableArray array];
+    
+    
     /**
      *  @Author frankfan, 14-10-29 18:10:49
      *
@@ -100,8 +116,11 @@
     arrowImage.image =[UIImage imageNamed:@"向下箭头icon"];
     [self.theLoadView addSubview:arrowImage];
     arrowImage.userInteractionEnabled = YES;
+    
+    UIView *touchView =[[UIView alloc]initWithFrame:CGRectMake(260, 10, 40, 40)];
+    [self.theLoadView addSubview:touchView];
     UITapGestureRecognizer *tap =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showCalendar:)];
-    [arrowImage addGestureRecognizer:tap];
+    [touchView addGestureRecognizer:tap];
     
     UIView *lineView =[[UIView alloc]initWithFrame:CGRectMake(0, 65, self.view.bounds.size.width, 1)];
     lineView.backgroundColor = customGrayColor;
@@ -203,7 +222,7 @@
     
     genderArray = @[@"男士",@"女士"];
     UISegmentedControl *segmentControl =[[UISegmentedControl alloc]initWithItems:genderArray];
-    segmentControl.frame = CGRectMake(233, 220, 80, 20);
+    segmentControl.frame = CGRectMake(233, 215, 80, 30);
     segmentControl.tintColor = baseTextColor;
     segmentControl.layer.cornerRadius = 1;
     [segmentControl addTarget:self action:@selector(segmentsCon:) forControlEvents:UIControlEventValueChanged];
@@ -250,8 +269,7 @@
     [commitButton addTarget:self action:@selector(commitButtonCLicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.theLoadView addSubview:commitButton];
     
-    
-    
+ 
     // Do any additional setup after loading the view.
 }
 
@@ -355,73 +373,11 @@
 
 
     NSLog(@">>>%@",timePicker.clockLabel.text);
-
+    label3.text = timePicker.clockLabel.text;
     [timePicker removeFromSuperview];
     
 }
 
-#warning 这是一个错误方法
-#if 0
-/*以下为错误方法*/
-/**
- *  @Author frankfan, 14-10-29 17:10:53
- *
- *  修正时间显示的制式
- *
- *  @param NSString 时间【string】
- *
- *  @return 修正后的时间【stirng】
- */
-
-/*时间显示的处理*/
-- (NSString *)transformTheTimerFormat:(NSString *)timerString{
-    
-    NSArray *timeArray =[timerString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@",at"]];
-    NSString *tempTimerString = timeArray[5];
-    NSString *realTimer = [tempTimerString substringWithRange:NSMakeRange(0, 12)];
-    NSArray *tempArray1 = [realTimer componentsSeparatedByString:@" "];
-    
-   
-    if([tempArray1[2] isEqualToString:@"AM"]){//上午
-        
-        NSArray *checkHourLeng = [realTimer componentsSeparatedByString:@":"];
-        
-        NSString *firstObj = checkHourLeng[0];
-        if([firstObj isEqualToString:@" 12"]){
-        
-            return [NSString stringWithFormat:@"%@:%@",@"00",checkHourLeng[1]];
-        }else{
-        
-             return [NSString stringWithFormat:@"%@:%@",checkHourLeng[0],checkHourLeng[1]];
-        }
-        
-       
-      
-    }else{//下午
-
-        NSArray *tempArray = [realTimer componentsSeparatedByString:@":"];
-        if([tempArray[0]isEqualToString:@" 12"]){
-        
-            long hour = [tempArray[0]integerValue];
-            NSString *finalTimer = [NSString stringWithFormat:@"%ld:%@",hour,tempArray[1]];
-            return finalTimer;
-
-        }else{
-        
-            long hour = [tempArray[0]integerValue]+12;
-            NSString *finalTimer = [NSString stringWithFormat:@"%ld:%@",hour,tempArray[1]];
-            return finalTimer;
-
-        }
-
-        
-        
-    }
-    
-  
-}
-
-#endif
 
 #pragma mark - 日历对象创建
 /**
@@ -447,8 +403,8 @@
      *  添加确定按钮
      */
     button =[UIButton buttonWithType:UIButtonTypeCustom];
-    button.backgroundColor = [UIColor colorWithWhite:0 alpha:1];
-    button.frame = CGRectMake(42, 340, 270, 30);
+    button.backgroundColor = [UIColor colorWithWhite:0.03 alpha:1];
+    button.frame = CGRectMake(42, 344, 270, 30);
     button.layer.cornerRadius = 7;
     [button setTitle:@"确定" forState:UIControlStateNormal];
     button.titleLabel.font = [UIFont systemFontOfSize:14];
@@ -475,6 +431,23 @@
         
         sender.alpha = 0;
     }];
+    
+    
+    NSDate *date =[NSDate date];
+    NSDateFormatter *dateFormatter =[[NSDateFormatter alloc]init];
+    [dateFormatter setDateFormat:@"YYYYMMdd"];
+
+    NSString *nowDateString = [dateFormatter stringFromDate:date];//当前系统时间
+    NSString *selecteDateString = [dateArray2 lastObject];//选择的时间
+    
+    if([selecteDateString integerValue]<[nowDateString integerValue]){//如果选择的时间小于系统时间
+    
+        [ProgressHUD showError:@"非法时间"];
+    }else{
+    
+        label1.text = [dateArray lastObject];
+    }
+    
     sender = nil;
     [sender removeFromSuperview];
     [self.pmCalendere dismissCalendarAnimated:YES];
@@ -495,7 +468,11 @@
 
     NSString *date = [NSString stringWithFormat:@"%@"
                         , [newPeriod.startDate dateStringWithFormat:@"yyyy-MM-dd"]];
+   
+    NSString *date2 =[NSString stringWithFormat:@"%@",[newPeriod.startDate dateStringWithFormat:@"yyyyMMdd"]];
     
+    [dateArray2 addObject:date2];
+    [dateArray addObject:date];
     NSLog(@"date:%@",date);
     
 }
@@ -541,6 +518,8 @@
     UITableViewCell *cell = [tableView popoverCellForRowAtIndexPath:indexPath];
     cell.imageView.image = [UIImage imageNamed:@"fs_main_login_selected.png"];
     NSLog(@"%@", peopleCountArray[indexPath.row]);
+    label2.text = [NSString stringWithFormat:@"%@人",peopleCountArray[indexPath.row]];
+    
 }
 
 

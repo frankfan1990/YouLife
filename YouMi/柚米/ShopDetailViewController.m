@@ -16,6 +16,7 @@
 #import "BusinessMenInfoViewController.h"
 #import "UserCommentTableViewCell.h"
 #import "UserCommentListViewController.h"
+#import "MainMapViewController.h"
 
 
 @interface ShopDetailViewController ()<UITableViewDelegate,UITableViewDataSource,EDStarRatingProtocol>
@@ -541,7 +542,15 @@
             [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         }
-    
+        
+        if(indexPath.row==2){//店铺地址
+        
+            MainMapViewController *mainMap =[MainMapViewController new];
+            mainMap.hidesBottomBarWhenPushed = YES;
+            
+            [self.navigationController pushViewController:mainMap animated:YES];
+        
+        }
         
     }
 

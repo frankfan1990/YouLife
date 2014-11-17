@@ -22,7 +22,7 @@
 #import "MMLocationManager.h"
 #import "ProgressHUD.h"
 
-@interface MainPageViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+@interface MainPageViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CLLocationManagerDelegate>
 {
 
     UIButton *four_Button1;
@@ -198,7 +198,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     
     [self.tableView addFooterWithTarget:self action:@selector(pullUpCallBack)];
     
-    
+
     
     /**
      *  @Author frankfan, 14-10-27 23:10:49
@@ -222,7 +222,6 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     
     
     
-    
 #pragma mark 模拟数据-从后台拉去“三大类”数据
     /*模拟数据*/
     NSArray *businessCircleList = @[@{@"附近":@[@"100m",@"500m",@"1000m",@"1500m"]},@{@"芙蓉区":@[@"五一路",@"火宫殿",@"下河街",@"步行街"]},@{@"雨花区":@[@"东塘",@"西塘",@"南塘",@"北塘",@"中塘"]},@{@"岳麓区":@[@"麓山东路",@"麓山南路",@"麓山西路",@"麓山北路",@"麓山中路"]},@{@"开福区":@[@"天马小区",@"大学城",@"麓山北路",@"麓谷",@"大学北路"]}];
@@ -230,6 +229,20 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     /*设置缓存*/
     [[TMCache sharedCache]setObject:businessCircleList forKey:kThreePartData_0];
 
+    
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        if(![[[NSUserDefaults standardUserDefaults]objectForKey:kUserLocationCity] length]){
+        
+            [self createBarButton];
+            [ProgressHUD showError:@"无法完成定位" Interaction:NO];
+        }
+        
+    });
+ 
+    
+    
     
     // Do any additional setup after loading the view.
 }
@@ -257,6 +270,15 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
 
 }
 
+
+
+/**
+ *  @Author frankfan, 14-11-14 21:11:56
+ *
+ *  根据定位的城市动态调整长度
+ *
+ *  @param title 
+ */
 - (void)setBarButtonTitle:(NSString *)title{
 
     
@@ -264,6 +286,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     leftbarButton.tag = 1001;
     leftbarButton.frame = CGRectMake(0, 0, 123, 30);
 
+   
     /*动态获取文字长度*/
     UIFont *tempFont =[UIFont systemFontOfSize:18];
     NSDictionary *userAttr = @{NSFontAttributeName:tempFont};
@@ -271,6 +294,8 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     /*动态设置icon位置*/
     UIImageView *arrowIcon =[[UIImageView alloc]initWithFrame:CGRectMake(cityTextSize.width-14, 2, 25, 25)];
     arrowIcon.image =[UIImage imageNamed:@"箭头icon.png"];
+    
+
     [leftbarButton addSubview:arrowIcon];
     
     [leftbarButton setTitle:title forState:UIControlStateNormal];
@@ -296,6 +321,8 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     UIBarButtonItem *barButton =[[UIBarButtonItem alloc]initWithCustomView:leftbarButton];
     self.navigationItem.leftBarButtonItem = barButton;
 
+  
+    
 }
 
 
@@ -308,13 +335,15 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     UIImageView *arrowIcon =[[UIImageView alloc]initWithFrame:CGRectMake(0, 2, 25, 25)];
     arrowIcon.image =[UIImage imageNamed:@"箭头icon.png"];
     [leftbarButton addSubview:arrowIcon];
-
+    leftbarButton.titleLabel.font = [UIFont systemFontOfSize:18];
     [leftbarButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [leftbarButton setTitleColor:baseTextColor forState:UIControlStateHighlighted];
     [leftbarButton addTarget:self action:@selector(barButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    leftbarButton.titleLabel.font = [UIFont systemFontOfSize:18];
+   
     UIBarButtonItem *barButton =[[UIBarButtonItem alloc]initWithCustomView:leftbarButton];
     self.navigationItem.leftBarButtonItem = barButton;
+    
+   
 }
 
 

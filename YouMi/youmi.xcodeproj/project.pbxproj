@@ -9,6 +9,17 @@
 /* Begin PBXBuildFile section */
 		6304672A1A15D41C00D9B9E3 /* 绿色勾.png in Resources */ = {isa = PBXBuildFile; fileRef = 630467291A15D41C00D9B9E3 /* 绿色勾.png */; };
 		6304672D1A15E06500D9B9E3 /* MoreActivityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304672C1A15E06500D9B9E3 /* MoreActivityDetailViewController.m */; };
+		6304679C1A19948900D9B9E3 /* MainMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304679B1A19948900D9B9E3 /* MainMapViewController.m */; };
+		630467A01A19A8F000D9B9E3 /* 步行.png in Resources */ = {isa = PBXBuildFile; fileRef = 6304679D1A19A8F000D9B9E3 /* 步行.png */; };
+		630467A11A19A8F000D9B9E3 /* 公交车.png in Resources */ = {isa = PBXBuildFile; fileRef = 6304679E1A19A8F000D9B9E3 /* 公交车.png */; };
+		630467A21A19A8F000D9B9E3 /* 驾车.png in Resources */ = {isa = PBXBuildFile; fileRef = 6304679F1A19A8F000D9B9E3 /* 驾车.png */; };
+		630467E81A19D3E500D9B9E3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 630467E71A19D3E500D9B9E3 /* QuartzCore.framework */; };
+		630467EA1A19D3EF00D9B9E3 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 630467E91A19D3EF00D9B9E3 /* OpenGLES.framework */; };
+		630467EC1A19D40300D9B9E3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 630467EB1A19D40300D9B9E3 /* SystemConfiguration.framework */; };
+		630467ED1A19D40E00D9B9E3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 633E456619AD7A7C001D8F75 /* CoreGraphics.framework */; };
+		630467EF1A19D41E00D9B9E3 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 630467EE1A19D41E00D9B9E3 /* Security.framework */; };
+		630467F11A19EA2700D9B9E3 /* AMapSearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 630467F01A19EA2700D9B9E3 /* AMapSearchKit.framework */; };
+		630467F51A19EA8800D9B9E3 /* AMapSearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 630467F41A19EA8800D9B9E3 /* AMapSearchKit.framework */; };
 		6312568019CABAD900436C39 /* 虚线.png in Resources */ = {isa = PBXBuildFile; fileRef = 6312567F19CABAD900436C39 /* 虚线.png */; };
 		6312572019CC270D00436C39 /* CommunityDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6312571F19CC270D00436C39 /* CommunityDetailsViewController.m */; };
 		6317A56819F63FCE009E332F /* ModBindPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6317A56719F63FCE009E332F /* ModBindPhoneViewController.m */; };
@@ -306,6 +317,18 @@
 		630467291A15D41C00D9B9E3 /* 绿色勾.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "绿色勾.png"; sourceTree = "<group>"; };
 		6304672B1A15E06500D9B9E3 /* MoreActivityDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreActivityDetailViewController.h; sourceTree = "<group>"; };
 		6304672C1A15E06500D9B9E3 /* MoreActivityDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreActivityDetailViewController.m; sourceTree = "<group>"; };
+		6304679A1A19948900D9B9E3 /* MainMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMapViewController.h; sourceTree = "<group>"; };
+		6304679B1A19948900D9B9E3 /* MainMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMapViewController.m; sourceTree = "<group>"; };
+		6304679D1A19A8F000D9B9E3 /* 步行.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "步行.png"; sourceTree = "<group>"; };
+		6304679E1A19A8F000D9B9E3 /* 公交车.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "公交车.png"; sourceTree = "<group>"; };
+		6304679F1A19A8F000D9B9E3 /* 驾车.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "驾车.png"; sourceTree = "<group>"; };
+		630467E71A19D3E500D9B9E3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		630467E91A19D3EF00D9B9E3 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		630467EB1A19D40300D9B9E3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		630467EE1A19D41E00D9B9E3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		630467F01A19EA2700D9B9E3 /* AMapSearchKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapSearchKit.framework; sourceTree = "<group>"; };
+		630467F21A19EA5800D9B9E3 /* libPods-AMapSearch.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-AMapSearch.a"; path = "Pods/build/Debug-iphoneos/libPods-AMapSearch.a"; sourceTree = "<group>"; };
+		630467F41A19EA8800D9B9E3 /* AMapSearchKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AMapSearchKit.framework; path = ../../../Downloads/AMapSearchKit.framework; sourceTree = "<group>"; };
 		6312567F19CABAD900436C39 /* 虚线.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "虚线.png"; sourceTree = "<group>"; };
 		6312571E19CC270C00436C39 /* CommunityDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommunityDetailsViewController.h; sourceTree = "<group>"; };
 		6312571F19CC270D00436C39 /* CommunityDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommunityDetailsViewController.m; sourceTree = "<group>"; };
@@ -795,7 +818,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				630467F51A19EA8800D9B9E3 /* AMapSearchKit.framework in Frameworks */,
+				630467EF1A19D41E00D9B9E3 /* Security.framework in Frameworks */,
+				630467ED1A19D40E00D9B9E3 /* CoreGraphics.framework in Frameworks */,
+				630467EC1A19D40300D9B9E3 /* SystemConfiguration.framework in Frameworks */,
+				630467EA1A19D3EF00D9B9E3 /* OpenGLES.framework in Frameworks */,
+				630467E81A19D3E500D9B9E3 /* QuartzCore.framework in Frameworks */,
 				63541B1419FE3D85001EC683 /* CoreLocation.framework in Frameworks */,
+				630467F11A19EA2700D9B9E3 /* AMapSearchKit.framework in Frameworks */,
 				63541B1219FE3D28001EC683 /* MapKit.framework in Frameworks */,
 				63901E0B19C19DEC006C4158 /* CoreText.framework in Frameworks */,
 				9D1FD9DAB83643BBBD451A8D /* libPods.a in Frameworks */,
@@ -851,6 +881,12 @@
 		633E456319AD7A7C001D8F75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				630467F41A19EA8800D9B9E3 /* AMapSearchKit.framework */,
+				630467F21A19EA5800D9B9E3 /* libPods-AMapSearch.a */,
+				630467EE1A19D41E00D9B9E3 /* Security.framework */,
+				630467EB1A19D40300D9B9E3 /* SystemConfiguration.framework */,
+				630467E91A19D3EF00D9B9E3 /* OpenGLES.framework */,
+				630467E71A19D3E500D9B9E3 /* QuartzCore.framework */,
 				63541B1319FE3D85001EC683 /* CoreLocation.framework */,
 				63541B1119FE3D28001EC683 /* MapKit.framework */,
 				635C39F219ED77050090DE16 /* youmi.xcworkspace */,
@@ -1008,6 +1044,7 @@
 		633E46EE19AE292A001D8F75 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				630467F01A19EA2700D9B9E3 /* AMapSearchKit.framework */,
 				636A985A1A0C98680014F9ED /* Shime */,
 				63A5A9011A00F8BF0015A49B /* ZSYPopView */,
 				63541B491A00CA38001EC683 /* KPTimePicker */,
@@ -1270,6 +1307,9 @@
 		63970FD619B415F700793A3D /* images */ = {
 			isa = PBXGroup;
 			children = (
+				6304679D1A19A8F000D9B9E3 /* 步行.png */,
+				6304679E1A19A8F000D9B9E3 /* 公交车.png */,
+				6304679F1A19A8F000D9B9E3 /* 驾车.png */,
 				630467291A15D41C00D9B9E3 /* 绿色勾.png */,
 				636A99071A106C420014F9ED /* 未处理.png */,
 				636A99081A106C420014F9ED /* ok.png */,
@@ -1656,6 +1696,8 @@
 				63C501971A1350AA00B5BCF5 /* UserCommentListViewController.m */,
 				6304672B1A15E06500D9B9E3 /* MoreActivityDetailViewController.h */,
 				6304672C1A15E06500D9B9E3 /* MoreActivityDetailViewController.m */,
+				6304679A1A19948900D9B9E3 /* MainMapViewController.h */,
+				6304679B1A19948900D9B9E3 /* MainMapViewController.m */,
 				637B40F719F0B22600A63BC6 /* AboutAcount */,
 				63541B2319FF9885001EC683 /* Food */,
 				63F780CC19C050C200DF7585 /* EntertainmentDetailViewController.h */,
@@ -1794,6 +1836,7 @@
 				635C397919EBADE50090DE16 /* password.png in Resources */,
 				63B9157E19B96AEA006F09EC /* 我的未选中.png in Resources */,
 				63F780BC19BEADC200DF7585 /* 左箭头@2x.png in Resources */,
+				630467A11A19A8F000D9B9E3 /* 公交车.png in Resources */,
 				63F780C419C0018100DF7585 /* 朝左箭头icon@2x.png in Resources */,
 				63EE69BB19B441A100CC7540 /* 首页选中@2x.png in Resources */,
 				63970FBD19B415E200793A3D /* 地标@2x.png in Resources */,
@@ -1825,6 +1868,7 @@
 				63A5A90C1A01E7310015A49B /* 购物车@2x.png in Resources */,
 				63A5A9001A00F4A00015A49B /* fs_main_login_selected@2x.png in Resources */,
 				6312568019CABAD900436C39 /* 虚线.png in Resources */,
+				630467A01A19A8F000D9B9E3 /* 步行.png in Resources */,
 				63541B2819FFC57D001EC683 /* 日历.png in Resources */,
 				63B9157D19B96AEA006F09EC /* 首页选中.png in Resources */,
 				6356263519C83C580011B926 /* 营业.png in Resources */,
@@ -1860,6 +1904,7 @@
 				63B915C019B9B345006F09EC /* page_state_normal@2x.png in Resources */,
 				6356262F19C82CCF0011B926 /* star-template@2x.png in Resources */,
 				63B9163519BE9DCA006F09EC /* 头像啊.png in Resources */,
+				630467A21A19A8F000D9B9E3 /* 驾车.png in Resources */,
 				6341300F1A07E33B00ED5273 /* cancel@2x.png in Resources */,
 				63EE69AE19B43EF000CC7540 /* 酒店.png in Resources */,
 				63541B601A00CA38001EC683 /* picker_wheel_ip4.png in Resources */,
@@ -1946,6 +1991,7 @@
 				634130001A07740600ED5273 /* BuyNowViewController.m in Sources */,
 				63541B3F19FFF17B001EC683 /* PMCalendarBackgroundView.m in Sources */,
 				6397103C19B45A6800793A3D /* UIView+Extension.m in Sources */,
+				6304679C1A19948900D9B9E3 /* MainMapViewController.m in Sources */,
 				6304672D1A15E06500D9B9E3 /* MoreActivityDetailViewController.m in Sources */,
 				63901E0519C19DC7006C4158 /* BusinessCircleViewController.m in Sources */,
 				63C5017B1A12673600B5BCF5 /* ActivityDetailViewController.m in Sources */,
@@ -2214,7 +2260,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/柚米",
+					/Users/frankfan/Downloads,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "柚米/youmi-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -2224,6 +2273,11 @@
 				);
 				INFOPLIST_FILE = "柚米/youmi-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/柚米/BaiduMap_IOSSDK_v2.5.0_Lib",
+					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
+				);
 				PRODUCT_NAME = youmi;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -2238,7 +2292,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/柚米",
+					/Users/frankfan/Downloads,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "柚米/youmi-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -2248,6 +2305,11 @@
 				);
 				INFOPLIST_FILE = "柚米/youmi-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/柚米/BaiduMap_IOSSDK_v2.5.0_Lib",
+					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
+				);
 				PRODUCT_NAME = youmi;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
