@@ -11,4 +11,6 @@
 @interface MainMapViewController : UIViewController
 
 @property (nonatomic,strong)NSString *shopperName;//店铺名
+@property (nonatomic,assign)double latitude;//纬度
+@property (nonatomic,assign)double longitude;//经度
 @end

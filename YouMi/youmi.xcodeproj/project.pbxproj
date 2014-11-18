@@ -10,9 +10,9 @@
 		6304672A1A15D41C00D9B9E3 /* 绿色勾.png in Resources */ = {isa = PBXBuildFile; fileRef = 630467291A15D41C00D9B9E3 /* 绿色勾.png */; };
 		6304672D1A15E06500D9B9E3 /* MoreActivityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304672C1A15E06500D9B9E3 /* MoreActivityDetailViewController.m */; };
 		6304679C1A19948900D9B9E3 /* MainMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304679B1A19948900D9B9E3 /* MainMapViewController.m */; };
-		630467A01A19A8F000D9B9E3 /* 步行.png in Resources */ = {isa = PBXBuildFile; fileRef = 6304679D1A19A8F000D9B9E3 /* 步行.png */; };
-		630467A11A19A8F000D9B9E3 /* 公交车.png in Resources */ = {isa = PBXBuildFile; fileRef = 6304679E1A19A8F000D9B9E3 /* 公交车.png */; };
-		630467A21A19A8F000D9B9E3 /* 驾车.png in Resources */ = {isa = PBXBuildFile; fileRef = 6304679F1A19A8F000D9B9E3 /* 驾车.png */; };
+		630467A01A19A8F000D9B9E3 /* 步行@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6304679D1A19A8F000D9B9E3 /* 步行@2x.png */; };
+		630467A11A19A8F000D9B9E3 /* 公交车@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6304679E1A19A8F000D9B9E3 /* 公交车@2x.png */; };
+		630467A21A19A8F000D9B9E3 /* 驾车@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6304679F1A19A8F000D9B9E3 /* 驾车@2x.png */; };
 		630467E81A19D3E500D9B9E3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 630467E71A19D3E500D9B9E3 /* QuartzCore.framework */; };
 		630467EA1A19D3EF00D9B9E3 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 630467E91A19D3EF00D9B9E3 /* OpenGLES.framework */; };
 		630467EC1A19D40300D9B9E3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 630467EB1A19D40300D9B9E3 /* SystemConfiguration.framework */; };
@@ -20,6 +20,8 @@
 		630467EF1A19D41E00D9B9E3 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 630467EE1A19D41E00D9B9E3 /* Security.framework */; };
 		630467F11A19EA2700D9B9E3 /* AMapSearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 630467F01A19EA2700D9B9E3 /* AMapSearchKit.framework */; };
 		630467F51A19EA8800D9B9E3 /* AMapSearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 630467F41A19EA8800D9B9E3 /* AMapSearchKit.framework */; };
+		630467F81A1A585B00D9B9E3 /* WhichWayToGoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630467F71A1A585B00D9B9E3 /* WhichWayToGoViewController.m */; };
+		630467FB1A1B3C9B00D9B9E3 /* ChineseToPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 630467FA1A1B3C9B00D9B9E3 /* ChineseToPinyin.m */; };
 		6312568019CABAD900436C39 /* 虚线.png in Resources */ = {isa = PBXBuildFile; fileRef = 6312567F19CABAD900436C39 /* 虚线.png */; };
 		6312572019CC270D00436C39 /* CommunityDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6312571F19CC270D00436C39 /* CommunityDetailsViewController.m */; };
 		6317A56819F63FCE009E332F /* ModBindPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6317A56719F63FCE009E332F /* ModBindPhoneViewController.m */; };
@@ -319,9 +321,9 @@
 		6304672C1A15E06500D9B9E3 /* MoreActivityDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreActivityDetailViewController.m; sourceTree = "<group>"; };
 		6304679A1A19948900D9B9E3 /* MainMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMapViewController.h; sourceTree = "<group>"; };
 		6304679B1A19948900D9B9E3 /* MainMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMapViewController.m; sourceTree = "<group>"; };
-		6304679D1A19A8F000D9B9E3 /* 步行.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "步行.png"; sourceTree = "<group>"; };
-		6304679E1A19A8F000D9B9E3 /* 公交车.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "公交车.png"; sourceTree = "<group>"; };
-		6304679F1A19A8F000D9B9E3 /* 驾车.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "驾车.png"; sourceTree = "<group>"; };
+		6304679D1A19A8F000D9B9E3 /* 步行@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "步行@2x.png"; sourceTree = "<group>"; };
+		6304679E1A19A8F000D9B9E3 /* 公交车@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "公交车@2x.png"; sourceTree = "<group>"; };
+		6304679F1A19A8F000D9B9E3 /* 驾车@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "驾车@2x.png"; sourceTree = "<group>"; };
 		630467E71A19D3E500D9B9E3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		630467E91A19D3EF00D9B9E3 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		630467EB1A19D40300D9B9E3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -329,6 +331,10 @@
 		630467F01A19EA2700D9B9E3 /* AMapSearchKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapSearchKit.framework; sourceTree = "<group>"; };
 		630467F21A19EA5800D9B9E3 /* libPods-AMapSearch.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-AMapSearch.a"; path = "Pods/build/Debug-iphoneos/libPods-AMapSearch.a"; sourceTree = "<group>"; };
 		630467F41A19EA8800D9B9E3 /* AMapSearchKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AMapSearchKit.framework; path = ../../../Downloads/AMapSearchKit.framework; sourceTree = "<group>"; };
+		630467F61A1A585B00D9B9E3 /* WhichWayToGoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhichWayToGoViewController.h; sourceTree = "<group>"; };
+		630467F71A1A585B00D9B9E3 /* WhichWayToGoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WhichWayToGoViewController.m; sourceTree = "<group>"; };
+		630467F91A1B3C9B00D9B9E3 /* ChineseToPinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChineseToPinyin.h; sourceTree = "<group>"; };
+		630467FA1A1B3C9B00D9B9E3 /* ChineseToPinyin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChineseToPinyin.m; sourceTree = "<group>"; };
 		6312567F19CABAD900436C39 /* 虚线.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "虚线.png"; sourceTree = "<group>"; };
 		6312571E19CC270C00436C39 /* CommunityDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommunityDetailsViewController.h; sourceTree = "<group>"; };
 		6312571F19CC270D00436C39 /* CommunityDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommunityDetailsViewController.m; sourceTree = "<group>"; };
@@ -1044,6 +1050,8 @@
 		633E46EE19AE292A001D8F75 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				630467F91A1B3C9B00D9B9E3 /* ChineseToPinyin.h */,
+				630467FA1A1B3C9B00D9B9E3 /* ChineseToPinyin.m */,
 				630467F01A19EA2700D9B9E3 /* AMapSearchKit.framework */,
 				636A985A1A0C98680014F9ED /* Shime */,
 				63A5A9011A00F8BF0015A49B /* ZSYPopView */,
@@ -1307,9 +1315,9 @@
 		63970FD619B415F700793A3D /* images */ = {
 			isa = PBXGroup;
 			children = (
-				6304679D1A19A8F000D9B9E3 /* 步行.png */,
-				6304679E1A19A8F000D9B9E3 /* 公交车.png */,
-				6304679F1A19A8F000D9B9E3 /* 驾车.png */,
+				6304679D1A19A8F000D9B9E3 /* 步行@2x.png */,
+				6304679E1A19A8F000D9B9E3 /* 公交车@2x.png */,
+				6304679F1A19A8F000D9B9E3 /* 驾车@2x.png */,
 				630467291A15D41C00D9B9E3 /* 绿色勾.png */,
 				636A99071A106C420014F9ED /* 未处理.png */,
 				636A99081A106C420014F9ED /* ok.png */,
@@ -1698,6 +1706,8 @@
 				6304672C1A15E06500D9B9E3 /* MoreActivityDetailViewController.m */,
 				6304679A1A19948900D9B9E3 /* MainMapViewController.h */,
 				6304679B1A19948900D9B9E3 /* MainMapViewController.m */,
+				630467F61A1A585B00D9B9E3 /* WhichWayToGoViewController.h */,
+				630467F71A1A585B00D9B9E3 /* WhichWayToGoViewController.m */,
 				637B40F719F0B22600A63BC6 /* AboutAcount */,
 				63541B2319FF9885001EC683 /* Food */,
 				63F780CC19C050C200DF7585 /* EntertainmentDetailViewController.h */,
@@ -1836,7 +1846,7 @@
 				635C397919EBADE50090DE16 /* password.png in Resources */,
 				63B9157E19B96AEA006F09EC /* 我的未选中.png in Resources */,
 				63F780BC19BEADC200DF7585 /* 左箭头@2x.png in Resources */,
-				630467A11A19A8F000D9B9E3 /* 公交车.png in Resources */,
+				630467A11A19A8F000D9B9E3 /* 公交车@2x.png in Resources */,
 				63F780C419C0018100DF7585 /* 朝左箭头icon@2x.png in Resources */,
 				63EE69BB19B441A100CC7540 /* 首页选中@2x.png in Resources */,
 				63970FBD19B415E200793A3D /* 地标@2x.png in Resources */,
@@ -1868,7 +1878,7 @@
 				63A5A90C1A01E7310015A49B /* 购物车@2x.png in Resources */,
 				63A5A9001A00F4A00015A49B /* fs_main_login_selected@2x.png in Resources */,
 				6312568019CABAD900436C39 /* 虚线.png in Resources */,
-				630467A01A19A8F000D9B9E3 /* 步行.png in Resources */,
+				630467A01A19A8F000D9B9E3 /* 步行@2x.png in Resources */,
 				63541B2819FFC57D001EC683 /* 日历.png in Resources */,
 				63B9157D19B96AEA006F09EC /* 首页选中.png in Resources */,
 				6356263519C83C580011B926 /* 营业.png in Resources */,
@@ -1904,7 +1914,7 @@
 				63B915C019B9B345006F09EC /* page_state_normal@2x.png in Resources */,
 				6356262F19C82CCF0011B926 /* star-template@2x.png in Resources */,
 				63B9163519BE9DCA006F09EC /* 头像啊.png in Resources */,
-				630467A21A19A8F000D9B9E3 /* 驾车.png in Resources */,
+				630467A21A19A8F000D9B9E3 /* 驾车@2x.png in Resources */,
 				6341300F1A07E33B00ED5273 /* cancel@2x.png in Resources */,
 				63EE69AE19B43EF000CC7540 /* 酒店.png in Resources */,
 				63541B601A00CA38001EC683 /* picker_wheel_ip4.png in Resources */,
@@ -2067,6 +2077,7 @@
 				6397101319B451CB00793A3D /* POPAnimation.mm in Sources */,
 				63901E6C19C2834E006C4158 /* BusinessCircleTableViewCell.m in Sources */,
 				633E46A019AE2876001D8F75 /* AboutMoreViewController.m in Sources */,
+				630467F81A1A585B00D9B9E3 /* WhichWayToGoViewController.m in Sources */,
 				63D1C26119F4FEBC00697F08 /* ModifyNicknameViewController.m in Sources */,
 				63D1C26419F54D5600697F08 /* ModifyPasswordViewController.m in Sources */,
 				633E46D919AE28C8001D8F75 /* ADDualTransition.m in Sources */,
@@ -2093,6 +2104,7 @@
 				63541B6D1A00CE8F001EC683 /* NSDate+Additions.m in Sources */,
 				633E469D19AE2866001D8F75 /* AboutMineViewController.m in Sources */,
 				633E46E419AE28C8001D8F75 /* ADSwapTransition.m in Sources */,
+				630467FB1A1B3C9B00D9B9E3 /* ChineseToPinyin.m in Sources */,
 				6356263319C837990011B926 /* ShopDetai_Row1TableViewCell.m in Sources */,
 				633E46DA19AE28C8001D8F75 /* ADFadeTransition.m in Sources */,
 				63E78C5D19D10FBC002755E9 /* ShopDetail_CommunityViewController.m in Sources */,
