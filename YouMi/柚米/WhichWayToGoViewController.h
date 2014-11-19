@@ -17,6 +17,7 @@
 @property (nonatomic,strong)NSArray *paths;//驾车/徒步导航信息组
 @property (nonatomic,strong)AMapRoute *route;
 @property (nonatomic,strong)AMapRoute *route2;//驾车
+@property (nonatomic,strong)AMapRoute *route3;//步行
 
 @property (nonatomic,strong)AMapSearchAPI *search;
 

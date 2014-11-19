@@ -44,6 +44,8 @@
     self.navigationItem.titleView = sg;
     sg.tintColor =baseRedColor;
     sg.backgroundColor = [UIColor clearColor];
+    [sg addTarget:self action:@selector(changeTheWayToGo:) forControlEvents:UIControlEventValueChanged];
+    
     
     /*回退*/
     UIButton *searchButton0 =[UIButton buttonWithType:UIButtonTypeCustom];
@@ -121,6 +123,11 @@
         sg.selectedSegmentIndex = 1;
     }
     
+    if(self.whichWay==3003){
+    
+        sg.selectedSegmentIndex = 2;
+    }
+    
     
 #pragma mark - 创建tableView
     self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 64+101, self.view.bounds.size.width, self.view.bounds.size.height-49-64-60)];
@@ -157,13 +164,40 @@
     }
     
     
+    if(_whichWay==3003){
     
+        [self searchNaviWalking:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude];//步行导航
+    }
     
     
     
     
     // Do any additional setup after loading the view.
 }
+
+
+#pragma 公交/驾车/步行切换
+- (void)changeTheWayToGo:(UISegmentedControl *)sgControl{
+
+    if(sgControl.selectedSegmentIndex==0){//公交
+    
+        self.whichWay = 3001;
+        [self searchNaviBus:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude andCity:@"长沙市"];
+        
+    }else if (sgControl.selectedSegmentIndex==1){//驾车
+        self.whichWay = 3002;
+        [self searchNaviDrive:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude];
+    
+    }else{//步行
+    
+        self.whichWay = 3003;
+        [self searchNaviWalking:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude];
+    
+    }
+
+}
+
+
 
 
 #pragma mark - cell的创建个数
@@ -179,6 +213,11 @@
         return [self.paths count];
     }
     
+    if(_whichWay==3003){
+        
+        return [self.paths count];
+    }
+
     return 0;
 }
 
@@ -246,7 +285,7 @@
             stepLabel.text = @"步行:";
         }
         
-        if(_whichWay==3002){
+        if(_whichWay==3002 || _whichWay==3003){
             
             stepLabel.text = @"距离:";
         }
@@ -262,9 +301,13 @@
         
     }
 
-    //红色标示数
-    UILabel *numLabel = (UILabel *)[cell viewWithTag:3001];
-    numLabel.text = [NSString stringWithFormat:@"%d",indexPath.row+1];
+    if(_whichWay==3001){
+    
+        //红色标示数
+        UILabel *numLabel = (UILabel *)[cell viewWithTag:3001];
+        numLabel.text = [NSString stringWithFormat:@"%d",indexPath.row+1];
+    }
+   
   
     
     
@@ -329,13 +372,40 @@
         //驾车时间
         UILabel *timeNedd = (UILabel *)[cell viewWithTag:3003];
         AMapPath *local_path =self.paths[indexPath.row];
-        timeNedd.text = [NSString stringWithFormat:@"%d分钟",local_path.duration];
+        timeNedd.text = [NSString stringWithFormat:@"%d分钟",local_path.duration/60];
         
         //驾车距离
          UILabel *footMeters =(UILabel *)[cell viewWithTag:3004];
-        footMeters.text = [NSString stringWithFormat:@"%ldm",(long)local_path.distance];
+        footMeters.text = [NSString stringWithFormat:@"%.0ldkm",(long)local_path.distance/1000];
     
+        UILabel *busPreoject = (UILabel *)[cell viewWithTag:3002];
+        busPreoject.text = @"最佳驾驶方案";
+        
+        UILabel *numLabel = (UILabel *)[cell viewWithTag:3001];
+        numLabel.text = @"车";
+
     }
+    
+    if(_whichWay==3003){
+    
+        //步行时间
+        UILabel *timeNedd = (UILabel *)[cell viewWithTag:3003];
+        AMapPath *local_path =self.paths[indexPath.row];
+        timeNedd.text = [NSString stringWithFormat:@"%d分钟",local_path.duration/60];
+    
+        //步行距离
+        UILabel *footMeters =(UILabel *)[cell viewWithTag:3004];
+        footMeters.text = [NSString stringWithFormat:@"%.0ldkm",(long)local_path.distance/1000];
+
+        UILabel *busPreoject = (UILabel *)[cell viewWithTag:3002];
+        busPreoject.text = @"最佳步行方案";
+        
+        UILabel *numLabel = (UILabel *)[cell viewWithTag:3001];
+        numLabel.text = @"步";
+
+
+    }
+    
     
     return cell;
 }
@@ -357,6 +427,11 @@
         
         mapDetail.route = self.route2;
     
+    }
+    
+    if(_whichWay==3003){
+    
+        mapDetail.route = self.route3;
     }
     
   
@@ -437,6 +512,30 @@
 
 
 
+#pragma mark -步行导航
+/* 驾车导航搜索. */
+- (void)searchNaviWalking:(CGFloat)ori_latitude andLongitude:(CGFloat)ori_longitude andLatitude:(CGFloat)des_latitude andLongitude:(CGFloat)des_longitude{
+    
+    AMapNavigationSearchRequest *navi = [[AMapNavigationSearchRequest alloc] init];
+    navi.searchType = AMapSearchType_NaviWalking;
+    navi.requireExtension = YES;
+    
+    /* 出发点. */
+    navi.origin = [AMapGeoPoint locationWithLatitude:ori_latitude
+                                           longitude:ori_longitude];
+    /* 目的地. */
+    navi.destination = [AMapGeoPoint locationWithLatitude:des_latitude
+                                                longitude:des_longitude];
+    
+    [self.search AMapNavigationSearch:navi];
+}
+
+
+
+
+
+
+
 
 
 #pragma mark - 从代理中获取导航数据
@@ -456,6 +555,15 @@
         self.route2 = response.route;
         self.paths = self.route2.paths;
         
+    }
+    
+    if(request.searchType == AMapSearchType_NaviWalking){//步行
+    
+        self.paths = response.route.paths;
+        self.route3 = response.route;
+        self.paths = self.route3.paths;
+
+    
     }
     
     [self.tableView reloadData];

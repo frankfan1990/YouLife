@@ -76,6 +76,9 @@
     footView.tag = 3003;
     [self.view addSubview:footView];
     
+    UITapGestureRecognizer *tap3 =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(whichWayToGO:)];
+    [footView addGestureRecognizer:tap3];
+
    
     self.search =[[AMapSearchAPI alloc]initWithSearchKey:kGaoDeAppKey Delegate:self];
     [self searchReGeoCode:28.1604559362 and:112.9536337433];
@@ -93,6 +96,7 @@
      *  公交/驾车/步行
      *  @return
      */
+#warning 此处为垃圾代码
     [self searchNaviBus:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude
             andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude
                 andCity:@"长沙市"];//公交导航数据
@@ -216,31 +220,23 @@
  */
 - (void)whichWayToGO:(UITapGestureRecognizer *)gesture{
 
+    WhichWayToGoViewController *whichWayToGo =[WhichWayToGoViewController new];
+    whichWayToGo.startCoordinate = self.startCoordinate;
+    whichWayToGo.destinationCoordinate = self.destinationCoordinate;
+    
     if(gesture.view.tag==3001){//公交
     
-        WhichWayToGoViewController *whichWayToGo =[WhichWayToGoViewController new];
         whichWayToGo.whichWay = 3001;
-        whichWayToGo.trsnasts_bus = self.trsnasts_bus;
-        whichWayToGo.route = self.route;
-        whichWayToGo.startCoordinate = self.startCoordinate;
-        whichWayToGo.destinationCoordinate = self.destinationCoordinate;
-        [self.navigationController pushViewController:whichWayToGo animated:YES];
-        
     }else if (gesture.view.tag==3002){//驾车
     
-        WhichWayToGoViewController *whichWayToGo =[WhichWayToGoViewController new];
         whichWayToGo.whichWay = 3002;
-        whichWayToGo.paths = self.paths;
-        whichWayToGo.route = self.route2;
-        whichWayToGo.startCoordinate = self.startCoordinate;
-        whichWayToGo.destinationCoordinate = self.destinationCoordinate;
-        [self.navigationController pushViewController:whichWayToGo animated:YES];
-        
-    
     }else{//步行
     
-    
+        whichWayToGo.whichWay = 3003;
     }
+    
+    
+    [self.navigationController pushViewController:whichWayToGo animated:YES];
 
 
 }

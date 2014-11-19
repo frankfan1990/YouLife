@@ -14,6 +14,9 @@
 {
     NSArray *polylines;
     
+    NSMutableArray *heightArray;//存储cell高度的
+   
+    
 }
 @property (nonatomic,strong)MAMapView *mapView;
 @property (nonatomic,strong)AMapSearchAPI *search;
@@ -21,6 +24,7 @@
 
 @property (nonatomic,strong)NSMutableArray *NaviStepsArray;//公交
 @property (nonatomic,strong)NSMutableArray *CarStepsArray;//驾车
+@property (nonatomic,strong)NSMutableArray *WalkingStepArray;//步行
 @end
 
 @implementation MapDetailViewController
@@ -35,10 +39,28 @@
     
     self.NaviStepsArray =[NSMutableArray array];
     self.CarStepsArray =[NSMutableArray array];
+    self.WalkingStepArray =[NSMutableArray array];
+    
+    heightArray =[NSMutableArray array];
+  
     
     /*title*/
     UILabel *title =[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 30, 40)];
-    title.text = [NSString stringWithFormat:@"第%ld方案",(long)self.projectNum];
+    if(self.whichWay==3001){
+    
+        title.text = [NSString stringWithFormat:@"公交第%ld方案",(long)self.projectNum];
+    }
+    
+    if(self.whichWay==3002){
+    
+        title.text = @"驾车最佳方案";
+    }
+    
+    if(self.whichWay==3003){
+    
+        title.text = @"步行最佳方案";
+    }
+    
     title.textColor = baseRedColor;
     self.navigationItem.titleView = title;
     
@@ -77,14 +99,14 @@
             
             if([segement.busline.name length]){
                 
-                [self.NaviStepsArray addObject:[NSString stringWithFormat:@"%@-%@(共经过%d站)",segement.busline.departureStop.name,segement.busline.arrivalStop.name,segement.busline.busStopsNum]];
+                [self.NaviStepsArray addObject:[NSString stringWithFormat:@"%@:%@-%@(共经过%d站)",segement.busline.name,segement.busline.departureStop.name,segement.busline.arrivalStop.name,segement.busline.busStopsNum]];
                 
             }
         }
 
     }
     
-    if(self.whichWay==3002){
+    if(self.whichWay==3002 ||self.whichWay==3003){
     
         NSArray *paths = self.route.paths;
         AMapPath *mapPath = [paths firstObject];
@@ -92,7 +114,14 @@
         NSArray *steps = mapPath.steps;
         for (AMapStep *step in steps) {
         
-            [self.CarStepsArray addObject:step.instruction];
+            if(self.whichWay==3002){
+        
+                [self.CarStepsArray addObject:step.instruction];
+            }else{
+            
+                [self.WalkingStepArray addObject:step.instruction];
+            }
+            
         }
        
     }
@@ -115,10 +144,16 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     if(self.whichWay==3001){
+        
         return [self.NaviStepsArray count];
+        
     }else if (self.whichWay==3002){
     
         return [self.CarStepsArray count];
+        
+    }else{
+    
+        return  [self.WalkingStepArray count];
     }
     
     return 0;
@@ -135,6 +170,8 @@
             return 10;
         }else{
             
+            CGFloat height = [self caculateTheTextHeight:self.NaviStepsArray[indexPath.row] andFontSize:14]+35;
+            [heightArray addObject:[NSNumber numberWithFloat:height]];
             return [self caculateTheTextHeight:self.NaviStepsArray[indexPath.row] andFontSize:14]+35;
         }
 
@@ -146,7 +183,23 @@
             return 10;
         }else{
         
+            CGFloat height = [self caculateTheTextHeight:self.CarStepsArray[indexPath.row] andFontSize:14]+35;
+            [heightArray addObject:[NSNumber numberWithFloat:height]];
             return [self caculateTheTextHeight:self.CarStepsArray[indexPath.row] andFontSize:14]+35;
+        }
+    
+    }
+    
+    if(self.whichWay==3003){
+        
+        if(![self.WalkingStepArray[indexPath.row] length]){
+            
+            return 10;
+        }else{
+            
+            CGFloat height = [self caculateTheTextHeight:self.WalkingStepArray[indexPath.row] andFontSize:14]+35;
+            [heightArray addObject:[NSNumber numberWithFloat:height]];
+            return [self caculateTheTextHeight:self.WalkingStepArray[indexPath.row] andFontSize:14]+35;
         }
     
     }
@@ -170,13 +223,21 @@
         //label
         UILabel *infoLabel =nil;
         if(self.whichWay==3001){
+
+            infoLabel = [[UILabel alloc]initWithFrame:CGRectMake(60, 5, self.view.bounds.size.width-100, [heightArray[indexPath.row]floatValue]-10)];
             
-            infoLabel = [[UILabel alloc]initWithFrame:CGRectMake(60, 5, self.view.bounds.size.width-100, [self caculateTheTextHeight:self.NaviStepsArray[indexPath.row] andFontSize:14]+25)];
         }
         
         if(self.whichWay==3002){
         
             infoLabel = [[UILabel alloc]initWithFrame:CGRectMake(60, 5, self.view.bounds.size.width-100, [self caculateTheTextHeight:self.CarStepsArray[indexPath.row] andFontSize:14]+25)];
+            
+        }
+        
+        if(self.whichWay==3003){
+        
+            infoLabel = [[UILabel alloc]initWithFrame:CGRectMake(60, 5, self.view.bounds.size.width-100, [self caculateTheTextHeight:self.WalkingStepArray[indexPath.row] andFontSize:14]+25)];
+
             
         }
         
@@ -198,10 +259,12 @@
    
         //redDot&line
         UIView *line =[[UIView alloc]initWithFrame:CGRectMake(30, 0, 2, infoLabel.bounds.size.height+10)];
+        line.tag = 9001;
         line.backgroundColor =[UIColor whiteColor];
         [cell.contentView addSubview:line];
         
         UIView *redDot =[[UIView alloc]initWithFrame:CGRectMake(20, cell.bounds.size.height/2.0-10+5, 20, 20)];
+        redDot.tag = 9002;
         redDot.center = CGPointMake(30, (infoLabel.bounds.size.height+10)/2.0);
         redDot.backgroundColor = baseRedColor;
         redDot.layer.borderWidth = 5;
@@ -211,17 +274,44 @@
         
     }
     
-    UILabel *infoLabel = (UILabel *)[cell viewWithTag:4001];
+    UILabel *infoLabel = nil;
+    UIView *line = nil;
     
     if(self.whichWay==3001){
     
+        infoLabel =(UILabel *)[cell viewWithTag:4001];
+        infoLabel.frame = CGRectMake(60, 5, self.view.bounds.size.width-100, [heightArray[indexPath.row]floatValue]-10);
         infoLabel.text = self.NaviStepsArray[indexPath.row];
+        
+        line = (UIView *)[cell viewWithTag:9001];
+        line.frame = CGRectMake(30, 0, 2, [heightArray[indexPath.row]floatValue]+10);
+        
     }
     
     if(self.whichWay==3002){
+        
+        infoLabel =(UILabel *)[cell viewWithTag:4001];
+        infoLabel.frame = CGRectMake(60, 5, self.view.bounds.size.width-100, [heightArray[indexPath.row]floatValue]-10);
+        infoLabel.text = self.CarStepsArray[indexPath.row];
+        
+        line = (UIView *)[cell viewWithTag:9001];
+        line.frame = CGRectMake(30, 0, 2, [heightArray[indexPath.row]floatValue]+10);
+        
         infoLabel.text = self.CarStepsArray[indexPath.row];
     }
     
+    if(self.whichWay==3003){
+    
+        infoLabel =(UILabel *)[cell viewWithTag:4001];
+        infoLabel.frame = CGRectMake(60, 5, self.view.bounds.size.width-100, [heightArray[indexPath.row]floatValue]-10);
+        infoLabel.text = self.WalkingStepArray[indexPath.row];
+        
+        line = (UIView *)[cell viewWithTag:9001];
+        line.frame = CGRectMake(30, 0, 2, [heightArray[indexPath.row]floatValue]+10);
+
+        infoLabel.text = self.WalkingStepArray[indexPath.row];
+    }
+ 
     return cell;
 
 }
@@ -367,7 +457,7 @@
 - (CGFloat)caculateTheTextHeight:(NSString *)string andFontSize:(int)fontSize{
     
     /*非彻底性封装,这里给定固定的宽度*/
-    CGSize constraint = CGSizeMake(self.view.bounds.size.width-60, CGFLOAT_MAX);
+    CGSize constraint = CGSizeMake(self.view.bounds.size.width-110, CGFLOAT_MAX);
     
     NSDictionary * attributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:fontSize] forKey:NSFontAttributeName];
     NSAttributedString *attributedText =
