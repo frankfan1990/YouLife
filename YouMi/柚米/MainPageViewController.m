@@ -230,7 +230,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
 
     
     locationManager =[[CLLocationManager alloc] init];
-    
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     
     // fix ios8 location issue
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {

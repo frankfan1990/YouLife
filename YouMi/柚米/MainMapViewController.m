@@ -18,9 +18,11 @@
 }
 @property (nonatomic,strong)AMapSearchAPI *search;
 @property (nonatomic,strong)MAMapView *mapView;
-@property (nonatomic,strong)AMapRoute *route;
+@property (nonatomic,strong)AMapRoute *route;//公交
+@property (nonatomic,strong)AMapRoute *route2;//驾车
 
 @property (nonatomic,strong)NSArray *trsnasts_bus;//公交导航信息组
+@property (nonatomic,strong)NSArray *paths;//驾车/徒步导航信息组
 @end
 
 @implementation MainMapViewController
@@ -65,6 +67,11 @@
     carView.tag = 3002;
     [self.view addSubview:carView];
     
+    UITapGestureRecognizer *tap2 =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(whichWayToGO:)];
+    [carView addGestureRecognizer:tap2];
+
+    
+    
     UIView *footView =[self createButtonItemView:CGRectMake(self.view.bounds.size.width/3.0*2, self.view.bounds.size.height-49, self.view.bounds.size.width/3.0, 49) andTitle:@" 步行" andImageName:@"步行"];
     footView.tag = 3003;
     [self.view addSubview:footView];
@@ -89,6 +96,10 @@
     [self searchNaviBus:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude
             andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude
                 andCity:@"长沙市"];//公交导航数据
+    
+    
+    [self searchNaviDrive:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude
+              andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude];//驾车导航
     
     
     
@@ -217,6 +228,14 @@
         
     }else if (gesture.view.tag==3002){//驾车
     
+        WhichWayToGoViewController *whichWayToGo =[WhichWayToGoViewController new];
+        whichWayToGo.whichWay = 3002;
+        whichWayToGo.paths = self.paths;
+        whichWayToGo.route = self.route2;
+        whichWayToGo.startCoordinate = self.startCoordinate;
+        whichWayToGo.destinationCoordinate = self.destinationCoordinate;
+        [self.navigationController pushViewController:whichWayToGo animated:YES];
+        
     
     }else{//步行
     
@@ -275,6 +294,28 @@
 }
 
 
+#pragma mark -驾车导航
+/* 驾车导航搜索. */
+- (void)searchNaviDrive:(CGFloat)ori_latitude andLongitude:(CGFloat)ori_longitude andLatitude:(CGFloat)des_latitude andLongitude:(CGFloat)des_longitude{
+
+    AMapNavigationSearchRequest *navi = [[AMapNavigationSearchRequest alloc] init];
+    navi.searchType       = AMapSearchType_NaviDrive;
+    navi.requireExtension = YES;
+    
+    /* 出发点. */
+    navi.origin = [AMapGeoPoint locationWithLatitude:ori_latitude
+                                           longitude:ori_longitude];
+    /* 目的地. */
+    navi.destination = [AMapGeoPoint locationWithLatitude:des_latitude
+                                                longitude:des_latitude];
+
+    [self.search AMapNavigationSearch:navi];
+}
+
+
+
+
+
 #pragma mark - 从代理中获取导航数据
 - (void)onNavigationSearchDone:(AMapNavigationSearchRequest *)request response:(AMapNavigationSearchResponse *)response{
     
@@ -284,6 +325,12 @@
         self.route = response.route;
     }
     
+    if(request.searchType == AMapSearchType_NaviDrive){//驾车
+        
+        self.paths = response.route.paths;
+        self.route2 = response.route;
+    
+    }
 
 
 

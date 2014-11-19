@@ -10,12 +10,17 @@
 #import "LineDashPolyline.h"
 #import "CommonUtility.h"
 
-@interface MapDetailViewController ()<MAMapViewDelegate,AMapSearchDelegate>
+@interface MapDetailViewController ()<MAMapViewDelegate,AMapSearchDelegate,UITableViewDelegate,UITableViewDataSource>
 {
     NSArray *polylines;
+    
 }
 @property (nonatomic,strong)MAMapView *mapView;
 @property (nonatomic,strong)AMapSearchAPI *search;
+@property (nonatomic,strong)UITableView *tableView;
+
+@property (nonatomic,strong)NSMutableArray *NaviStepsArray;//公交
+@property (nonatomic,strong)NSMutableArray *CarStepsArray;//驾车
 @end
 
 @implementation MapDetailViewController
@@ -24,6 +29,12 @@
     [super viewDidLoad];
     self.view.backgroundColor = customGrayColor;
     //
+    /**
+     参数初始化
+     */
+    
+    self.NaviStepsArray =[NSMutableArray array];
+    self.CarStepsArray =[NSMutableArray array];
     
     /*title*/
     UILabel *title =[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 30, 40)];
@@ -47,8 +58,177 @@
     [self.view addSubview:redLine];
     
     
+    //
+    if(self.whichWay==3001){
+    
+        AMapTransit *transit = self.route.transits[self.projectNum-1];
+        NSArray *segements = transit.segments;
+        
+        for (AMapSegment *segement in segements) {
+            
+            if([segement.walking.steps count]){
+                
+                for (AMapStep *step in segement.walking.steps) {
+                    
+                    [self.NaviStepsArray addObject:step.instruction];
+                }
+                
+            }
+            
+            if([segement.busline.name length]){
+                
+                [self.NaviStepsArray addObject:[NSString stringWithFormat:@"%@-%@(共经过%d站)",segement.busline.departureStop.name,segement.busline.arrivalStop.name,segement.busline.busStopsNum]];
+                
+            }
+        }
+
+    }
+    
+    if(self.whichWay==3002){
+    
+        NSArray *paths = self.route.paths;
+        AMapPath *mapPath = [paths firstObject];
+        
+        NSArray *steps = mapPath.steps;
+        for (AMapStep *step in steps) {
+        
+            [self.CarStepsArray addObject:step.instruction];
+        }
+       
+    }
+    
+    
+    
+#pragma mark - 创建tableView
+    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(10, self.view.bounds.size.height-198, self.view.bounds.size.width, self.view.bounds.size.height-201-64-49-60) style:UITableViewStylePlain];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    [self.view addSubview:self.tableView];
+    self.tableView.backgroundColor = customGrayColor;
+    self.tableView.separatorStyle = NO;
+    
        // Do any additional setup after loading the view.
 }
+
+
+#pragma mark - 创建cell的个数
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    
+    if(self.whichWay==3001){
+        return [self.NaviStepsArray count];
+    }else if (self.whichWay==3002){
+    
+        return [self.CarStepsArray count];
+    }
+    
+    return 0;
+    
+}
+
+#pragma mark - cell的高度
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    if(self.whichWay==3001){
+    
+        if(![self.NaviStepsArray[indexPath.row] length]){
+            
+            return 10;
+        }else{
+            
+            return [self caculateTheTextHeight:self.NaviStepsArray[indexPath.row] andFontSize:14]+35;
+        }
+
+    }
+    
+    if(self.whichWay==3002){
+        
+        if(![self.CarStepsArray[indexPath.row] length]){
+            return 10;
+        }else{
+        
+            return [self caculateTheTextHeight:self.CarStepsArray[indexPath.row] andFontSize:14]+35;
+        }
+    
+    }
+   
+    
+    return 0;
+}
+
+#pragma mark - 创建cell
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    UITableViewCell *cell = nil;
+    static NSString *cellName = @"cell";
+    cell =[tableView dequeueReusableCellWithIdentifier:cellName];
+    if(!cell){
+    
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellName];
+        cell.backgroundColor = customGrayColor;
+        cell.selectionStyle = NO;
+        
+        //label
+        UILabel *infoLabel =nil;
+        if(self.whichWay==3001){
+            
+            infoLabel = [[UILabel alloc]initWithFrame:CGRectMake(60, 5, self.view.bounds.size.width-100, [self caculateTheTextHeight:self.NaviStepsArray[indexPath.row] andFontSize:14]+25)];
+        }
+        
+        if(self.whichWay==3002){
+        
+            infoLabel = [[UILabel alloc]initWithFrame:CGRectMake(60, 5, self.view.bounds.size.width-100, [self caculateTheTextHeight:self.CarStepsArray[indexPath.row] andFontSize:14]+25)];
+            
+        }
+        
+        infoLabel.tag = 4001;
+        infoLabel.font =[UIFont systemFontOfSize:14];
+        infoLabel.textColor = baseTextColor;
+        infoLabel.backgroundColor = [UIColor whiteColor];
+        infoLabel.layer.cornerRadius = 5;
+        infoLabel.layer.masksToBounds = YES;
+        infoLabel.numberOfLines = 0;
+        infoLabel.textAlignment = NSTextAlignmentCenter;
+        infoLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        [cell.contentView addSubview:infoLabel];
+        
+        UIImageView *arrowImageView =[[UIImageView alloc]initWithFrame:CGRectMake(56, 0, 14, 10)];
+        arrowImageView.center = CGPointMake(58, (infoLabel.bounds.size.height+10)/2.0);
+        [cell.contentView addSubview:arrowImageView];
+        arrowImageView.image = [UIImage imageNamed:@"白色箭头"];
+   
+        //redDot&line
+        UIView *line =[[UIView alloc]initWithFrame:CGRectMake(30, 0, 2, infoLabel.bounds.size.height+10)];
+        line.backgroundColor =[UIColor whiteColor];
+        [cell.contentView addSubview:line];
+        
+        UIView *redDot =[[UIView alloc]initWithFrame:CGRectMake(20, cell.bounds.size.height/2.0-10+5, 20, 20)];
+        redDot.center = CGPointMake(30, (infoLabel.bounds.size.height+10)/2.0);
+        redDot.backgroundColor = baseRedColor;
+        redDot.layer.borderWidth = 5;
+        redDot.layer.cornerRadius = 10;
+        redDot.layer.borderColor = [UIColor whiteColor].CGColor;
+        [cell.contentView addSubview:redDot];
+        
+    }
+    
+    UILabel *infoLabel = (UILabel *)[cell viewWithTag:4001];
+    
+    if(self.whichWay==3001){
+    
+        infoLabel.text = self.NaviStepsArray[indexPath.row];
+    }
+    
+    if(self.whichWay==3002){
+        infoLabel.text = self.CarStepsArray[indexPath.row];
+    }
+    
+    return cell;
+
+}
+
+
+
+
 
 #pragma mark - 初始化地图
 - (void)viewWillAppear:(BOOL)animated{
@@ -171,6 +351,7 @@
         
         polylineRenderer.lineWidth   = 4;
         polylineRenderer.strokeColor = [UIColor magentaColor];
+        polylineRenderer.strokeColor =baseRedColor;
         
         return polylineRenderer;
     }
@@ -180,6 +361,28 @@
 
 
 }
+
+
+#pragma mark - 动态计算文字高度
+- (CGFloat)caculateTheTextHeight:(NSString *)string andFontSize:(int)fontSize{
+    
+    /*非彻底性封装,这里给定固定的宽度*/
+    CGSize constraint = CGSizeMake(self.view.bounds.size.width-60, CGFLOAT_MAX);
+    
+    NSDictionary * attributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:fontSize] forKey:NSFontAttributeName];
+    NSAttributedString *attributedText =
+    [[NSAttributedString alloc]
+     initWithString:string
+     attributes:attributes];
+    CGRect rect = [attributedText boundingRectWithSize:constraint
+                                               options:NSStringDrawingUsesLineFragmentOrigin
+                                               context:nil];
+    CGSize size = rect.size;
+    
+    
+    return size.height;
+}
+
 
 
 

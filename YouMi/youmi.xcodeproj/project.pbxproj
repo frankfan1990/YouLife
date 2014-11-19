@@ -36,6 +36,7 @@
 		6325D8D71A020F73001DA5BD /* MyUBiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8D61A020F73001DA5BD /* MyUBiViewController.m */; };
 		6325D8DA1A021514001DA5BD /* MyCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8D91A021514001DA5BD /* MyCommentViewController.m */; };
 		6325D8DE1A022481001DA5BD /* CourseDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8DD1A022481001DA5BD /* CourseDetailsViewController.m */; };
+		632CEB1D1A1C75F200DDD535 /* 白色箭头.png in Resources */ = {isa = PBXBuildFile; fileRef = 632CEB1C1A1C75F200DDD535 /* 白色箭头.png */; };
 		633E456F19AD7A7C001D8F75 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633E456D19AD7A7C001D8F75 /* InfoPlist.strings */; };
 		633E457119AD7A7C001D8F75 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E457019AD7A7C001D8F75 /* main.m */; };
 		633E457519AD7A7C001D8F75 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E457419AD7A7C001D8F75 /* AppDelegate.m */; };
@@ -364,6 +365,8 @@
 		6325D8D91A021514001DA5BD /* MyCommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCommentViewController.m; sourceTree = "<group>"; };
 		6325D8DC1A022481001DA5BD /* CourseDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CourseDetailsViewController.h; sourceTree = "<group>"; };
 		6325D8DD1A022481001DA5BD /* CourseDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CourseDetailsViewController.m; sourceTree = "<group>"; };
+		632CEB1B1A1C3E4C00DDD535 /* convert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = convert.h; sourceTree = "<group>"; };
+		632CEB1C1A1C75F200DDD535 /* 白色箭头.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "白色箭头.png"; sourceTree = "<group>"; };
 		6335B89D19AE39BE00F37A5F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		633E456119AD7A7C001D8F75 /* youmi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = youmi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		633E456419AD7A7C001D8F75 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -901,6 +904,15 @@
 			name = "Curltrue&Education";
 			sourceTree = "<group>";
 		};
+		632CEB1A1A1C3DCD00DDD535 /* NSDataHelper */ = {
+			isa = PBXGroup;
+			children = (
+				63541B6B1A00CE8F001EC683 /* NSDate+Additions.h */,
+				63541B6C1A00CE8F001EC683 /* NSDate+Additions.m */,
+			);
+			name = NSDataHelper;
+			sourceTree = "<group>";
+		};
 		633E455819AD7A7C001D8F75 = {
 			isa = PBXGroup;
 			children = (
@@ -1243,8 +1255,8 @@
 		635C3A5619EE6AED0090DE16 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				63541B6B1A00CE8F001EC683 /* NSDate+Additions.h */,
-				63541B6C1A00CE8F001EC683 /* NSDate+Additions.m */,
+				632CEB1B1A1C3E4C00DDD535 /* convert.h */,
+				632CEB1A1A1C3DCD00DDD535 /* NSDataHelper */,
 				63E378D819EF94D600C0D02A /* ReachAbility */,
 				635C3A5719EE6AFA0090DE16 /* isEmail&PhoneNum */,
 			);
@@ -1352,6 +1364,7 @@
 		63970FD619B415F700793A3D /* images */ = {
 			isa = PBXGroup;
 			children = (
+				632CEB1C1A1C75F200DDD535 /* 白色箭头.png */,
 				630468291A1BA7B900D9B9E3 /* endPoint.png */,
 				6304682A1A1BA7B900D9B9E3 /* endPoint@2x.png */,
 				6304682B1A1BA7B900D9B9E3 /* startPoint.png */,
@@ -1902,6 +1915,7 @@
 				63541B641A00CA38001EC683 /* round_backarrow_big.png in Resources */,
 				63541B651A00CA38001EC683 /* round_backarrow_big@2x.png in Resources */,
 				63EE69BF19B4475300CC7540 /* 首页未选中@2x.png in Resources */,
+				632CEB1D1A1C75F200DDD535 /* 白色箭头.png in Resources */,
 				63C60BFC19C6F06E002FEBB9 /* 分享@2x.png in Resources */,
 				63541B671A00CA38001EC683 /* schedule_image_moon-high@2x.png in Resources */,
 				63970FC219B415E200793A3D /* 更多选中@2x.png in Resources */,

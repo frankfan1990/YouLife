@@ -8,10 +8,11 @@
 
 #import "WhichWayToGoViewController.h"
 #import "MapDetailViewController.h"
+#import "ChineseToPinyin.h"
 
-@interface WhichWayToGoViewController ()<AMapSearchDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface WhichWayToGoViewController ()<AMapSearchDelegate,AMapSearchDelegate,UITableViewDelegate,UITableViewDataSource>
 
-@property (nonatomic,strong)AMapSearchAPI *search;
+
 @property (nonatomic,strong)UITableView *tableView;
 
 @property (nonatomic,strong)NSMutableArray *busLineProjectArray;//公交路线方案
@@ -116,6 +117,10 @@
         sg.selectedSegmentIndex = 0;
     }
     
+    if(self.whichWay==3002){
+        sg.selectedSegmentIndex = 1;
+    }
+    
     
 #pragma mark - 创建tableView
     self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 64+101, self.view.bounds.size.width, self.view.bounds.size.height-49-64-60)];
@@ -125,6 +130,35 @@
     [self.view addSubview:self.tableView];
     self.tableView.rowHeight = 60;
    
+    
+    /**
+     *  @Author frankfan, 14-11-19 16:11:25
+     *
+     *  在这里开始配置高德地图
+     *
+     *  @param NSInteger
+     *
+     *  @return
+     */
+    
+    if(_whichWay==3001){
+    
+        [self searchNaviBus:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude
+                andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude
+                    andCity:@"长沙市"];//公交导航数据
+
+    }
+    
+    if(_whichWay==3002){
+    
+        [self searchNaviDrive:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude
+                  andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude];//驾车导航
+
+    }
+    
+    
+    
+    
     
     
     
@@ -139,6 +173,12 @@
     
         return [self.trsnasts_bus count];
     }
+    
+    if(_whichWay==3002){
+    
+        return [self.paths count];
+    }
+    
     return 0;
 }
 
@@ -201,7 +241,16 @@
         stepLabel.textColor = [UIColor colorWithWhite:0.75 alpha:1];
         stepLabel.adjustsFontSizeToFitWidth = YES;
         [cell.contentView addSubview:stepLabel];
-        stepLabel.text = @"步行:";
+        if(_whichWay==3001){
+            
+            stepLabel.text = @"步行:";
+        }
+        
+        if(_whichWay==3002){
+            
+            stepLabel.text = @"距离:";
+        }
+        
         
         UILabel *stepsNum =[[UILabel alloc]initWithFrame:CGRectMake(165, cell.bounds.size.height/2.0-15+23, 100, 35)];
         stepsNum.tag = 3004;
@@ -215,54 +264,77 @@
 
     //红色标示数
     UILabel *numLabel = (UILabel *)[cell viewWithTag:3001];
-    if(_whichWay==3001){
-    
-        numLabel.text = [NSString stringWithFormat:@"%d",indexPath.row+1];
-    }
+    numLabel.text = [NSString stringWithFormat:@"%d",indexPath.row+1];
+  
     
     
     //公交班线
-    UILabel *busPreoject = (UILabel *)[cell viewWithTag:3002];
-    
-    /**
-     *  @Author frankfan, 14-11-18 15:11:35
-     *
-     *  这里去解析相应的bus方案
-     */
-    AMapTransit *local_transits = self.trsnasts_bus[indexPath.row];
-    NSArray *local_segements = local_transits.segments;
-    NSMutableArray *array =[NSMutableArray array];
-    for (AMapSegment *local_segement in local_segements) {
-        
-        if([local_segement.busline.departureStop.name length]&&[local_segement.busline.arrivalStop.name length]){
-            
-            
-            [array addObject:[NSString stringWithFormat:@" %@",local_segement.busline.departureStop.name]];
-            [array addObject:[NSString stringWithFormat:@"-%@",local_segement.busline.arrivalStop.name]];
-        }
-        
-    }
-    NSString *busPathString = [array componentsJoinedByString:@""];
     if(_whichWay==3001){
+        
+        UILabel *busPreoject = (UILabel *)[cell viewWithTag:3002];
+        
+        /**
+         *  @Author frankfan, 14-11-18 15:11:35
+         *
+         *  这里去解析相应的bus方案
+         */
+        AMapTransit *local_transits = self.trsnasts_bus[indexPath.row];
+        NSArray *local_segements = local_transits.segments;
+        NSMutableArray *array =[NSMutableArray array];
+        for (AMapSegment *local_segement in local_segements) {
+            
+            if([local_segement.busline.departureStop.name length]&&[local_segement.busline.arrivalStop.name length]){
+                
+                
+                [array addObject:[NSString stringWithFormat:@" %@",local_segement.busline.departureStop.name]];
+                [array addObject:[NSString stringWithFormat:@"-%@",local_segement.busline.arrivalStop.name]];
+            }
+            
+        }
+        NSString *busPathString = [array componentsJoinedByString:@""];
+
         
         busPreoject.text = busPathString;
     }
     
     
     //时间
-    UILabel *timeNedd = (UILabel *)[cell viewWithTag:3003];
-    AMapTransit *local_transit_bus = self.trsnasts_bus[indexPath.row];
     if(_whichWay==3001){
         
-        timeNedd.text = [NSString stringWithFormat:@"%ld分钟",local_transit_bus.duration/60];
+        UILabel *timeNedd = (UILabel *)[cell viewWithTag:3003];
+        AMapTransit *local_transit_bus = self.trsnasts_bus[indexPath.row];
+
+        timeNedd.text = [NSString stringWithFormat:@"%d分钟",local_transit_bus.duration/60];
     }
     
     
     //步行米数
-    UILabel *footMeters =(UILabel *)[cell viewWithTag:3004];
+   
     if(_whichWay==3001){
         
+         UILabel *footMeters =(UILabel *)[cell viewWithTag:3004];
+        AMapTransit *local_transit_bus = self.trsnasts_bus[indexPath.row];
         footMeters.text = [NSString stringWithFormat:@"%ldm",(long)local_transit_bus.walkingDistance];
+    }
+    
+    
+    /**
+     *  @Author frankfan, 14-11-19 15:11:04
+     *
+     *  驾车部分的处理
+     */
+    
+    if(_whichWay==3002){
+    
+        //驾车时间
+        UILabel *timeNedd = (UILabel *)[cell viewWithTag:3003];
+        AMapPath *local_path =self.paths[indexPath.row];
+        timeNedd.text = [NSString stringWithFormat:@"%d分钟",local_path.duration];
+        
+        //驾车距离
+         UILabel *footMeters =(UILabel *)[cell viewWithTag:3004];
+        footMeters.text = [NSString stringWithFormat:@"%ldm",(long)local_path.distance];
+    
     }
     
     return cell;
@@ -272,14 +344,122 @@
 #pragma mark - cell被点击触发
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 
+    
     MapDetailViewController *mapDetail =[MapDetailViewController new];
     mapDetail.projectNum = indexPath.row+1;
-    mapDetail.whichWay = self.whichWay;
-    mapDetail.route = self.route;
+     mapDetail.whichWay = self.whichWay;
+    if(_whichWay==3001){
+    
+        mapDetail.route = self.route;
+    }
+    
+    if(_whichWay==3002){
+        
+        mapDetail.route = self.route2;
+    
+    }
+    
+  
     mapDetail.startCoordinate = self.startCoordinate;
     mapDetail.destinationCoordinate = self.destinationCoordinate;
     [self.navigationController pushViewController:mapDetail animated:YES];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+
+
+#pragma mark - 公交导航
+/**
+ *  @Author frankfan, 14-11-18 16:11:18
+ *
+ *  这里面如果是公交导航的话city字段是不能少的
+ *  city字段为汉语拼音，且不能含有“市”字,方法内有处理
+ *  @param ori_latitude  出发地纬度
+ *  @param ori_longitude 出发地经度
+ *  @param des_latitude  目的地纬度
+ *  @param des_longitude 目的地经度
+ *  @param city          所在城市【公交导航所需】
+ */
+- (void)searchNaviBus:(CGFloat)ori_latitude andLongitude:(CGFloat)ori_longitude andLatitude:(CGFloat)des_latitude andLongitude:(CGFloat)des_longitude andCity:(NSString *)city{
+    
+    AMapNavigationSearchRequest *naviRequest = [[AMapNavigationSearchRequest alloc] init];
+    naviRequest.searchType = AMapSearchType_NaviBus;
+    naviRequest.origin = [AMapGeoPoint locationWithLatitude:ori_latitude longitude:ori_longitude];
+    naviRequest.destination = [AMapGeoPoint locationWithLatitude:des_latitude longitude:des_longitude];
+    
+    
+    NSString *cityName = nil;
+    if([city isEqualToString:@"长沙市"]){
+        
+        cityName = @"changsha";
+    }else if ([city isEqualToString:@"重庆市"]){
+        
+        cityName = @"chongqing";
+    }else{
+        
+        NSString *local_cityName = nil;
+        if([city containsString:@"市"]){
+            
+            NSArray *cityEleArray = [city componentsSeparatedByString:@"市"];
+            local_cityName = [cityEleArray firstObject];
+        }else{
+            
+            local_cityName = city;
+        }
+        
+        NSString *pingyin = [ChineseToPinyin pinyinFromChiniseString:local_cityName];
+        NSString *realCityName = [pingyin lowercaseStringWithLocale:[NSLocale systemLocale]];
+        cityName = realCityName;
+    }
+    
+    naviRequest.city = cityName;
+    [self.search AMapNavigationSearch: naviRequest];
+}
+
+
+#pragma mark -驾车导航
+/* 驾车导航搜索. */
+- (void)searchNaviDrive:(CGFloat)ori_latitude andLongitude:(CGFloat)ori_longitude andLatitude:(CGFloat)des_latitude andLongitude:(CGFloat)des_longitude{
+    
+    AMapNavigationSearchRequest *navi = [[AMapNavigationSearchRequest alloc] init];
+    navi.searchType = AMapSearchType_NaviDrive;
+    navi.requireExtension = YES;
+    
+    /* 出发点. */
+    navi.origin = [AMapGeoPoint locationWithLatitude:ori_latitude
+                                           longitude:ori_longitude];
+    /* 目的地. */
+    navi.destination = [AMapGeoPoint locationWithLatitude:des_latitude
+                                                longitude:des_longitude];
+    
+    [self.search AMapNavigationSearch:navi];
+}
+
+
+
+
+
+#pragma mark - 从代理中获取导航数据
+- (void)onNavigationSearchDone:(AMapNavigationSearchRequest *)request response:(AMapNavigationSearchResponse *)response{
+    
+    if(request.searchType == AMapSearchType_NaviBus){//公交
+        
+        self.trsnasts_bus = response.route.transits;//公交方案
+        self.route = response.route;
+        self.trsnasts_bus = self.route.transits;
+        
+    }
+    
+    if(request.searchType == AMapSearchType_NaviDrive){//驾车
+        
+        self.paths = response.route.paths;
+        self.route2 = response.route;
+        self.paths = self.route2.paths;
+        
+    }
+    
+    [self.tableView reloadData];
+    
 }
 
 
