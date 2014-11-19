@@ -1,8 +1,8 @@
 //
-//  MainMapViewController.h
+//  MapDetailViewController.h
 //  youmi
 //
-//  Created by frankfan on 14/11/17.
+//  Created by frankfan on 14/11/18.
 //  Copyright (c) 2014年 ruizhou. All rights reserved.
 //
 
@@ -10,11 +10,11 @@
 #import <MAMapKit/MAMapKit.h>
 #import <AMapSearchKit/AMapSearchAPI.h>
 
-@interface MainMapViewController : UIViewController
+@interface MapDetailViewController : UIViewController
 
-@property (nonatomic,strong)NSString *shopperName;//店铺名
-@property (nonatomic,assign)double latitude;//纬度
-@property (nonatomic,assign)double longitude;//经度
+@property (nonatomic,assign)NSInteger whichWay;
+@property (nonatomic,assign)NSInteger projectNum;//第几个方案
+@property (nonatomic, strong)AMapRoute *route;
 
 /* 起始点经纬度. */
 @property (nonatomic) CLLocationCoordinate2D startCoordinate;

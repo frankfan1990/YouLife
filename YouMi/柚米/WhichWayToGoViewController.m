@@ -7,7 +7,7 @@
 //
 
 #import "WhichWayToGoViewController.h"
-#import <AMapSearchKit/AMapSearchAPI.h>
+#import "MapDetailViewController.h"
 
 @interface WhichWayToGoViewController ()<AMapSearchDelegate,UITableViewDelegate,UITableViewDataSource>
 
@@ -254,7 +254,7 @@
     AMapTransit *local_transit_bus = self.trsnasts_bus[indexPath.row];
     if(_whichWay==3001){
         
-        timeNedd.text = [NSString stringWithFormat:@"%d分钟",local_transit_bus.duration/60];
+        timeNedd.text = [NSString stringWithFormat:@"%ld分钟",local_transit_bus.duration/60];
     }
     
     
@@ -262,15 +262,29 @@
     UILabel *footMeters =(UILabel *)[cell viewWithTag:3004];
     if(_whichWay==3001){
         
-        footMeters.text = [NSString stringWithFormat:@"%dm",local_transit_bus.walkingDistance];
+        footMeters.text = [NSString stringWithFormat:@"%ldm",(long)local_transit_bus.walkingDistance];
     }
     
     return cell;
 }
 
 
+#pragma mark - cell被点击触发
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    MapDetailViewController *mapDetail =[MapDetailViewController new];
+    mapDetail.projectNum = indexPath.row+1;
+    mapDetail.whichWay = self.whichWay;
+    mapDetail.route = self.route;
+    mapDetail.startCoordinate = self.startCoordinate;
+    mapDetail.destinationCoordinate = self.destinationCoordinate;
+    [self.navigationController pushViewController:mapDetail animated:YES];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
 
 
+
+#pragma mark - 回退
 //回退
 - (void)buttonClicked:(UIButton *)sender{
 

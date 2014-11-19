@@ -33,6 +33,7 @@
     UIButton *leftbarButton;
     
     CCSegmentedControl *ccsegementCV;
+    CLLocationManager * locationManager;
 
 }
 @property (nonatomic,strong)UICollectionView *collectionView;
@@ -209,7 +210,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     [[MMLocationManager shareLocation]getCity:^(NSString *addressString) {
         
         [self setBarButtonTitle:addressString];
-     
+        
         [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:kUserLocationCity];
         [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:@"gpsLocation"];
         
@@ -217,7 +218,36 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         
         [self createBarButton];
         [ProgressHUD showError:@"无法完成定位"];
+        
     }];
+    
+    [[MMLocationManager shareLocation]getLocationCoordinate:^(CLLocationCoordinate2D locationCorrrdinate) {
+        
+        NSLog(@"lat:%f---longitude:%f",locationCorrrdinate.latitude,locationCorrrdinate.longitude);
+        
+    }];
+    
+
+    
+    locationManager =[[CLLocationManager alloc] init];
+    
+    
+    // fix ios8 location issue
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
+#ifdef __IPHONE_8_0
+        if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
+        {
+            [locationManager performSelector:@selector(requestAlwaysAuthorization)];//用这个方法，plist中需要NSLocationAlwaysUsageDescription
+        }
+        
+        if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
+        {
+            [locationManager performSelector:@selector(requestWhenInUseAuthorization)];//用这个方法，plist里要加字段NSLocationWhenInUseUsageDescription
+        }
+#endif
+    }
+    
+    NSLog(@">>>>%f----%f",locationManager.location.coordinate.latitude,locationManager.location.coordinate.longitude);
     
     
     
@@ -237,6 +267,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         
             [self createBarButton];
             [ProgressHUD showError:@"无法完成定位" Interaction:NO];
+            [self setBarButtonTitle:@"长沙"];
         }
         
     });

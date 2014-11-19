@@ -547,8 +547,8 @@
         
             MainMapViewController *mainMap =[MainMapViewController new];
             mainMap.hidesBottomBarWhenPushed = YES;
-            
             [self.navigationController pushViewController:mainMap animated:YES];
+            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         }
         

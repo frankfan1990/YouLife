@@ -7,8 +7,6 @@
 //
 
 #import "MainMapViewController.h"
-#import <MAMapKit/MAMapKit.h>
-#import <AMapSearchKit/AMapSearchAPI.h>
 #import "WhichWayToGoViewController.h"
 #import "ChineseToPinyin.h"
 
@@ -20,6 +18,7 @@
 }
 @property (nonatomic,strong)AMapSearchAPI *search;
 @property (nonatomic,strong)MAMapView *mapView;
+@property (nonatomic,strong)AMapRoute *route;
 
 @property (nonatomic,strong)NSArray *trsnasts_bus;//公交导航信息组
 @end
@@ -74,12 +73,12 @@
     self.search =[[AMapSearchAPI alloc]initWithSearchKey:kGaoDeAppKey Delegate:self];
     [self searchReGeoCode:28.1604559362 and:112.9536337433];
     
-    //添加标注
-    annotation0 =[[MAPointAnnotation alloc]init];
-    annotation0.coordinate = CLLocationCoordinate2DMake(28.1604559362, 112.9536337433);
     
     
     
+    self.startCoordinate = CLLocationCoordinate2DMake(28.1604559362, 112.9536337433);
+    self.destinationCoordinate = CLLocationCoordinate2DMake(28.2602631576, 112.9779605718);
+   
     /**
      *  @Author frankfan, 14-11-18 12:11:32
      *
@@ -87,9 +86,8 @@
      *  公交/驾车/步行
      *  @return
      */
-    
-    [self searchNaviBus:28.1604559362 andLongitude:112.9536337433
-            andLatitude:28.2602631576 andLongitude:112.9779605718
+    [self searchNaviBus:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude
+            andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude
                 andCity:@"长沙市"];//公交导航数据
     
     
@@ -110,18 +108,24 @@
 
     [super viewWillAppear:animated];
     self.mapView =[[MAMapView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-50)];
-    [self.mapView addAnnotation:annotation0];
  
+    //添加标注
+    annotation0 =[[MAPointAnnotation alloc]init];
+    annotation0.coordinate = CLLocationCoordinate2DMake(28.1604559362, 112.9536337433);
+
+   
     
     self.mapView.showsScale = YES;
     self.mapView.delegate = self;
     
     //让视图缩放适配
-    MACoordinateSpan span ={0.03, 0.03};
+    MACoordinateSpan span ={0.06, 0.06};
     MACoordinateRegion region={annotation0.coordinate,span};
     [self.mapView setRegion:region animated:YES];
     self.mapView.centerCoordinate = annotation0.coordinate;
     
+    [self.mapView addAnnotation:annotation0];
+
     [self.view addSubview:self.mapView];
     
 }
@@ -206,6 +210,9 @@
         WhichWayToGoViewController *whichWayToGo =[WhichWayToGoViewController new];
         whichWayToGo.whichWay = 3001;
         whichWayToGo.trsnasts_bus = self.trsnasts_bus;
+        whichWayToGo.route = self.route;
+        whichWayToGo.startCoordinate = self.startCoordinate;
+        whichWayToGo.destinationCoordinate = self.destinationCoordinate;
         [self.navigationController pushViewController:whichWayToGo animated:YES];
         
     }else if (gesture.view.tag==3002){//驾车
@@ -274,7 +281,7 @@
     if(request.searchType == AMapSearchType_NaviBus){//公交
         
         self.trsnasts_bus = response.route.transits;//公交方案
-       
+        self.route = response.route;
     }
     
 

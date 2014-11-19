@@ -374,6 +374,7 @@
 //    ItemDetailController *foodShop =[[ItemDetailController alloc]init];
     ShopDetailViewController *shopDetail =[ShopDetailViewController new];
     [self.navigationController pushViewController:shopDetail animated:YES];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES ];
 }
 
 
