@@ -37,6 +37,7 @@
 		6325D8DA1A021514001DA5BD /* MyCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8D91A021514001DA5BD /* MyCommentViewController.m */; };
 		6325D8DE1A022481001DA5BD /* CourseDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8DD1A022481001DA5BD /* CourseDetailsViewController.m */; };
 		632CEB1D1A1C75F200DDD535 /* 白色箭头.png in Resources */ = {isa = PBXBuildFile; fileRef = 632CEB1C1A1C75F200DDD535 /* 白色箭头.png */; };
+		632CEB211A1DC13200DDD535 /* ShopObjectModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 632CEB201A1DC13200DDD535 /* ShopObjectModel.m */; };
 		633E456F19AD7A7C001D8F75 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633E456D19AD7A7C001D8F75 /* InfoPlist.strings */; };
 		633E457119AD7A7C001D8F75 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E457019AD7A7C001D8F75 /* main.m */; };
 		633E457519AD7A7C001D8F75 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E457419AD7A7C001D8F75 /* AppDelegate.m */; };
@@ -367,6 +368,8 @@
 		6325D8DD1A022481001DA5BD /* CourseDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CourseDetailsViewController.m; sourceTree = "<group>"; };
 		632CEB1B1A1C3E4C00DDD535 /* convert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = convert.h; sourceTree = "<group>"; };
 		632CEB1C1A1C75F200DDD535 /* 白色箭头.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "白色箭头.png"; sourceTree = "<group>"; };
+		632CEB1F1A1DC13200DDD535 /* ShopObjectModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopObjectModel.h; sourceTree = "<group>"; };
+		632CEB201A1DC13200DDD535 /* ShopObjectModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopObjectModel.m; sourceTree = "<group>"; };
 		6335B89D19AE39BE00F37A5F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		633E456119AD7A7C001D8F75 /* youmi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = youmi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		633E456419AD7A7C001D8F75 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -911,6 +914,24 @@
 				63541B6C1A00CE8F001EC683 /* NSDate+Additions.m */,
 			);
 			name = NSDataHelper;
+			sourceTree = "<group>";
+		};
+		632CEB1E1A1DC0AC00DDD535 /* AboutUserInfo */ = {
+			isa = PBXGroup;
+			children = (
+				63BCD30219FA8BA200092C05 /* Userinfo.h */,
+				63BCD30319FA8BA200092C05 /* Userinfo.m */,
+			);
+			name = AboutUserInfo;
+			sourceTree = "<group>";
+		};
+		632CEB221A1DC27600DDD535 /* ShopObject */ = {
+			isa = PBXGroup;
+			children = (
+				632CEB1F1A1DC13200DDD535 /* ShopObjectModel.h */,
+				632CEB201A1DC13200DDD535 /* ShopObjectModel.m */,
+			);
+			name = ShopObject;
 			sourceTree = "<group>";
 		};
 		633E455819AD7A7C001D8F75 = {
@@ -1604,9 +1625,9 @@
 		63B7AA0819AED24B00AAE30A /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				63EEA91919F899AA00F5A8A5 /* dataAboutView */,
-				63BCD30219FA8BA200092C05 /* Userinfo.h */,
-				63BCD30319FA8BA200092C05 /* Userinfo.m */,
+				63EEA91919F899AA00F5A8A5 /* DataAboutView */,
+				632CEB1E1A1DC0AC00DDD535 /* AboutUserInfo */,
+				632CEB221A1DC27600DDD535 /* ShopObject */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1730,7 +1751,7 @@
 			name = ReachAbility;
 			sourceTree = "<group>";
 		};
-		63EEA91919F899AA00F5A8A5 /* dataAboutView */ = {
+		63EEA91919F899AA00F5A8A5 /* DataAboutView */ = {
 			isa = PBXGroup;
 			children = (
 				63B7AA0519AED24500AAE30A /* MainPageData.h */,
@@ -1738,7 +1759,7 @@
 				6360A98319AF1A9D0013809B /* DataAboutTitle.h */,
 				6360A98419AF1A9D0013809B /* DataAboutTitle.m */,
 			);
-			name = dataAboutView;
+			name = DataAboutView;
 			sourceTree = "<group>";
 		};
 		63F780C019BFDE2A00DF7585 /* PublicSubViewControllers */ = {
@@ -2080,6 +2101,7 @@
 				6356266F19C9582C0011B926 /* CConvenienceViewController.m in Sources */,
 				6397101719B451CB00793A3D /* POPAnimationTracer.mm in Sources */,
 				63A5A9121A02068D0015A49B /* MyAttentionViewController.m in Sources */,
+				632CEB211A1DC13200DDD535 /* ShopObjectModel.m in Sources */,
 				630468021A1B856B00D9B9E3 /* CommonUtility.m in Sources */,
 				63A5A8FC1A00F4940015A49B /* ZSYPopoverListView.m in Sources */,
 				63541B0A19FE2103001EC683 /* ChineseToPinyinResource.m in Sources */,

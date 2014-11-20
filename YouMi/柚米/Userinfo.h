@@ -19,7 +19,7 @@
 
 @property (nonatomic,copy)NSString *memberId;//会员编号
 
-
+@property (nonatomic,copy)NSString *token;//第三方登陆Token
 @property (nonatomic,copy)NSString *memberAccount;//会员查询号
 @property (nonatomic,copy)NSString *nickName;//昵称
 @property (nonatomic,copy)NSString *memberName;//会员姓名

@@ -99,7 +99,7 @@
             
             if([segement.busline.name length]){
                 
-                [self.NaviStepsArray addObject:[NSString stringWithFormat:@"%@:%@-%@(共经过%d站)",segement.busline.name,segement.busline.departureStop.name,segement.busline.arrivalStop.name,segement.busline.busStopsNum]];
+                [self.NaviStepsArray addObject:[NSString stringWithFormat:@"%@:%@-%@(共经过%ld站)",segement.busline.name,segement.busline.departureStop.name,segement.busline.arrivalStop.name,(long)segement.busline.busStopsNum]];
                 
             }
         }
@@ -126,8 +126,7 @@
        
     }
     
-    
-    
+       
 #pragma mark - 创建tableView
     self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(10, self.view.bounds.size.height-198, self.view.bounds.size.width, self.view.bounds.size.height-201-64-49-60) style:UITableViewStylePlain];
     self.tableView.delegate = self;

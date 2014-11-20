@@ -16,6 +16,13 @@
 #import "POP/POP.h"//用来处理“三大模块”的标示旋转动画
 #import "ShopDetailViewController.h"
 
+#import "UIImageView+WebCache.h"
+#import <AFNetworking.h>
+#import "ShopObjectModel.h"
+#import "ProgressHUD.h"
+#import "Reachability.h"
+#import "UIImageView+WebCache.h"
+#import <TMCache.h>
 
 @interface FoodDetailViewController ()
 {
@@ -25,6 +32,8 @@
     NSMutableArray *statuRecode_array;
     /*modul_end*////
     NSMutableArray *storeTheTag;//存储点击的tag
+    
+    Reachability *rechability;
     
 }
 
@@ -39,6 +48,9 @@
 
 @property (nonatomic,strong)PdownMenuViewController *downMenu;
 
+//
+@property (nonatomic,strong)TMCache *tmCache;
+@property (nonatomic,strong)NSMutableArray *shopObjects;//商铺对象列表
 @end
 
 @implementation FoodDetailViewController
@@ -60,6 +72,11 @@
     storeTheTag =[NSMutableArray array];//存放被点击的tag
     statuRecode_array =[NSMutableArray array];
     
+    /**
+     在这里开始初始化数据
+     */
+    
+    self.shopObjects = [NSMutableArray array];
     
     /*title*/
     UILabel *title =[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 30, 40)];
@@ -166,7 +183,48 @@
     [self.view addSubview:headerLine];
 
     
+#pragma mark - 网络请求
+    /**
+     *  @Author frankfan, 14-11-20 11:11:28
+     *
+     *  从这里开始网络请求
+     *
+     *  @return
+     */
     
+    self.tmCache =[[TMCache alloc]initWithName:@"foodShop_cache"];//初始化一个缓存对象
+    rechability =[Reachability reachabilityWithHostName:@"www.baidu.com"];
+    
+    //请求商铺列表
+    
+    NSDictionary *parameters = @{api_typeId:self.shopTypeID,api_start:@0,api_limit:@10};
+    AFHTTPRequestOperationManager *getShopList_manager =[AFHTTPRequestOperationManager manager];
+    getShopList_manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
+    if([rechability isReachable]){//网络正常
+    
+        [ProgressHUD show:nil Interaction:NO];
+        //开始进行网络请求
+        [getShopList_manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSDictionary *resultDict = (NSDictionary *)responseObject;
+            self.shopObjects = [[resultDict objectForKey:@"data"] mutableCopy];
+            [self.tableView reloadData];
+            
+            [ProgressHUD showSuccess:nil];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@".....error:%@\n",[error localizedDescription]);
+            [ProgressHUD showError:@"网络错误" Interaction:NO];
+        }];
+        
+        
+        
+    
+    }else{//网络异常
+    
+        [ProgressHUD showError:@"网络异常" Interaction:NO];
+    }
     
 
     
@@ -335,14 +393,7 @@
         NSArray *flag = @[[NSNumber numberWithInteger:self.index],[NSNumber numberWithInteger:sender.tag]];//将两个标志[首页按钮,三个按钮]传过去，区别的加载数据
         [[NSNotificationCenter defaultCenter]postNotificationName:kPassLeftData_0 object:flag];
     }
-   
     
-    
-    
-    
-    
-    
-  
 }
 
 
@@ -352,7 +403,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
 
-    return 10;/*fake date*/
+    return [self.shopObjects count];/*fake date*/
 }
 
 
@@ -361,6 +412,21 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
     MainPageCustomTableViewCell *cell =[MainPageCustomTableViewCell cellWithTableView:tableView];
+    
+    if([self.shopObjects count]){
+    
+        NSDictionary *tempDict = self.shopObjects[indexPath.row];
+        NSError *error;
+        ShopObjectModel *shopModel = [ShopObjectModel modelWithDictionary:tempDict error:&error];
+        
+        cell.TheShopName.text = shopModel.shopName;//商铺名
+        cell.TheShopAddress.text = [NSString stringWithFormat:@"%@ | %@",shopModel.typeName,shopModel.circleName];//商铺地址
+        [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//店铺头像
+        
+        
+        NSLog(@".....%@",[error localizedDescription]);
+    }
+    
     return cell;
 
 

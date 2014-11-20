@@ -32,6 +32,14 @@
 
 #define kGaoDeAppKey @"461e3b5c277c297c4fd64ed54c9fa634"//高德appKey
 
+/********************************************************************/
+
+#define kShopTypeArray @"shopType" //取得本地shopTypeID数组
+
+
+
+
+
 
 /*系统相关*/
 #ifndef ___SystemConfig_h
@@ -200,6 +208,30 @@
 #define API_AboutYouMi @"http://88.88.3.102:8080/youmi/about"
 //发布模式
 //#define API_AboutYouMi @"http://120.24.71.104:8080/youmi/about"
+
+
+
+#pragma mark - 获取商铺类型ID
+/**
+ *  @Author frankfan, 14-11-20 10:11:38
+ *
+ *  商铺类型
+ */
+//接口
+#define API_ShopType @"http://120.24.71.104:8080/youmi/shopType/getShopType"
+
+
+#pragma mark - 商铺列表
+/**
+ *  @Author frankfan, 14-11-20 11:11:01
+ *
+ *  从后台拉取商品列表信息
+ */
+//接口
+#define API_ShopList @"http://120.24.71.104:8080/youmi/shop/list"
+#define api_typeId @"typeId"
+#define api_start @"start"//分页起始位置
+#define api_limit @"limit"//每次请求数目
 
 
 

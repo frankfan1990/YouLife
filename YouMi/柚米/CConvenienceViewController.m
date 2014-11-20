@@ -266,8 +266,7 @@
         [self.tableView reloadData];
     
     }else if (indexPath.row==0){
-    
- 
+
         _outPutData = self.dataSource1;
         [self.tableView reloadData];
     }else if (indexPath.row==2) {

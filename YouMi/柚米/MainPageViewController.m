@@ -21,6 +21,7 @@
 #import "CityListSelectViewController.h"
 #import "MMLocationManager.h"
 #import "ProgressHUD.h"
+#import <AFNetworking.h>
 
 @interface MainPageViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CLLocationManagerDelegate>
 {
@@ -34,7 +35,8 @@
     
     CCSegmentedControl *ccsegementCV;
     CLLocationManager * locationManager;
-
+    
+  
 }
 @property (nonatomic,strong)UICollectionView *collectionView;
 @property (nonatomic,strong)DataAboutTitle *titles;
@@ -266,7 +268,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         if(![[[NSUserDefaults standardUserDefaults]objectForKey:kUserLocationCity] length]){
         
             [self createBarButton];
-            [ProgressHUD showError:@"无法完成定位" Interaction:NO];
+//            [ProgressHUD showError:@"无法完成定位" Interaction:NO];
             [self setBarButtonTitle:@"长沙"];
         }
         
@@ -274,6 +276,37 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
  
     
     
+    
+#pragma mark - 开始获取数据
+    
+    /**
+     *  @Author frankfan, 14-11-20 10:11:51
+     *
+     *  在这里开始进行网络请求
+     *
+     *  @return
+     */
+    
+    //获取商铺类型ID
+    if(![[[NSUserDefaults standardUserDefaults]objectForKey:kShopTypeArray] count]){
+    
+        AFHTTPRequestOperationManager *manager_shopType =[AFHTTPRequestOperationManager manager];
+        manager_shopType.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
+        [ProgressHUD show:nil Interaction:NO];
+        [manager_shopType GET:API_ShopType parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSDictionary *tempDict = (NSDictionary *)responseObject;
+            NSArray *shopTypeArray = (NSArray *)tempDict[@"results"];
+            [[NSUserDefaults standardUserDefaults] setObject:shopTypeArray forKey:kShopTypeArray];
+            [ProgressHUD showSuccess:nil];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            [ProgressHUD showError:@"网络请求失败"];
+    
+            NSLog(@"error_shopType:%@",[error localizedDescription]);
+        }];
+    }
     
     // Do any additional setup after loading the view.
 }
@@ -544,7 +577,21 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         
         FoodDetailViewController *foodDetailViewCV =[[FoodDetailViewController alloc]init];
         foodDetailViewCV.index = indexPath.row;
-        [self.navigationController pushViewController:foodDetailViewCV animated:YES];
+        
+        NSArray *shopTypeArray = [[NSUserDefaults standardUserDefaults] objectForKey:kShopTypeArray];
+        NSDictionary *tempDict = shopTypeArray[indexPath.row];
+        foodDetailViewCV.shopTypeID = tempDict[@"typeId"];
+        
+        if([[[NSUserDefaults standardUserDefaults]objectForKey:kShopTypeArray] count]){
+        
+             [self.navigationController pushViewController:foodDetailViewCV animated:YES];
+        }else{
+        
+            
+            [ProgressHUD showError:@"网络错误" Interaction:NO];
+        }
+      
+        
     }else if (indexPath.row==1){
     
         EntertainmentDetailViewController *entertainmentDetailCV =[[EntertainmentDetailViewController alloc]init];
