@@ -7,7 +7,7 @@
 
 
 const double pi = 3.14159265358979324;
-
+const double PI = 3.14159265358979324;
 //
 // Krasovsky 1940
 //
@@ -76,26 +76,67 @@ double transformLon(double x, double y)
 
 
 
-//火星转百度
-const double x_pi = 3.14159265358979324 * 3000.0 / 180.0;
 
-void bd_encrypt(double gg_lat, double gg_lon, double &bd_lat, double &bd_lon)
+
+
+/**
+ *  @Author frankfan, 14-11-21 10:11:15
+ *
+ *  给定两点坐标计算两地距离
+ *
+ *  @param lon1 A点经度
+ *  @param lat1 A点纬度
+ *  @param lon2 B点经度
+ *  @param lat2 B点纬度
+ *
+ *  @return A-B距离
+ */
+
+//一定要注意这里的经纬度顺序
+
+double LantitudeLongitudeDist(double lon1,double lat1,
+                              double lon2,double lat2)
 {
-    double x = gg_lon, y = gg_lat;
-    double z = sqrt(x * x + y * y) + 0.00002 * sin(y * x_pi);
-    double theta = atan2(y, x) + 0.000003 * cos(x * x_pi);
-    bd_lon = z * cos(theta) + 0.0065;
-    bd_lat = z * sin(theta) + 0.006;
+    double er = 6378137; // 6378700.0f;
+    //ave. radius = 6371.315 (someone said more accurate is 6366.707)
+    //equatorial radius = 6378.388
+    //nautical mile = 1.15078
+    double radlat1 = PI*lat1/180.0f;
+    double radlat2 = PI*lat2/180.0f;
+    
+    //now long.
+    double radlong1 = PI*lon1/180.0f;
+    double radlong2 = PI*lon2/180.0f;
+    
+    if( radlat1 < 0 ) radlat1 = PI/2 + fabs(radlat1);// south
+    if( radlat1 > 0 ) radlat1 = PI/2 - fabs(radlat1);// north
+    if( radlong1 < 0 ) radlong1 = PI*2 - fabs(radlong1);//west
+    
+    if( radlat2 < 0 ) radlat2 = PI/2 + fabs(radlat2);// south
+    if( radlat2 > 0 ) radlat2 = PI/2 - fabs(radlat2);// north
+    if( radlong2 < 0 ) radlong2 = PI*2 - fabs(radlong2);// west
+    
+    //spherical coordinates x=r*cos(ag)sin(at), y=r*sin(ag)*sin(at), z=r*cos(at)
+    //zero ag is up so reverse lat
+    double x1 = er * cos(radlong1) * sin(radlat1);
+    double y1 = er * sin(radlong1) * sin(radlat1);
+    double z1 = er * cos(radlat1);
+    
+    
+    double x2 = er * cos(radlong2) * sin(radlat2);
+    double y2 = er * sin(radlong2) * sin(radlat2);
+    double z2 = er * cos(radlat2);
+    
+    double d = sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)+(z1-z2)*(z1-z2));
+    
+    //side, side, side, law of cosines and arccos
+    double theta = acos((er*er+er*er-d*d)/(2*er*er));
+    double dist  = theta*er;
+    
+    return dist;
 }
 
 
-//百度转火星
-void bd_decrypt(double bd_lat, double bd_lon, double &gg_lat, double &gg_lon)
-{
-    double x = bd_lon - 0.0065, y = bd_lat - 0.006;
-    double z = sqrt(x * x + y * y) - 0.00002 * sin(y * x_pi);
-    double theta = atan2(y, x) - 0.000003 * cos(x * x_pi);
-    gg_lon = z * cos(theta);
-    gg_lat = z * sin(theta);
-}
+
+
 #endif

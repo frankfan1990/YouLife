@@ -23,8 +23,9 @@
 #import "Reachability.h"
 #import "UIImageView+WebCache.h"
 #import <TMCache.h>
-
-
+#import <MapKit/MapKit.h>
+#import "convert.h"
+#import "convert2.h"
 
 static NSInteger _start = 10;
 @interface FoodDetailViewController ()
@@ -39,6 +40,9 @@ static NSInteger _start = 10;
     Reachability *rechability;
     
     BOOL isPullUpMode;//如果向上加载更多方法被执行,则改变数据加载逻辑
+    
+    CLLocationManager *locationManager;//定位当前
+    CLLocationCoordinate2D currentMarsLocation;//当前位置的火星坐标
     
 }
 
@@ -56,6 +60,9 @@ static NSInteger _start = 10;
 //
 @property (nonatomic,strong)TMCache *tmCache;
 @property (nonatomic,strong)NSMutableArray *shopObjects;//商铺对象列表
+@property (nonatomic,strong)NSMutableArray *shopMarLocations;//商品火星坐标数组
+@property (nonatomic,strong)NSMutableArray *distanceFromAtoB;//计算两地距离
+
 @end
 
 @implementation FoodDetailViewController
@@ -84,6 +91,10 @@ static NSInteger _start = 10;
     self.shopObjects = [NSMutableArray array];
     
     isPullUpMode = NO;
+    
+    self.shopMarLocations =[NSMutableArray array];
+    
+    self.distanceFromAtoB =[NSMutableArray array];
     
     /*title*/
     UILabel *title =[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 30, 40)];
@@ -190,6 +201,21 @@ static NSInteger _start = 10;
     [self.view addSubview:headerLine];
 
     
+    /**
+     *  @Author frankfan, 14-11-21 10:11:54
+     *
+     *  获取当前坐标
+     *
+     *  @return 当前坐标
+     */
+    
+    locationManager =[[CLLocationManager alloc]init];
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+   
+    //当前位置的火星坐标
+    currentMarsLocation = transform(locationManager.location.coordinate);
+    
+    
 #pragma mark - 网络请求
     /**
      *  @Author frankfan, 14-11-20 11:11:28
@@ -223,9 +249,22 @@ static NSInteger _start = 10;
                 
                 NSDictionary *resultDict = (NSDictionary *)responseObject;
                 self.shopObjects = [[resultDict objectForKey:@"data"] mutableCopy];
-                [self.tableView reloadData];
+//                [self.tableView reloadData];
+                
+                //将百度坐标转火星坐标，并放入相应数组
+                [self theDistanceBetweenAandB];
+                
+                
+                  [self.tableView reloadData];
+                
+                for (NSValue *value in self.shopMarLocations) {
+                    
+                    NSLog(@"~~%f----~~%f",value.CGVectorValue.dx,value.CGVectorValue.dy);
+                }
+                
                 
                 [self.tmCache setObject:resultDict forKey:@"key_foodShopCache"];
+                
                 [ProgressHUD dismiss];
                 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -237,12 +276,65 @@ static NSInteger _start = 10;
             
             [ProgressHUD showError:@"网络异常" Interaction:NO];
         }
-    
 
-    
   
-    
     // Do any additional setup after loading the view.
+}
+
+
+/**
+ *  @Author frankfan, 14-11-21 16:11:12
+ *
+ *  计算两地的距离
+ *
+ *  @return
+ */
+#pragma mark - 计算两地距离
+- (void)theDistanceBetweenAandB{
+
+    //将百度坐标转火星坐标，并放入相应数组
+    for (NSDictionary *tempDict in self.shopObjects) {
+        
+        double mar_lat;//火星坐标纬度
+        double mar_longitude;//火星坐标经度
+        
+        double bd_lat;
+        double bd_lng;
+        if([tempDict[@"lat"]isKindOfClass:[NSNull class]]){
+            
+            bd_lat = 0.0;
+            bd_lng = 0.0;
+        }else{
+            
+            bd_lat = [[tempDict objectForKey:@"lat"]doubleValue];
+            bd_lng = [[tempDict objectForKey:@"lng"]doubleValue];
+        }
+        
+        
+        
+//        bd_decrypt(bd_lat, bd_lng, &mar_lat, &mar_longitude);//百度坐标转火星坐标
+        
+        
+        //计算两地距离
+        double distanceAB;
+        if(currentMarsLocation.latitude){
+            
+            if(bd_lat==0.0){
+                
+                distanceAB = 0.0;
+            }else{
+                
+                distanceAB = LantitudeLongitudeDist(currentMarsLocation.longitude, currentMarsLocation.latitude, bd_lng, bd_lat);
+            }
+            
+            
+        }
+        [self.distanceFromAtoB addObject:[NSNumber numberWithDouble:distanceAB]];
+        
+        
+    }
+
+
 }
 
 
@@ -441,6 +533,25 @@ static NSInteger _start = 10;
             cell.TheShopAddress.text = [NSString stringWithFormat:@"%@ | %@",shopModel.typeName,shopModel.circleName];//商铺地址
             [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//店铺头像
          
+            
+            if([self.distanceFromAtoB count]){
+            
+                if([self.distanceFromAtoB[indexPath.row]doubleValue]==0){
+                    cell.distanceFromShop.text = @"无数据";
+                }else{
+                    
+                    NSNumber *num = self.distanceFromAtoB[indexPath.row];
+                    if(num.doubleValue>1000){
+                    
+                        cell.distanceFromShop.text = [NSString stringWithFormat:@"%.fkm",num.doubleValue/1000];
+                    }else{
+                    
+                        cell.distanceFromShop.text = [NSString stringWithFormat:@"%fm",num.doubleValue];
+                    }
+                    
+                }
+            }
+            
         }
     }else{
         
@@ -452,6 +563,25 @@ static NSInteger _start = 10;
         cell.TheShopName.text = shopModel.shopName;//商铺名
         cell.TheShopAddress.text = [NSString stringWithFormat:@"%@ | %@",shopModel.typeName,shopModel.circleName];//商铺地址
         [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//店铺头像
+        
+        if([self.distanceFromAtoB count]){
+            
+            if([self.distanceFromAtoB[indexPath.row]doubleValue]==0){
+                cell.distanceFromShop.text = @"无数据";
+            }else{
+                
+                NSNumber *num = self.distanceFromAtoB[indexPath.row];
+                if(num.doubleValue>1000){
+                    
+                    cell.distanceFromShop.text = [NSString stringWithFormat:@"%.fkm",num.doubleValue/1000];
+                }else{
+                    
+                    cell.distanceFromShop.text = [NSString stringWithFormat:@"%fm",num.doubleValue];
+                }
+                
+            }
+        }
+        
         
         NSLog(@"else");
         NSLog(@"error:%@",[error localizedDescription]);
@@ -477,7 +607,7 @@ static NSInteger _start = 10;
 
 
 
-#pragma mark 下拉刷新回调方法
+#pragma mark - 下拉刷新回调方法
 
 - (void)pullDownToReferesh{
 
@@ -487,6 +617,7 @@ static NSInteger _start = 10;
     if(![rechability isReachable]){
         
         [ProgressHUD showError:@"网络异常"];
+        [self.tableView headerEndRefreshing];
         return;
     }else{
     
@@ -534,9 +665,11 @@ static NSInteger _start = 10;
             
             NSDictionary *resultDict = (NSDictionary *)responseObject;
             NSArray *pageArray = [resultDict objectForKey:@"data"];
+            isPullUpMode = YES;
             [self.shopObjects addObjectsFromArray:pageArray];
             
-            isPullUpMode = YES;
+            [self theDistanceBetweenAandB];
+            
             [self.tableView reloadData];
         
             [self.tableView footerEndRefreshing];
@@ -556,8 +689,6 @@ static NSInteger _start = 10;
     }
     
 }
-
-
 
 #pragma mark 导航栏上的两个按钮触发回调
 

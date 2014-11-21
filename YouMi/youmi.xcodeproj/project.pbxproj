@@ -370,6 +370,7 @@
 		632CEB1C1A1C75F200DDD535 /* 白色箭头.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "白色箭头.png"; sourceTree = "<group>"; };
 		632CEB1F1A1DC13200DDD535 /* ShopObjectModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopObjectModel.h; sourceTree = "<group>"; };
 		632CEB201A1DC13200DDD535 /* ShopObjectModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopObjectModel.m; sourceTree = "<group>"; };
+		632CEB231A1EE33600DDD535 /* convert2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = convert2.h; sourceTree = "<group>"; };
 		6335B89D19AE39BE00F37A5F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		633E456119AD7A7C001D8F75 /* youmi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = youmi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		633E456419AD7A7C001D8F75 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1277,6 +1278,7 @@
 			isa = PBXGroup;
 			children = (
 				632CEB1B1A1C3E4C00DDD535 /* convert.h */,
+				632CEB231A1EE33600DDD535 /* convert2.h */,
 				632CEB1A1A1C3DCD00DDD535 /* NSDataHelper */,
 				63E378D819EF94D600C0D02A /* ReachAbility */,
 				635C3A5719EE6AFA0090DE16 /* isEmail&PhoneNum */,
