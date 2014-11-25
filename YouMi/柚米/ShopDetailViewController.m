@@ -19,7 +19,7 @@
 #import "MainMapViewController.h"
 
 
-@interface ShopDetailViewController ()<UITableViewDelegate,UITableViewDataSource,EDStarRatingProtocol>
+@interface ShopDetailViewController ()<UITableViewDelegate,UITableViewDataSource,EDStarRatingProtocol,UIAlertViewDelegate>
 {
 
     /*收藏按钮是否点击*/
@@ -141,8 +141,7 @@
      *  @return
      */
     
-#warning fake data
-    self.cycleImageArrayURLs = [@[@"http://vip.biznav.cn/20090615162541/pic/20090701134141962.jpg",@"http://a3.att.hudong.com/10/45/01300001024098130129454552574.jpg",@"http://qic.tw/upload/school/MID_20110503003627550.jpg",@"http://img5.imgtn.bdimg.com/it/u=2127817408,3685587629&fm=23&gp=0.jpg",@"http://image.3607.com/2012/03/31/20120320180128640.jpg"]mutableCopy];
+    self.cycleImageArrayURLs = [self.shopModel.pictures mutableCopy];
     
     /*保证图片数组里元素不大于5个*/
     NSArray *imageArrays = nil;
@@ -152,24 +151,22 @@
             
             imageArrays =[self.cycleImageArrayURLs subarrayWithRange:NSMakeRange(0, 5)];
             
+        }else{
+        
+            imageArrays = self.cycleImageArrayURLs;
         }
         
     }
     
+    
     if(!imageArrays){
         
-        for (NSString *urlString in self.cycleImageArrayURLs) {
-            
-            NSURL *imageURL =[NSURL URLWithString:urlString];
-            
             UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)];
-            [imageView sd_setImageWithURL:imageURL placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];
+            [imageView sd_setImageWithURL:nil placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];
             [self.iamgeViewArrays addObject:imageView];
-            
-        }
+       
         
     }else{
-        
         
         for (NSString *urlString in imageArrays) {
             
@@ -180,7 +177,6 @@
             [self.iamgeViewArrays addObject:imageView];
             
         }
-        
         
     }
     
@@ -229,13 +225,6 @@
    
     
     
-    
-    
-    
-    
-    
-    
-    
     /**
      *  @Author frankfan, 14-11-11 10:11:48
      *
@@ -251,9 +240,6 @@
     
         string2 = @" 没有更多优惠信息";
     }
-    
-    
-    
     
     
     // Do any additional setup after loading the view.
@@ -633,8 +619,9 @@
             cell1_0 = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
             
             //店铺名
-            UILabel *shopName = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 100, 45)];
+            UILabel *shopName = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 150, 45)];
             shopName.tag = 2001;
+            shopName.adjustsFontSizeToFitWidth = YES;
             shopName.font = [UIFont systemFontOfSize:17];
             shopName.textColor = baseTextColor;
             [cell1_0.contentView addSubview:shopName];
@@ -645,9 +632,10 @@
             star1.tag = 2002;
 
 
-            //菜品
+            //标签
             UILabel *foodInfo =[[UILabel alloc]initWithFrame:CGRectMake(10, 45, 200, 15)];
             foodInfo.tag = 2003;
+            foodInfo.adjustsFontSizeToFitWidth = YES;
             foodInfo.textColor = [UIColor colorWithWhite:.75 alpha:1];
             foodInfo.font =[UIFont systemFontOfSize:14];
             [cell1_0.contentView addSubview:foodInfo];
@@ -663,11 +651,11 @@
             cell1_0.selectionStyle = NO;
             
             //店铺名
-            shopName.text = @"店铺名";
+            shopName.text = self.shopModel.shopName;
             //评分
-            star1.rating = (float)2.5;
-            //菜品
-            foodInfo.text = @"墨鱼排骨";
+            star1.rating = self.shopModel.starsReviews;
+            //标签
+            foodInfo.text = self.shopModel.tagWords;
             //金币规则
             goldAbout.text = @"满5块送100U币";
             
@@ -722,7 +710,7 @@
             shopAddress.adjustsFontSizeToFitWidth = YES;
             [cell1_2.contentView addSubview:shopAddress];
             //地址
-            shopAddress.text = @"湘江世纪城";
+            shopAddress.text = self.shopModel.address;
             
             return cell1_2;
         }
@@ -735,11 +723,15 @@
             phoneIcon.image =[UIImage imageNamed:@"电话"];
             [cell1_3.contentView addSubview:phoneIcon];
         
-            UILabel *phoneNumLabel =[[UILabel alloc]initWithFrame:CGRectMake(30, 5, 280, 35)];
-            phoneNumLabel.font =[UIFont systemFontOfSize:14];
-            phoneNumLabel.textColor = baseTextColor;
+            //手机号码
+            UIButton *phoneNumLabel =[UIButton buttonWithType:UIButtonTypeCustom];
+            phoneNumLabel.frame = CGRectMake(30, 5, 110, 35);
+            phoneNumLabel.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+            phoneNumLabel.titleLabel.font =[UIFont systemFontOfSize:14];
+            [phoneNumLabel setTitleColor:baseTextColor forState:UIControlStateNormal];
             [cell1_3.contentView addSubview:phoneNumLabel];
-            
+            [phoneNumLabel addTarget:self action:@selector(phoneNumberButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            phoneNumLabel.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;//button文字靠左对齐
             
             UIButton *appointment =[UIButton buttonWithType:UIButtonTypeCustom];
             appointment.layer.cornerRadius = 3;
@@ -753,14 +745,26 @@
             
             
             //电话号码
-            phoneNumLabel.text = @"15575829000";
+            NSString *contactNumber = nil;
+            if([self.shopModel.contact length]){
+            
+                NSArray *phoneNumbers = [self.shopModel.contact componentsSeparatedByString:@" "];
+                if([phoneNumbers count]>=2){
+                    
+                    contactNumber = [phoneNumbers firstObject];
+                }else{
+                    
+                    contactNumber = self.shopModel.contact;
+                }
+                
+            }
+            
+            [phoneNumLabel setTitle:contactNumber forState:UIControlStateNormal];
             
             return cell1_3;
         
         }
         
-        
-    
     }
     
     if(indexPath.section==2){//第三段
@@ -875,6 +879,33 @@
        return nil;
     
 }
+
+
+#pragma mark - 手机号码被触发
+- (void)phoneNumberButtonClicked:(UIButton *)sender{
+    
+    NSString *currentNumber = sender.currentTitle;
+    UIAlertView *alertView =[[UIAlertView alloc]initWithTitle:@"确定拨号吗?" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+    [alertView show];
+    
+    NSLog(@"%@",currentNumber);
+
+}
+
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+
+    if(buttonIndex==1){
+        
+        [alertView dismissWithClickedButtonIndex:0 animated:YES];
+    }else{
+    
+        NSLog(@"》》》》》启动拨号");
+    }
+
+}
+
+
 
 
 #pragma mark - 预约按钮触发 跳转

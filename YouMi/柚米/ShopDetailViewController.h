@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ShopObjectModel.h"
 
 @interface ShopDetailViewController : UIViewController
 
 @property (nonatomic,assign)int model;//接受传过来的模块
+@property (nonatomic,strong)ShopObjectModel *shopModel;
 @end

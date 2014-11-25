@@ -83,7 +83,7 @@ static NSInteger _start = 10;
     //
     storeTheTag =[NSMutableArray array];//存放被点击的tag
     statuRecode_array =[NSMutableArray array];
-    
+    self.whichMode = self.index;
     /**
      在这里开始初始化数据
      */
@@ -249,20 +249,13 @@ static NSInteger _start = 10;
                 
                 NSDictionary *resultDict = (NSDictionary *)responseObject;
                 self.shopObjects = [[resultDict objectForKey:@"data"] mutableCopy];
-//                [self.tableView reloadData];
+
                 
                 //将百度坐标转火星坐标，并放入相应数组
                 [self theDistanceBetweenAandB];
                 
-                
-                  [self.tableView reloadData];
-                
-                for (NSValue *value in self.shopMarLocations) {
-                    
-                    NSLog(@"~~%f----~~%f",value.CGVectorValue.dx,value.CGVectorValue.dy);
-                }
-                
-                
+                [self.tableView reloadData];
+        
                 [self.tmCache setObject:resultDict forKey:@"key_foodShopCache"];
                 
                 [ProgressHUD dismiss];
@@ -279,6 +272,7 @@ static NSInteger _start = 10;
 
   
     // Do any additional setup after loading the view.
+   
 }
 
 
@@ -289,6 +283,10 @@ static NSInteger _start = 10;
  *
  *  @return
  */
+
+
+
+#warning 这里不适用上拉加载更多
 #pragma mark - 计算两地距离
 - (void)theDistanceBetweenAandB{
 
@@ -312,7 +310,7 @@ static NSInteger _start = 10;
         
         
         
-//        bd_decrypt(bd_lat, bd_lng, &mar_lat, &mar_longitude);//百度坐标转火星坐标
+        bd_decrypt(bd_lat, bd_lng, &mar_lat, &mar_longitude);//百度坐标转火星坐标
         
         
         //计算两地距离
@@ -543,7 +541,7 @@ static NSInteger _start = 10;
                     NSNumber *num = self.distanceFromAtoB[indexPath.row];
                     if(num.doubleValue>1000){
                     
-                        cell.distanceFromShop.text = [NSString stringWithFormat:@"%.fkm",num.doubleValue/1000];
+                        cell.distanceFromShop.text = [NSString stringWithFormat:@"%.2fkm",num.doubleValue/1000.0];
                     }else{
                     
                         cell.distanceFromShop.text = [NSString stringWithFormat:@"%fm",num.doubleValue];
@@ -573,7 +571,7 @@ static NSInteger _start = 10;
                 NSNumber *num = self.distanceFromAtoB[indexPath.row];
                 if(num.doubleValue>1000){
                     
-                    cell.distanceFromShop.text = [NSString stringWithFormat:@"%.fkm",num.doubleValue/1000];
+                    cell.distanceFromShop.text = [NSString stringWithFormat:@"%.2fkm",num.doubleValue/1000];
                 }else{
                     
                     cell.distanceFromShop.text = [NSString stringWithFormat:@"%fm",num.doubleValue];
@@ -587,13 +585,9 @@ static NSInteger _start = 10;
         NSLog(@"error:%@",[error localizedDescription]);
     }
     
-
-    
     return cell;
 
-
 }
-
 
 #pragma mark cell被选择触发动作
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -601,11 +595,20 @@ static NSInteger _start = 10;
     
 //    ItemDetailController *foodShop =[[ItemDetailController alloc]init];
     ShopDetailViewController *shopDetail =[ShopDetailViewController new];
-    [self.navigationController pushViewController:shopDetail animated:YES];
+    
+    NSDictionary *modelDict = self.shopObjects[indexPath.row];
+    shopDetail.shopModel = [ShopObjectModel modelWithDictionary:modelDict error:nil];
+    
+    if(shopDetail.shopModel){
+    
+        [self.navigationController pushViewController:shopDetail animated:YES];
+    }else{
+    
+        [ProgressHUD showError:@"数据错误" Interaction:YES];
+    }
+    
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES ];
 }
-
-
 
 #pragma mark - 下拉刷新回调方法
 
@@ -643,7 +646,6 @@ static NSInteger _start = 10;
         }];
     
     }
- 
     
 }
 
@@ -668,14 +670,55 @@ static NSInteger _start = 10;
             isPullUpMode = YES;
             [self.shopObjects addObjectsFromArray:pageArray];
             
-            [self theDistanceBetweenAandB];
+
+            
+            //获得距离数组
+            //将百度坐标转火星坐标，并放入相应数组
+            for (NSDictionary *tempDict in pageArray) {
+                
+                double mar_lat;//火星坐标纬度
+                double mar_longitude;//火星坐标经度
+                
+                double bd_lat;
+                double bd_lng;
+                if([tempDict[@"lat"]isKindOfClass:[NSNull class]]){
+                    
+                    bd_lat = 0.0;
+                    bd_lng = 0.0;
+                }else{
+                    
+                    bd_lat = [[tempDict objectForKey:@"lat"]doubleValue];
+                    bd_lng = [[tempDict objectForKey:@"lng"]doubleValue];
+                }
+                
+            
+                bd_decrypt(bd_lat, bd_lng, &mar_lat, &mar_longitude);//百度坐标转火星坐标
+                
+                //计算两地距离
+                double distanceAB;
+                if(currentMarsLocation.latitude){
+                    
+                    if(bd_lat==0.0){
+                        
+                        distanceAB = 0.0;
+                    }else{
+                        
+                        distanceAB = LantitudeLongitudeDist(currentMarsLocation.longitude, currentMarsLocation.latitude, bd_lng, bd_lat);
+
+                    }
+                    
+                }
+
+                [self.distanceFromAtoB addObject:[NSNumber numberWithDouble:distanceAB]];
+                
+            }
             
             [self.tableView reloadData];
         
             [self.tableView footerEndRefreshing];
             
             _start = _start+10;//假如数据拉取成功，则标志头向右滑动11个单位
-            
+        
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
@@ -683,7 +726,7 @@ static NSInteger _start = 10;
             [self.tableView footerEndRefreshing];
             [ProgressHUD showError:@"网络错误"];
             
-            _start = _start;//假如数据拉取失败，则标志头维持不变【逻辑清晰代码】
+            _start = _start;//假如数据拉取失败，则标志头维持不变【逻辑清晰代码-提示作用】
         }];
         
     }
@@ -702,10 +745,7 @@ static NSInteger _start = 10;
         NSLog(@"搜索...");
     }
 
-
-
 }
-
 
 - (void)clearArray{
     
@@ -724,13 +764,20 @@ static NSInteger _start = 10;
 }
 
 
-- (void)dealloc{
-    
+- (void)viewWillDisappear:(BOOL)animated{
+
+    [super viewWillDisappear:animated];
     if([ProgressHUD shared]){
-    
+        
         [ProgressHUD dismiss];
     }
     
+}
+
+
+- (void)dealloc{
+    
+
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 

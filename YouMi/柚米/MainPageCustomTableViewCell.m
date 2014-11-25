@@ -30,15 +30,15 @@
         [self.contentView addSubview:backView];
         
         //
-        self.headerImageView =[[UIImageView alloc]initWithFrame:CGRectMake(5+5, 28-15, 60+20-5+10, 60+15)];
-        self.headerImageView.layer.borderWidth = 1;
-        self.headerImageView.layer.borderColor =[UIColor colorWithWhite:0.95 alpha:0.5].CGColor;
+        self.headerImageView =[[UIImageView alloc]initWithFrame:CGRectMake(5+5, 28-15+5, 60+20-5+10, 60+15-10)];
+//        self.headerImageView.layer.borderWidth = 1;
+//        self.headerImageView.layer.borderColor =[UIColor colorWithWhite:0.95 alpha:0.5].CGColor;
         self.headerImageView.layer.masksToBounds = YES;
-        self.headerImageView.layer.cornerRadius = 5;
+        self.headerImageView.layer.cornerRadius = 2;
         [self.contentView addSubview:self.headerImageView];
         
         //
-        self.TheShopName =[[UILabel alloc]initWithFrame:CGRectMake(100, 28-15, 144, 22)];
+        self.TheShopName =[[UILabel alloc]initWithFrame:CGRectMake(100+4, 28-15+3, 144, 22)];
         self.TheShopName.font = ShopNameFont;
         self.TheShopName.textColor = baseTextColor;
         [self.contentView addSubview:self.TheShopName];
@@ -46,7 +46,7 @@
         self.TheShopName.text = @"店铺名";
         
         //
-        self.aboutUpay =[[UILabel alloc]initWithFrame:CGRectMake(100, 47-8, 144, 22)];
+        self.aboutUpay =[[UILabel alloc]initWithFrame:CGRectMake(100+4, 47-8+2, 144, 22)];
         self.aboutUpay.font = ShopNameFont;
         self.aboutUpay.textColor = [UIColor colorWithWhite:0.7 alpha:0.9];
         [self.contentView addSubview:self.aboutUpay];
@@ -54,7 +54,7 @@
         self.aboutUpay.text = @"满一百送50U币";
         
         //
-        self.TheShopAddress =[[UILabel alloc]initWithFrame:CGRectMake(100, 69, 144, 22)];
+        self.TheShopAddress =[[UILabel alloc]initWithFrame:CGRectMake(100+4, 69-3, 144, 22)];
         self.TheShopAddress.font = ShopNameFont;
         self.TheShopAddress.textColor = baseTextColor;
         [self.contentView addSubview:self.TheShopAddress];

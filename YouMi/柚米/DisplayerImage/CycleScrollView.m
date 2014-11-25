@@ -125,11 +125,6 @@
     return self;
 }
 
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-//
-//
-//    
-//}
 
 
 

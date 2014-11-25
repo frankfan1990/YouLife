@@ -23,6 +23,7 @@
 #import "ProgressHUD.h"
 #import <AFNetworking.h>
 
+
 @interface MainPageViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CLLocationManagerDelegate>
 {
 
@@ -335,6 +336,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
          [self setBarButtonTitle:self.titleString];
     }
 
+    
 }
 
 

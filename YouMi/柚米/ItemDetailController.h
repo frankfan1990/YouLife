@@ -7,6 +7,7 @@
 //店铺详情
 
 #import <UIKit/UIKit.h>
+#import "ShopObjectModel.h"
 
 @interface ItemDetailController : UIViewController<UITableViewDelegate,UITableViewDataSource>
 
