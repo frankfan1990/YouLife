@@ -234,5 +234,15 @@
 #define api_limit @"limit"//每次请求数目
 
 
+/**
+ *  @author frankfan, 14-11-26 11:11:13
+ *
+ *  根据shopID获取商品详情
+ */
+//接口
+#define API_ShopDetails @"http://120.24.71.104:8080/youmi/shop/detail"
+#define api_shopId @"shopId"
+
+
 
 #endif

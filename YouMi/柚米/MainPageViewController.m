@@ -22,6 +22,7 @@
 #import "MMLocationManager.h"
 #import "ProgressHUD.h"
 #import <AFNetworking.h>
+#import "Reachability.h"
 
 
 @interface MainPageViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CLLocationManagerDelegate>
@@ -202,8 +203,6 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     
     [self.tableView addFooterWithTarget:self action:@selector(pullUpCallBack)];
     
-
-
 #pragma mark - 开始获取数据
     
     /**
@@ -243,30 +242,44 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
      *  定位
      */
     
-    [[MMLocationManager shareLocation]getCity:^(NSString *addressString) {
-        
-        [self setBarButtonTitle:addressString];
-        
-        [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:kUserLocationCity];
-        [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:@"gpsLocation"];
-        
-    } error:^(NSError *error) {
-        
-        [self createBarButton];
-        [ProgressHUD showError:@"无法完成定位"];
-        
-    }];
+    Reachability *reachability =[Reachability reachabilityWithHostName:@"www.baidu.com"];
     
-    [[MMLocationManager shareLocation]getLocationCoordinate:^(CLLocationCoordinate2D locationCorrrdinate) {
-        
-        NSLog(@"lat:%f---longitude:%f",locationCorrrdinate.latitude,locationCorrrdinate.longitude);
-        
-    }];
     
-
+    if([reachability isReachable]){
     
-    locationManager =[[CLLocationManager alloc] init];
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        [[MMLocationManager shareLocation]getCity:^(NSString *addressString) {
+            
+            [self setBarButtonTitle:addressString];
+            
+            [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:kUserLocationCity];
+            [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:@"gpsLocation"];
+            
+        } error:^(NSError *error) {
+            
+            [self createBarButton];
+            [ProgressHUD showError:@"无法完成定位"];
+            
+        }];
+        
+        [[MMLocationManager shareLocation]getLocationCoordinate:^(CLLocationCoordinate2D locationCorrrdinate) {
+            
+            NSLog(@"lat:%f---longitude:%f",locationCorrrdinate.latitude,locationCorrrdinate.longitude);
+            
+        }];
+        /*********/
+        
+        
+        locationManager =[[CLLocationManager alloc] init];
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        
+    }else{
+    
+        [ProgressHUD showError:@"网络异常"];
+       
+    }
+    
+    
+    
     
     // fix ios8 location issue
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
@@ -308,15 +321,8 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         
     });
  
-    
-    
-    
-    
-    // Do any additional setup after loading the view.
+     // Do any additional setup after loading the view.
 }
-
-
-
 
 /**
  *  @Author frankfan, 14-10-27 17:10:17
@@ -336,7 +342,6 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
          [self setBarButtonTitle:self.titleString];
     }
 
-    
 }
 
 
@@ -578,12 +583,12 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
 #pragma mark 8个按钮的方法触发
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
 
+     NSArray *shopTypeArray = [[NSUserDefaults standardUserDefaults] objectForKey:kShopTypeArray];
     if(indexPath.row==0){
         
         FoodDetailViewController *foodDetailViewCV =[[FoodDetailViewController alloc]init];
         foodDetailViewCV.index = indexPath.row;
         
-        NSArray *shopTypeArray = [[NSUserDefaults standardUserDefaults] objectForKey:kShopTypeArray];
         NSDictionary *tempDict = shopTypeArray[indexPath.row];
         foodDetailViewCV.shopTypeID = tempDict[@"typeId"];
         
@@ -601,7 +606,19 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     
         EntertainmentDetailViewController *entertainmentDetailCV =[[EntertainmentDetailViewController alloc]init];
         entertainmentDetailCV.index = indexPath.row;
-        [self.navigationController pushViewController:entertainmentDetailCV animated:YES];
+        
+        NSDictionary *tempDict = shopTypeArray[indexPath.row];
+        entertainmentDetailCV.shopTypeID_entertainment = tempDict[@"typeId"];
+        
+        if([[[NSUserDefaults standardUserDefaults]objectForKey:kShopTypeArray] count]){
+            
+            [self.navigationController pushViewController:entertainmentDetailCV animated:YES];
+        }else{
+            
+            
+            [ProgressHUD showError:@"网络错误" Interaction:NO];
+        }
+        
     }else if (indexPath.row==2){
     
         EducationViewController *educationController =[[EducationViewController alloc]init];
@@ -776,12 +793,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     
         NSLog(@"1003");
     }
-
-
-
 }
-
-
 
 
 - (void)didReceiveMemoryWarning

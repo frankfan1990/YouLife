@@ -10,4 +10,5 @@
 
 @interface BusinessMenInfoViewController : UIViewController
 
+@property (nonatomic,copy)NSString *htmlString;//富文本
 @end

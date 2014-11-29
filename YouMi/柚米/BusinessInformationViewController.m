@@ -7,18 +7,23 @@
 //
 
 #import "BusinessInformationViewController.h"
+#import "RTLabel.h"
 
-@interface BusinessInformationViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface BusinessInformationViewController ()<UITableViewDelegate,UITableViewDataSource,UIWebViewDelegate>
 {
 
     NSArray *shopInfo;
     //
-    UILabel *detailInfoLabel;//动态高度cell
+    UIWebView *detailInfoLabel;
+    
     NSString *restaurantFeatures;//餐厅特色
     NSString *busInformation;//公交信息
     
+    CGFloat webViewHeight;
+    
 }
 @property (nonatomic,strong)UITableView *tableView;
+@property (nonatomic,strong)ShopBusiniessInfoObjcModel *shopBusiniessInfo;
 @end
 
 @implementation BusinessInformationViewController
@@ -30,11 +35,12 @@
     /**
      基本信息配置
      */
+    //初始化shopBusiniessInfoModel
+    self.shopBusiniessInfo =[ShopBusiniessInfoObjcModel modelWithDictionary:self.objecDict error:nil];
+    /****/
     
-#warning fake data
-    //fake data
-    restaurantFeatures = @"餐征特征特征特征特特征特征特征特征特征特征特征特征特征特征特征";
-    busInformation = @"公交信息信息信信息信息信息信";
+    restaurantFeatures = self.shopBusiniessInfo.businessDescription;
+    busInformation = self.shopBusiniessInfo.bus;
     
     shopInfo = @[@"营业时间",@"",@"",@"餐厅特色",restaurantFeatures,@"公交信息",busInformation];
     
@@ -55,7 +61,7 @@
     self.navigationItem.leftBarButtonItem = leftitem;
 
     //
-    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(10, 0, self.view.bounds.size.width-20, self.view.bounds.size.height-44) style:UITableViewStylePlain];
+    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(10, 0, self.view.bounds.size.width-20, self.view.bounds.size.height-10) style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
@@ -65,13 +71,7 @@
     UIView *footerView = [[UIView alloc]initWithFrame:CGRectZero];
     footerView.backgroundColor = customGrayColor;
     self.tableView.tableFooterView = footerView;
-    
-    
-    
-    
-    
-    
-    
+
     // Do any additional setup after loading the view.
 }
 
@@ -121,6 +121,7 @@
          */
         
         cell2.layer.cornerRadius = 5;
+        cell2.layer.masksToBounds = YES;
         if(indexPath.row==1){
             
             UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, 44, cell2.bounds.size.width, 1)];
@@ -146,15 +147,27 @@
             if(indexPath.row==1){
             
                 lanchTitle.text = @"中餐";
-                lanchTimeInfo.text = @"2014-10-6";
+                if([self.shopBusiniessInfo.amstartDate length]){
+                    
+                    lanchTimeInfo.text = self.shopBusiniessInfo.amstartDate;
+                }else{
+                
+                    lanchTitle.text = @"暂无数据";
+                }
+                
             }else{
             
                 lanchTitle.text = @"晚餐";
-                lanchTimeInfo.text = @"2014-11-6";
+                if([self.shopBusiniessInfo.pmendDate length]){
+                    
+                    lanchTimeInfo.text = self.shopBusiniessInfo.pmendDate;
+                }else{
+                
+                    lanchTimeInfo.text = @"暂无数据";
+                }
+                
             }
-            
-            
-            
+           
         }
         
         /**
@@ -170,17 +183,14 @@
             labelHeight = [self caculateTheTextHeight:shopInfo[4] andFontSize:14];
         }
         
-        detailInfoLabel =[[UILabel alloc]initWithFrame:CGRectMake(10, 5, cell2.bounds.size.width-30, labelHeight)];
-        detailInfoLabel.font =[UIFont systemFontOfSize:14];
-        detailInfoLabel.textColor = baseTextColor;
-        detailInfoLabel.numberOfLines = 0;
-        detailInfoLabel.lineBreakMode = NSLineBreakByWordWrapping;
         
+        detailInfoLabel =[[UIWebView alloc]initWithFrame:CGRectMake(10, 5, cell2.bounds.size.width-30, labelHeight+20)];
+        detailInfoLabel.scrollView.scrollEnabled = NO;
         
         if(indexPath.row==4 || indexPath.row==6){
             
             
-            detailInfoLabel.text = shopInfo[indexPath.row];
+            [detailInfoLabel loadHTMLString:shopInfo[indexPath.row] baseURL:nil];//webView加载富文本
             [cell2.contentView addSubview:detailInfoLabel];
         }
     
@@ -210,14 +220,10 @@
         
             
             NSString *text = [shopInfo objectAtIndex:[indexPath row]];
-            
-            
             CGFloat height = MAX([self caculateTheTextHeight:text andFontSize:14], 44.0f);
             
-            
-            return height + 10;
-
-        
+            return height + 20;
+           
         }
         
         
@@ -239,7 +245,7 @@
 - (CGFloat)caculateTheTextHeight:(NSString *)string andFontSize:(int)fontSize{
   
     /*非彻底性封装*/
-    CGSize constraint = CGSizeMake(self.view.bounds.size.width-20, CGFLOAT_MAX);
+    CGSize constraint = CGSizeMake(self.view.bounds.size.width-50, CGFLOAT_MAX);
     
     NSDictionary * attributes = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:fontSize] forKey:NSFontAttributeName];
     NSAttributedString *attributedText =
@@ -262,8 +268,6 @@
 
     [self.navigationController popViewControllerAnimated:YES];
 }
-
-
 
 
 - (void)didReceiveMemoryWarning {

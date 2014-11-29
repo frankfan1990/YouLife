@@ -87,11 +87,13 @@
     
     
     //显示目的地
-    UILabel *destinationLabel =[[UILabel alloc]initWithFrame:CGRectMake(45, 64+51, self.view.bounds.size.width, 49)];
+    UILabel *destinationLabel =[[UILabel alloc]initWithFrame:CGRectMake(45, 64+51, self.view.bounds.size.width-50, 49)];
     destinationLabel.font =[UIFont systemFontOfSize:16];
     destinationLabel.textColor = baseTextColor;
+    destinationLabel.adjustsFontSizeToFitWidth = YES;
     [self.view addSubview:destinationLabel];
-    destinationLabel.text = @"天马小区";
+    
+    destinationLabel.text = self.shopName;
 
     UIView *myDestination =[[UIView alloc]initWithFrame:CGRectMake(10, 64+51+15, 20, 20)];
     myDestination.layer.cornerRadius = 10;
@@ -153,6 +155,7 @@
         [self searchNaviBus:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude
                 andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude
                     andCity:@"长沙市"];//公交导航数据
+        [self.tableView reloadData];
 
     }
     
@@ -161,12 +164,14 @@
         [self searchNaviDrive:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude
                   andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude];//驾车导航
 
+        [self.tableView reloadData];
     }
     
     
     if(_whichWay==3003){
     
         [self searchNaviWalking:self.startCoordinate.latitude andLongitude:self.startCoordinate.longitude andLatitude:self.destinationCoordinate.latitude andLongitude:self.destinationCoordinate.longitude];//步行导航
+        [self.tableView reloadData];
     }
     
     
@@ -305,7 +310,7 @@
     
         //红色标示数
         UILabel *numLabel = (UILabel *)[cell viewWithTag:3001];
-        numLabel.text = [NSString stringWithFormat:@"%d",indexPath.row+1];
+        numLabel.text = [NSString stringWithFormat:@"%ld",indexPath.row+1];
     }
    
   
@@ -347,7 +352,7 @@
         UILabel *timeNedd = (UILabel *)[cell viewWithTag:3003];
         AMapTransit *local_transit_bus = self.trsnasts_bus[indexPath.row];
 
-        timeNedd.text = [NSString stringWithFormat:@"%d分钟",local_transit_bus.duration/60];
+        timeNedd.text = [NSString stringWithFormat:@"%ld分钟",local_transit_bus.duration/60];
     }
     
     

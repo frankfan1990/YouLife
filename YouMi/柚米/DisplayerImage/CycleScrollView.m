@@ -46,6 +46,7 @@
                                                highlightedImage:highlightDotImage
                                                      dotsNumber:totalPageCounts sideLength:dotGapWidth dotsGap:dotGapWidth];
             _pageControl.hidden = NO;
+            self.scrollView.backgroundColor = [UIColor whiteColor];
             self.scrollView.showsVerticalScrollIndicator = NO;
             
         }
@@ -118,8 +119,10 @@
         self.scrollView.delegate = self;
 
         //
-        self.scrollView.backgroundColor =[UIColor redColor];
-        
+        self.scrollView.backgroundColor =[UIColor whiteColor];
+        UIImageView *imageView =[[UIImageView alloc]initWithFrame:self.scrollView.bounds];
+        imageView.image = [UIImage imageNamed:@"defaultBackgroundImage"];
+        [self.scrollView addSubview:imageView];
                 
     }
     return self;

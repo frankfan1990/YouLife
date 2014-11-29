@@ -10,6 +10,7 @@
 #import <AMapSearchKit/AMapSearchAPI.h>
 #import <MAMapKit/MAMapKit.h>
 
+
 @interface WhichWayToGoViewController : UIViewController
 
 @property (nonatomic,assign)NSInteger whichWay;
@@ -18,6 +19,7 @@
 @property (nonatomic,strong)AMapRoute *route;
 @property (nonatomic,strong)AMapRoute *route2;//驾车
 @property (nonatomic,strong)AMapRoute *route3;//步行
+@property (nonatomic,copy)NSString *shopName;//店铺名
 
 @property (nonatomic,strong)AMapSearchAPI *search;
 

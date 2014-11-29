@@ -16,38 +16,38 @@
     if (self) {
         
         //
-        self.headerImageView =[[UIImageView alloc]initWithFrame:CGRectMake(25, 28, 60, 60)];
-        self.headerImageView.layer.borderWidth = 3;
-        self.headerImageView.layer.borderColor =[UIColor colorWithWhite:0.9 alpha:0.8].CGColor;
+        self.headerImageView =[[UIImageView alloc]initWithFrame:CGRectMake(5+5, 28-15+5, 60+20-5+10, 60+15-10)];
         self.headerImageView.layer.masksToBounds = YES;
-        self.headerImageView.layer.cornerRadius = 30;
+        self.headerImageView.layer.cornerRadius = 2;
         [self.contentView addSubview:self.headerImageView];
 
         //
-        self.TheShopName =[[UILabel alloc]initWithFrame:CGRectMake(100, 26, 144, 22)];
+        self.TheShopName =[[UILabel alloc]initWithFrame:CGRectMake(100+4, 28-15+3, 144, 22)];
         self.TheShopName.font = ShopNameFont;
         self.TheShopName.textColor = baseTextColor;
         [self.contentView addSubview:self.TheShopName];
-#warning fake data 此数据需要从接口处去得
+
         self.TheShopName.text = @"店铺名";
         
         
         //
-        self.aboutUpay =[[UILabel alloc]initWithFrame:CGRectMake(100, 47, 144, 22)];
+        self.aboutUpay =[[UILabel alloc]initWithFrame:CGRectMake(100+4, 69-3, 144, 22)];
         self.aboutUpay.font = ShopNameFont;
         self.aboutUpay.textColor = [UIColor colorWithWhite:0.7 alpha:0.9];
         [self.contentView addSubview:self.aboutUpay];
-#warning fake data 此数据需要从接口处去得
+
         self.aboutUpay.text = @"满一百送50U币";
 
         
         //
-        self.TheShopAddress =[[UILabel alloc]initWithFrame:CGRectMake(225, 43, 90, 22)];
-        self.TheShopAddress.textAlignment = NSTextAlignmentCenter;
+        self.TheShopAddress =[[UILabel alloc]initWithFrame:CGRectMake(225+10, 43, self.bounds.size.width-225-10-5, 22)];
+        self.TheShopAddress.textAlignment = NSTextAlignmentLeft;
+        self.TheShopAddress.font =[UIFont systemFontOfSize:12];
+        self.TheShopAddress.adjustsFontSizeToFitWidth = YES;
         self.TheShopAddress.font = ShopNameFont;
         self.TheShopAddress.textColor = baseTextColor;
         [self.contentView addSubview:self.TheShopAddress];
-#warning fake data 此数据需要从接口处去得
+
         self.TheShopAddress.text = @"南门口";
 
 

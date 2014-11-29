@@ -41,7 +41,7 @@
     
     self.webView =[[UIWebView alloc]initWithFrame:self.view.bounds];
     [self.view addSubview:self.webView];
-    
+    [self.webView loadHTMLString:self.htmlString baseURL:nil];
     
     
     

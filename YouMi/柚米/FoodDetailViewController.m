@@ -16,6 +16,7 @@
 #import "POP/POP.h"//用来处理“三大模块”的标示旋转动画
 #import "ShopDetailViewController.h"
 
+#import "LocationManager.h"
 #import "UIImageView+WebCache.h"
 #import <AFNetworking.h>
 #import "ShopObjectModel.h"
@@ -27,8 +28,9 @@
 #import "convert.h"
 #import "convert2.h"
 
+
 static NSInteger _start = 10;
-@interface FoodDetailViewController ()
+@interface FoodDetailViewController ()<MKMapViewDelegate>
 {
 
     NSString *_metereString;
@@ -212,10 +214,11 @@ static NSInteger _start = 10;
     locationManager =[[CLLocationManager alloc]init];
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
    
-    //当前位置的火星坐标
+    //当前位置的火星坐标-这里待商榷是否需要转火星坐标
     currentMarsLocation = transform(locationManager.location.coordinate);
+
     
-    
+        
 #pragma mark - 网络请求
     /**
      *  @Author frankfan, 14-11-20 11:11:28
@@ -244,7 +247,7 @@ static NSInteger _start = 10;
         if([rechability isReachable]){//网络正常
             
             //开始进行网络请求
-            [ProgressHUD show:nil];
+//            [ProgressHUD show:nil];
             [getShopList_manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
                 NSDictionary *resultDict = (NSDictionary *)responseObject;
@@ -258,7 +261,7 @@ static NSInteger _start = 10;
         
                 [self.tmCache setObject:resultDict forKey:@"key_foodShopCache"];
                 
-                [ProgressHUD dismiss];
+//                [ProgressHUD dismiss];
                 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 
@@ -283,8 +286,6 @@ static NSInteger _start = 10;
  *
  *  @return
  */
-
-
 
 #warning 这里不适用上拉加载更多
 #pragma mark - 计算两地距离
@@ -505,7 +506,7 @@ static NSInteger _start = 10;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
 
-    return [self.shopObjects count];/*fake date*/
+    return [self.shopObjects count];
 }
 
 
@@ -593,11 +594,12 @@ static NSInteger _start = 10;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 
     
-//    ItemDetailController *foodShop =[[ItemDetailController alloc]init];
     ShopDetailViewController *shopDetail =[ShopDetailViewController new];
+    shopDetail.originPosition = CLLocationCoordinate2DMake(currentMarsLocation.latitude, currentMarsLocation.longitude);
     
     NSDictionary *modelDict = self.shopObjects[indexPath.row];
     shopDetail.shopModel = [ShopObjectModel modelWithDictionary:modelDict error:nil];
+    
     
     if(shopDetail.shopModel){
     

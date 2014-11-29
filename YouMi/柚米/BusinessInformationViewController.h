@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ShopBusiniessInfoObjcModel.h"
 
 @interface BusinessInformationViewController : UIViewController
 
+@property (nonatomic,strong)NSDictionary *objecDict;//用来产生model的字典
 @end

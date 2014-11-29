@@ -167,7 +167,7 @@
     
     /*创建轮播效果控件*/
     
-    self.mainScrillerView =[[CycleScrollView alloc]initWithFrame:CGRectMake(0, 114, self.view.bounds.size.width, 180) animationDuration:3.2];
+    self.mainScrillerView =[[CycleScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180) animationDuration:3.2];
     __weak MallViewController *_self = self;
     self.mainScrillerView.totalPagesCount = ^NSInteger(void){
     
@@ -183,7 +183,7 @@
     self.mainScrillerView.TapActionBlock = ^(NSInteger pageIndex){
     
     
-        NSLog(@"index:%ld",pageIndex);
+        NSLog(@"index:%ld",(long)pageIndex);
     };
     
     
@@ -192,10 +192,11 @@
     
 #pragma mark 创建tableView
     
-    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 294, self.view.bounds.size.width, self.view.bounds.size.height-49-294) style:UITableViewStylePlain];
+//    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 294, self.view.bounds.size.width, self.view.bounds.size.height-49-294) style:UITableViewStylePlain];
+    
+    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 114, self.view.bounds.size.width, self.view.bounds.size.height-49-114) style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.tableView.rowHeight = commomCellHeight;
     [self.view addSubview:self.tableView];
     
     
@@ -221,7 +222,7 @@
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        [self.tableView footerEndRefreshing];
+        [self.tableView headerEndRefreshing];
     });
 
 }
@@ -410,7 +411,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
 
-    return arrayCount;
+    return arrayCount+1;
 }
 
 
@@ -418,9 +419,37 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
-    MainPageCustomTableViewCell *cell =[MainPageCustomTableViewCell cellWithTableView:tableView];
+    UITableViewCell *headCell = nil;
+    MainPageCustomTableViewCell *cell = nil;
+    
+    if(indexPath.row==0){
+    
+        headCell =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        [headCell.contentView addSubview:self.mainScrillerView];
+        return headCell;
+    }
+    
+    if(indexPath.row != 0){
+    
+        cell = [MainPageCustomTableViewCell cellWithTableView:tableView];
+        return cell;
+    }
+    
 
-    return cell;
+    return nil;
+
+}
+
+#pragma mark - cell高度
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (indexPath.row==0) {
+        
+        return 180;
+    }else{
+    
+        return commomCellHeight;
+    }
 
 }
 

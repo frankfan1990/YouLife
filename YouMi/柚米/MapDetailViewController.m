@@ -128,7 +128,16 @@
     
        
 #pragma mark - 创建tableView
-    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(10, self.view.bounds.size.height-198, self.view.bounds.size.width, self.view.bounds.size.height-201-64-49-60) style:UITableViewStylePlain];
+    
+    int heighThreshold = 0;//适配iPhone4s
+    if(self.view.bounds.size.height>480){
+        heighThreshold = 0;
+    }else if (self.view.bounds.size.height<=480){
+    
+        heighThreshold = 90;
+    }
+    
+    self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(10, self.view.bounds.size.height-198, self.view.bounds.size.width, self.view.bounds.size.height-201-64-49-60+heighThreshold) style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];

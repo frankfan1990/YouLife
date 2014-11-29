@@ -1,23 +1,17 @@
 //
-//  ShopObjectModel.h
+//  ShopDetailObjcModel.h
 //  youmi
 //
-//  Created by frankfan on 14/11/20.
+//  Created by frankfan on 14/11/26.
 //  Copyright (c) 2014年 ruizhou. All rights reserved.
 //
-
-#import "MTLModel.h"
-#import <Mantle.h>
-
-/**
- *  @Author frankfan, 14-11-20 14:11:34
- *
- *  商铺数据层对象
+/*
+ *商铺详情数据层
  */
 
+#import "MTLModel.h"
 
-@interface ShopObjectModel : MTLModel
-
+@interface ShopDetailObjcModel : MTLModel
 
 @property (nonatomic,copy)NSString *shopId;//商铺编号
 @property (nonatomic,copy)NSString *shopName;//商铺名称

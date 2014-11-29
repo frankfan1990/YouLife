@@ -9,12 +9,13 @@
 #import "MainMapViewController.h"
 #import "WhichWayToGoViewController.h"
 #import "ChineseToPinyin.h"
+#import "ProgressHUD/ProgressHUD.h"
 
 
 @interface MainMapViewController ()<MAMapViewDelegate,AMapSearchDelegate>
 {
     
-    MAPointAnnotation *annotation0;
+    
 }
 @property (nonatomic,strong)AMapSearchAPI *search;
 @property (nonatomic,strong)MAMapView *mapView;
@@ -33,9 +34,10 @@
     
     
     /*title*/
-    UILabel *title =[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 30, 40)];
-    self.shopperName = @"店铺名";
+    UILabel *title =[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 40)];
     title.text = self.shopperName;
+    title.adjustsFontSizeToFitWidth = YES;
+    title.textAlignment = NSTextAlignmentCenter;
     title.textColor = baseRedColor;
     self.navigationItem.titleView = title;
     
@@ -81,13 +83,13 @@
 
    
     self.search =[[AMapSearchAPI alloc]initWithSearchKey:kGaoDeAppKey Delegate:self];
-    [self searchReGeoCode:28.1604559362 and:112.9536337433];
+    [self searchReGeoCode:self.startCoordinate.latitude and:self.startCoordinate.longitude];
     
     
     
     
-    self.startCoordinate = CLLocationCoordinate2DMake(28.1604559362, 112.9536337433);
-    self.destinationCoordinate = CLLocationCoordinate2DMake(28.2602631576, 112.9779605718);
+//    self.startCoordinate = CLLocationCoordinate2DMake(28.1604559362, 112.9536337433);
+//    self.destinationCoordinate = CLLocationCoordinate2DMake(28.2602631576, 112.9779605718);
    
     /**
      *  @Author frankfan, 14-11-18 12:11:32
@@ -125,21 +127,28 @@
     self.mapView =[[MAMapView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-50)];
  
     //添加标注
-    annotation0 =[[MAPointAnnotation alloc]init];
-    annotation0.coordinate = CLLocationCoordinate2DMake(28.1604559362, 112.9536337433);
-
-   
+    _annotation0 =[[MAPointAnnotation alloc]init];
+    
+    if(self.lat == 0){
+    
+        [ProgressHUD showError:@"数据缺失" Interaction:NO];
+    }else{
+    
+        _annotation0.coordinate = CLLocationCoordinate2DMake(self.lat, self.lng);
+    }
+    
+    
     
     self.mapView.showsScale = YES;
     self.mapView.delegate = self;
     
     //让视图缩放适配
     MACoordinateSpan span ={0.06, 0.06};
-    MACoordinateRegion region={annotation0.coordinate,span};
+    MACoordinateRegion region={_annotation0.coordinate,span};
     [self.mapView setRegion:region animated:YES];
-    self.mapView.centerCoordinate = annotation0.coordinate;
+    self.mapView.centerCoordinate = _annotation0.coordinate;
     
-    [self.mapView addAnnotation:annotation0];
+    [self.mapView addAnnotation:_annotation0];
 
     [self.view addSubview:self.mapView];
     
@@ -223,10 +232,16 @@
     WhichWayToGoViewController *whichWayToGo =[WhichWayToGoViewController new];
     whichWayToGo.startCoordinate = self.startCoordinate;
     whichWayToGo.destinationCoordinate = self.destinationCoordinate;
+    whichWayToGo.shopName = self.shopperName;
+    
+    whichWayToGo.startCoordinate = self.startCoordinate;//当前坐标
+    whichWayToGo.destinationCoordinate = self.destinationCoordinate;//目的地坐标
+
     
     if(gesture.view.tag==3001){//公交
     
         whichWayToGo.whichWay = 3001;
+        
     }else if (gesture.view.tag==3002){//驾车
     
         whichWayToGo.whichWay = 3002;

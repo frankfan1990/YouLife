@@ -17,7 +17,11 @@
 @property (nonatomic,assign)double longitude;//经度
 
 /* 起始点经纬度. */
-@property (nonatomic) CLLocationCoordinate2D startCoordinate;
+@property (nonatomic,assign) CLLocationCoordinate2D startCoordinate;
 /* 终点经纬度. */
-@property (nonatomic) CLLocationCoordinate2D destinationCoordinate;
+@property (nonatomic,assign) CLLocationCoordinate2D destinationCoordinate;
+
+@property (nonatomic,strong) MAPointAnnotation *annotation0;//店铺坐标
+@property (nonatomic,assign) double lat;
+@property (nonatomic,assign) double lng;
 @end

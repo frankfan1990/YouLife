@@ -12,6 +12,17 @@
 #import "PdownMenuViewController.h"
 #import "POP/POP.h"
 
+#import "ProgressHUD/ProgressHUD.h"
+#import <AFHTTPRequestOperationManager.h>
+#import "Reachability.h"
+#import <TMCache.h>
+#import <MapKit/MapKit.h>
+#import "convert_oc.h"
+#import "convert2_new.h"
+#import "ShopObjectModel.h"
+#import "UIImageView+WebCache.h"
+
+static NSInteger _start = 10;
 @interface EntertainmentDetailViewController ()
 {
 
@@ -22,7 +33,12 @@
     
     NSMutableArray *storeTheTag;//存储点击的tag
 
-
+    Reachability *rechability_entertainment;
+    
+    BOOL isPullUpMode_entertainment;//如果向上加载更多方法被执行,则改变数据加载逻辑
+    
+    CLLocationManager *locationManager_entertainment;//定位当前
+    CLLocationCoordinate2D currentMarsLocation_entertainment;//当前位置的火星坐标
 
 }
 
@@ -37,6 +53,9 @@
 /*modul_begin*/
 @property (nonatomic,strong)PdownMenuViewController *downMenu;
 /*modul_end*/
+
+@property (nonatomic,strong)TMCache *tmCache_entertainment;
+@property (nonatomic,strong)NSMutableArray *shopObjects_entertainment;//商铺对象列表
 @end
 
 @implementation EntertainmentDetailViewController
@@ -58,6 +77,14 @@
     //
     storeTheTag =[NSMutableArray array];//存放被点击的tag
     statuRecode_array =[NSMutableArray array];
+    self.whichMode_entertainment = self.index;
+    /**
+     在这里开始初始化数据
+     */
+    
+    self.shopObjects_entertainment = [NSMutableArray array];
+    
+    isPullUpMode_entertainment = NO;
 
     
     /*title*/
@@ -170,6 +197,76 @@
     
 #pragma mark - 添加上拉加载
     [self.tableView addFooterWithTarget:self action:@selector(pullUpCallBack)];
+    
+
+    /**
+     *  @Author frankfan, 14-11-21 10:11:54
+     *
+     *  获取当前坐标
+     *
+     *  @return 当前坐标
+     */
+    
+    locationManager_entertainment =[[CLLocationManager alloc]init];
+    locationManager_entertainment.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    //当前位置的火星坐标-这里待商榷是否需要转火星坐标
+    currentMarsLocation_entertainment = [convert_oc CLLocationCoordinate2D_transform:locationManager_entertainment.location.coordinate];
+
+#pragma mark - 网络请求
+    /**
+     *  @Author frankfan, 14-11-20 11:11:28
+     *
+     *  从这里开始网络请求,这里的逻辑是：先从本地缓存读取数据，如果有就呈现，然后进行网络请求
+     *  如果没有缓存，就直接进行网络请求
+     *  这里缓存逻辑的目的并非节省用户流量，而是“尽快”给用户显示内容
+     *  @return
+     */
+    
+    self.tmCache_entertainment =[[TMCache alloc]initWithName:@"entertainmentShop_cache"];//初始化一个缓存对象
+    rechability_entertainment =[Reachability reachabilityWithHostName:@"www.baidu.com"];
+    
+    if([self.tmCache_entertainment objectForKey:@"key_entertainmentShopCache"]){
+        
+        NSDictionary *resultDict = [self.tmCache_entertainment objectForKey:@"key_entertainmentShopCache"];
+        self.shopObjects_entertainment = [[resultDict objectForKey:@"data"] mutableCopy];
+    }
+    
+    //请求商铺列表
+    
+    NSDictionary *parameters = @{api_typeId:self.shopTypeID_entertainment,api_start:@0,api_limit:@10};
+    AFHTTPRequestOperationManager *getShopList_manager =[AFHTTPRequestOperationManager manager];
+    getShopList_manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
+    
+    if([rechability_entertainment isReachable]){//网络正常
+        
+        //开始进行网络请求
+        //[ProgressHUD show:nil];
+        [getShopList_manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSDictionary *resultDict = (NSDictionary *)responseObject;
+            self.shopObjects_entertainment = [[resultDict objectForKey:@"data"] mutableCopy];
+            
+    
+            [self.tableView reloadData];
+            
+            [self.tmCache_entertainment setObject:resultDict forKey:@"key_entertainmentShopCache"];
+            
+            //[ProgressHUD dismiss];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@".....error:%@\n",[error localizedDescription]);
+            [ProgressHUD showError:@"网络错误" Interaction:NO];
+        }];
+    }else{//网络异常
+        
+        [ProgressHUD showError:@"网络异常" Interaction:NO];
+    }
+    
+
+
+    
     
     
     
@@ -341,7 +438,7 @@
 
 
 
-#pragma mark 导航栏上的两个按钮触发回调
+#pragma mark - 导航栏上的两个按钮触发回调
 
 - (void)navi_buttonClicked:(UIButton *)sender{
     
@@ -352,25 +449,60 @@
         
         NSLog(@"搜索...");
     }
-    
-    
-    
+   
 }
 
 
-#pragma mark cell个数的生成-fake data
+#pragma mark - cell个数的生成
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
-    return 10+2;/*fake data*/
+    return [self.shopObjects_entertainment count];
 
 }
 
-#pragma mark 创建cell
+#pragma mark - 创建cell
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
     EntertainmentTableViewCell *cell =[EntertainmentTableViewCell cellWithTableView:tableView];
+    
+    if([self.tmCache_entertainment objectForKey:@"key_entertainmentShopCache"] && !isPullUpMode_entertainment){
+        
+        //从缓存中获取字典
+        NSDictionary *tempDictCache = [self.tmCache_entertainment objectForKey:@"key_entertainmentShopCache"];
+        if(tempDictCache){
+            
+            NSArray *whichCreateShopModels = tempDictCache[@"data"];
+            NSDictionary *whichCreateShopModel = whichCreateShopModels[indexPath.row];
+            
+            NSError *error;
+            ShopObjectModel *shopModel = [ShopObjectModel modelWithDictionary:whichCreateShopModel error:&error];
+            
+            cell.TheShopName.text = shopModel.shopName;//商铺名
+           
+            [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//店铺头像
+            
+            cell.aboutUpay.text = shopModel.shopTitle;//U币政策
+            cell.TheShopAddress.text = shopModel.circleName;//商圈名字
+            
+        }
+    }else{
+        
+        
+        NSDictionary *tempDict = self.shopObjects_entertainment[indexPath.row];
+        NSError *error;
+        ShopObjectModel *shopModel = [ShopObjectModel modelWithDictionary:tempDict error:&error];
+        
+        cell.TheShopName.text = shopModel.shopName;//商铺名
+        cell.TheShopAddress.text = shopModel.circleName;//商圈名字
+        [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//店铺头像
+        cell.aboutUpay.text = shopModel.shopTitle;//U币政策
+       
+        NSLog(@"else");
+        NSLog(@"error:%@",[error localizedDescription]);
+    }
+    
     return cell;
 }
 
@@ -379,23 +511,80 @@
 
 - (void)pullDownRefresh{
 
-#warning 模拟网络请求，fake func
-    /*dake Func*/
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    NSDictionary *parameters = @{api_typeId:self.shopTypeID_entertainment,api_start:@0,api_limit:@10};
+    AFHTTPRequestOperationManager *getShopList_manager =[AFHTTPRequestOperationManager manager];
+    getShopList_manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
+    if(![rechability_entertainment isReachable]){
         
+        [ProgressHUD showError:@"网络异常"];
         [self.tableView headerEndRefreshing];
-    });
+        return;
+    }else{
+        
+        [getShopList_manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            _start = 10;
+            NSDictionary *resultDict = (NSDictionary *)responseObject;
+            self.shopObjects_entertainment = [[resultDict objectForKey:@"data"]mutableCopy];
+            
+            isPullUpMode_entertainment = NO;
+            [self.tableView reloadData];
+            
+            [self.tmCache_entertainment setObject:resultDict forKey:@"key_entertainmentShopCache"];
+            [self.tableView headerEndRefreshing];
+            
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@"error:%@",[error localizedDescription]);
+            [self.tableView headerEndRefreshing];
+            [ProgressHUD showError:@"网络错误"];
+            
+        }];
+        
+    }
 
 }
 
 #pragma mark - 上拉加载更多的回调方法
 - (void)pullUpCallBack{
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+   
+    NSDictionary *parameters = @{api_typeId:self.shopTypeID_entertainment,api_start:[NSNumber numberWithInteger:_start],api_limit:@10};
+    AFHTTPRequestOperationManager *getShopList_manager =[AFHTTPRequestOperationManager manager];
+    getShopList_manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
+    if(![rechability_entertainment isReachable]){
         
+        [ProgressHUD showError:@"网络异常"];
         [self.tableView footerEndRefreshing];
-    });
-    
+        return;
+    }else{
+        
+        [getShopList_manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSDictionary *resultDict = (NSDictionary *)responseObject;
+            NSArray *pageArray = [resultDict objectForKey:@"data"];
+            isPullUpMode_entertainment = YES;
+            [self.shopObjects_entertainment addObjectsFromArray:pageArray];
+            
+            [self.tableView reloadData];
+            
+            [self.tableView footerEndRefreshing];
+            
+            _start = _start+10;//假如数据拉取成功，则标志头向右滑动11个单位
+            
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@"error:%@",[error localizedDescription]);
+            [self.tableView footerEndRefreshing];
+            [ProgressHUD showError:@"网络错误"];
+            
+            _start = _start;//假如数据拉取失败，则标志头维持不变【逻辑清晰代码-提示作用】
+        }];
+        
+    }
+
+
 }
 
 
