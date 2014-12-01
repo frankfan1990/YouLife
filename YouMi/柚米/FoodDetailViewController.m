@@ -28,9 +28,10 @@
 #import "convert.h"
 #import "convert2.h"
 
+#import <MAMapKit/MAMapKit.h>
 
 static NSInteger _start = 10;
-@interface FoodDetailViewController ()<MKMapViewDelegate>
+@interface FoodDetailViewController ()<MKMapViewDelegate,MAMapViewDelegate>
 {
 
     NSString *_metereString;
@@ -45,7 +46,8 @@ static NSInteger _start = 10;
     
     CLLocationManager *locationManager;//定位当前
     CLLocationCoordinate2D currentMarsLocation;//当前位置的火星坐标
-    
+ 
+    MAMapView *mamapView;
 }
 
 
@@ -218,7 +220,12 @@ static NSInteger _start = 10;
     currentMarsLocation = transform(locationManager.location.coordinate);
 
     
-        
+    
+    
+    locationManager =[[CLLocationManager alloc] init];
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    
 #pragma mark - 网络请求
     /**
      *  @Author frankfan, 14-11-20 11:11:28
@@ -277,6 +284,9 @@ static NSInteger _start = 10;
     // Do any additional setup after loading the view.
    
 }
+
+
+
 
 
 /**
@@ -764,6 +774,8 @@ static NSInteger _start = 10;
     self.downMenu = nil;
     
 }
+
+
 
 
 - (void)viewWillDisappear:(BOOL)animated{

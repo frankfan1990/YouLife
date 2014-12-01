@@ -182,6 +182,7 @@
 		6394C15D1A28509100BB4714 /* RuleDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 6394C15C1A28509100BB4714 /* RuleDetail.m */; };
 		6394C1611A28D50700BB4714 /* convert_oc.m in Sources */ = {isa = PBXBuildFile; fileRef = 6394C1601A28D50700BB4714 /* convert_oc.m */; };
 		6394C16A1A28D98D00BB4714 /* convert2_new.c in Sources */ = {isa = PBXBuildFile; fileRef = 6394C1681A28D98D00BB4714 /* convert2_new.c */; };
+		6394C1CB1A2BFE8000BB4714 /* UserCommentsObjcModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6394C1CA1A2BFE8000BB4714 /* UserCommentsObjcModel.m */; };
 		63970F7119B0609600793A3D /* CCSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63970F7019B0609600793A3D /* CCSegmentedControl.m */; };
 		63970FBD19B415E200793A3D /* 地标@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63970FA319B415E200793A3D /* 地标@2x.png */; };
 		63970FBE19B415E200793A3D /* 分类未选中@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63970FA419B415E200793A3D /* 分类未选中@2x.png */; };
@@ -636,6 +637,8 @@
 		6394C1601A28D50700BB4714 /* convert_oc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = convert_oc.m; sourceTree = "<group>"; };
 		6394C1681A28D98D00BB4714 /* convert2_new.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = convert2_new.c; sourceTree = "<group>"; };
 		6394C1691A28D98D00BB4714 /* convert2_new.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = convert2_new.h; sourceTree = "<group>"; };
+		6394C1C91A2BFE8000BB4714 /* UserCommentsObjcModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCommentsObjcModel.h; sourceTree = "<group>"; };
+		6394C1CA1A2BFE8000BB4714 /* UserCommentsObjcModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCommentsObjcModel.m; sourceTree = "<group>"; };
 		63970F6F19B0609600793A3D /* CCSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSegmentedControl.h; sourceTree = "<group>"; };
 		63970F7019B0609600793A3D /* CCSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCSegmentedControl.m; sourceTree = "<group>"; };
 		63970FA319B415E200793A3D /* 地标@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "地标@2x.png"; sourceTree = "<group>"; };
@@ -994,6 +997,9 @@
 				631224D01A26B20200B3E9EF /* ShopBusiniessInfoObjcModel.m */,
 				631224D61A27065700B3E9EF /* ShopNewsObjcModel.h */,
 				631224D71A27065700B3E9EF /* ShopNewsObjcModel.m */,
+				6394C1C91A2BFE8000BB4714 /* UserCommentsObjcModel.h */,
+				6394C1CA1A2BFE8000BB4714 /* UserCommentsObjcModel.m */,
+				6394C15A1A28506E00BB4714 /* GoodsObjects */,
 			);
 			name = ShopObjects;
 			sourceTree = "<group>";
@@ -1716,7 +1722,6 @@
 				63EEA91919F899AA00F5A8A5 /* DataAboutView */,
 				632CEB1E1A1DC0AC00DDD535 /* AboutUserInfo */,
 				632CEB221A1DC27600DDD535 /* ShopObjects */,
-				6394C15A1A28506E00BB4714 /* GoodsObjects */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -2174,6 +2179,7 @@
 				6397103C19B45A6800793A3D /* UIView+Extension.m in Sources */,
 				6304679C1A19948900D9B9E3 /* MainMapViewController.m in Sources */,
 				6304672D1A15E06500D9B9E3 /* MoreActivityDetailViewController.m in Sources */,
+				6394C1CB1A2BFE8000BB4714 /* UserCommentsObjcModel.m in Sources */,
 				63901E0519C19DC7006C4158 /* BusinessCircleViewController.m in Sources */,
 				63C5017B1A12673600B5BCF5 /* ActivityDetailViewController.m in Sources */,
 				63B7AA3719AEFF9F00AAE30A /* MainPageCustomTableViewCell.m in Sources */,

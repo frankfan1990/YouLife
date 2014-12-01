@@ -23,6 +23,8 @@
 #import "ProgressHUD.h"
 #import <AFNetworking.h>
 #import "Reachability.h"
+#import "LocationManager.h"
+
 
 
 @interface MainPageViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CLLocationManagerDelegate>
@@ -37,6 +39,7 @@
     
     CCSegmentedControl *ccsegementCV;
     CLLocationManager * locationManager;
+    LocationManager *lcmanager;
     
   
 }
@@ -236,11 +239,32 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
 
 
     
-    /**
-     *  @Author frankfan, 14-10-27 23:10:49
-     *
-     *  定位
-     */
+//    /**
+//     *  @Author frankfan, 14-10-27 23:10:49
+//     *
+//     *  定位
+//     */
+//    
+//    // fix ios8 location issue
+//    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
+//#ifdef __IPHONE_8_0
+//        if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
+//        {
+//            NSLog(@"测试");
+//            [locationManager performSelector:@selector(requestAlwaysAuthorization)];//用这个方法，plist中需要NSLocationAlwaysUsageDescription
+//        }
+//        
+//        if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
+//        {
+//            NSLog(@"测试2");
+//            [locationManager performSelector:@selector(requestWhenInUseAuthorization)];//用这个方法，plist里要加字段NSLocationWhenInUseUsageDescription
+//        }
+//#endifs   
+//    }
+//    
+//    NSLog(@">>>>%f----%f",locationManager.location.coordinate.latitude,locationManager.location.coordinate.longitude);
+    
+
     
     Reachability *reachability =[Reachability reachabilityWithHostName:@"www.baidu.com"];
     
@@ -260,43 +284,19 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
             [ProgressHUD showError:@"无法完成定位"];
             
         }];
-        
-        [[MMLocationManager shareLocation]getLocationCoordinate:^(CLLocationCoordinate2D locationCorrrdinate) {
+     
+        /*****定位当前坐标****/
+        lcmanager =[[LocationManager alloc]init];
+        [lcmanager getUserNowLocationInfoWithAlert:YES getUserLocationFinish:^(BOOL success, CLLocation *userLocation) {
             
-            NSLog(@"lat:%f---longitude:%f",locationCorrrdinate.latitude,locationCorrrdinate.longitude);
-            
+            NSLog(@"userLocation:%@",userLocation);
         }];
-        /*********/
-        
-        
-        locationManager =[[CLLocationManager alloc] init];
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        
+
     }else{
     
         [ProgressHUD showError:@"网络异常"];
        
     }
-    
-    
-    
-    
-    // fix ios8 location issue
-    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
-#ifdef __IPHONE_8_0
-        if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
-        {
-            [locationManager performSelector:@selector(requestAlwaysAuthorization)];//用这个方法，plist中需要NSLocationAlwaysUsageDescription
-        }
-        
-        if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
-        {
-            [locationManager performSelector:@selector(requestWhenInUseAuthorization)];//用这个方法，plist里要加字段NSLocationWhenInUseUsageDescription
-        }
-#endif
-    }
-    
-    NSLog(@">>>>%f----%f",locationManager.location.coordinate.latitude,locationManager.location.coordinate.longitude);
     
     
     
@@ -324,6 +324,12 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
      // Do any additional setup after loading the view.
 }
 
+
+
+
+
+
+
 /**
  *  @Author frankfan, 14-10-27 17:10:17
  *
@@ -334,6 +340,11 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
 - (void)viewWillAppear:(BOOL)animated{
 
     
+ 
+    [super viewWillAppear:animated];
+    [locationManager requestWhenInUseAuthorization];
+    [locationManager startUpdatingLocation];
+  
     self.titleString = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocationCity];
 
     

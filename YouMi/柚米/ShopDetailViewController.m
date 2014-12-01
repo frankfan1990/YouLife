@@ -24,6 +24,7 @@
 #import "Reachability.h"
 #import "ShopNewsObjcModel.h"
 #import "GoodsObjcModel.h"
+#import "UserCommentsObjcModel.h"
 
 @interface ShopDetailViewController ()<UITableViewDelegate,UITableViewDataSource,EDStarRatingProtocol,UIAlertViewDelegate>
 {
@@ -445,14 +446,14 @@
     }
     if(section==4){//用户评论
     
-        if([self.userCommentArray count]>=1){
+        if([shopDetailObjcModel.comments count]>1){
         
             return 1;
         }else{
         
-            return 1;
+            return [shopDetailObjcModel.comments count];
         }
-        
+   
     }
     
     return 0;
@@ -513,7 +514,8 @@
         [button setTitleColor:[UIColor colorWithWhite:0.55 alpha:1] forState:UIControlStateNormal];
         button.titleLabel.font =[UIFont systemFontOfSize:14];
         //在这里显示一共有多少条评论
-        [button setTitle:[NSString stringWithFormat:@"%@条",@111] forState:UIControlStateNormal];
+        NSString *commentsCount =[NSString stringWithFormat:@"%d",[shopDetailObjcModel.comments count]];
+        [button setTitle:[NSString stringWithFormat:@"%@条",commentsCount] forState:UIControlStateNormal];
         [backView addSubview:button];
         [button addTarget:self action:@selector(commentButtonClicked) forControlEvents:UIControlEventTouchUpInside];
         
@@ -755,9 +757,20 @@
     
     if(indexPath.section==4){//用户评论
 
-        if([userComment length]){
+    
+        NSDictionary *tempDict = nil;
+        UserCommentsObjcModel *userComment = nil;
+        if([shopDetailObjcModel.comments count]){
             
-            CGFloat commentContentHeight = [self caculateTheTextHeight:userComment andFontSize:14];
+            tempDict =shopDetailObjcModel.comments[indexPath.row];
+            userComment =[UserCommentsObjcModel modelWithDictionary:tempDict error:nil];
+        }
+        
+        
+        
+        if([userComment.content length]){
+            
+            CGFloat commentContentHeight = [self caculateTheTextHeight:userComment.content andFontSize:14];
             return commentContentHeight+35;
         }else{
         
@@ -1183,7 +1196,14 @@
         cell4 = [UserCommentTableViewCell cellWithTableView:tableView];
         cell4.selectionStyle = NO;
         
-        cell4.commentContent.text = userComment;
+        UserCommentsObjcModel *userComments = nil;
+        if([shopDetailObjcModel.comments count]){
+            
+            NSDictionary *tempDict = shopDetailObjcModel.comments[indexPath.row];
+            userComments =[UserCommentsObjcModel modelWithDictionary:tempDict error:nil];
+        }
+        
+        cell4.commentContent.text = userComments.content;
        
         CGFloat contentHeight;
         if([cell4.commentContent.text length]){
@@ -1201,11 +1221,23 @@
         cell4.commentContent.frame = CGRectMake(10, 36, self.view.bounds.size.width-40, contentHeight);
         
         //来自某用户评论
-        cell4.theCommenter.text = @"frankfan";
+        cell4.theCommenter.text = userComments.userName;
         //评论时间
-        cell4.theDay.text = @"2014.12.28";
-        //评论时间time
-        cell4.theTime.text = @"12:22";
+        NSArray *tempArray = nil;
+        if([shopDetailObjcModel.comments count]){
+            
+            NSDictionary *tempDict = shopDetailObjcModel.comments[indexPath.row];
+            userComments =[UserCommentsObjcModel modelWithDictionary:tempDict error:nil];
+            NSString *tempString = userComments.createTime;
+            tempArray = [tempString componentsSeparatedByString:@" "];
+        }
+        
+        if([tempArray count]){
+        
+            cell4.theDay.text = tempArray[0];
+            //评论时间time
+            cell4.theTime.text = tempArray[1];
+        }
         
         return cell4;
     
@@ -1278,8 +1310,6 @@
 
 
 }
-
-
 
 
 /**
