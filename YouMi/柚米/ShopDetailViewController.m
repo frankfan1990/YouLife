@@ -53,8 +53,8 @@ const NSString *text_html = @"text/html";
     ShopDetailObjcModel *shopDetailObjcModel;//营业信息
     ShopNewsObjcModel *shopNewsObjcModel;//商家资讯
     //
-    NSArray *delegateDataSourceForBusiniessNews;//商铺资讯的代理数据源
-    NSArray *delegateDataSouorceForBusiniessActivity;//商铺特惠活动代理资源
+    NSMutableArray *delegateDataSourceForBusiniessNews;//商铺资讯的代理数据源
+    NSMutableArray *delegateDataSouorceForBusiniessActivity;//商铺特惠活动代理资源
     
     BOOL businiessinfoClicked;
     BOOL businiessActivityClicked;
@@ -105,9 +105,8 @@ const NSString *text_html = @"text/html";
     reachability =[Reachability reachabilityWithHostName:@"www.baidu.com"];
     
     itemTitles = @[@"",@"店铺信息",@"商家资讯",@"特惠活动",@"用户评论"];
+
     
-    string1 = @"查看更多优惠";
-    string2 = @"查看更多优惠";
     userComment = @"这是一条用户评论，我必须要说的是，这家店真的很烂！我必须要说的是，这家店真的很烂！我必须要说的是，这家店真的很烂！！！真是真是真的烂擦擦擦擦擦！！！！！";
     self.cycleImageArrayURLs =[NSMutableArray array];
     self.iamgeViewArrays =[NSMutableArray array];
@@ -237,37 +236,20 @@ const NSString *text_html = @"text/html";
          
             if([shopDetailObjcModel.shopNewses count]>2){
             
-               delegateDataSourceForBusiniessNews = [shopDetailObjcModel.shopNewses subarrayWithRange:NSMakeRange(0, 2)];
-            }
-            
-            if([shopDetailObjcModel.goodses count]>2){
-            
-                delegateDataSouorceForBusiniessActivity = [shopDetailObjcModel.goodses subarrayWithRange:NSMakeRange(0, 2)];
-            }
-            
-            /******/
-            if([shopDetailObjcModel.shopNewses count]>2){
-                
+               delegateDataSourceForBusiniessNews = [[shopDetailObjcModel.shopNewses subarrayWithRange:NSMakeRange(0, 2)]mutableCopy];
                 string1 = @"点击查看更多";
-               
-                
-            }else{
-                
-                string1 = @"没有更多信息";
-                
+               [delegateDataSourceForBusiniessNews addObject:string1];
             }
             
             if([shopDetailObjcModel.goodses count]>2){
-                
+            
+                delegateDataSouorceForBusiniessActivity = [[shopDetailObjcModel.goodses subarrayWithRange:NSMakeRange(0, 2)]mutableCopy];
                 string2 = @"点击查看更多";
-                
-            }else{
-            
-                string2 = @"没有更多信息";
-            
+                [delegateDataSouorceForBusiniessActivity addObject:string2];
             }
+            
             /******/
-          
+
             /******/
             [self.tableView reloadData];
             [self handleTheCyclePlayingImages:shopDetailObjcModel.pictures];
@@ -321,24 +303,7 @@ const NSString *text_html = @"text/html";
     star1.editable = NO;
     [star1 setNeedsDisplay];
    
-    
-    
-    /**
-     *  @Author frankfan, 14-11-11 10:11:48
-     *
-     *  用来检查后台数据量
-     */
-    
-    if([self.originShopInfoArray count]<3){
-    
-        string1 = @"没有更多优惠信息";
-    }
-    
-    if([self.originDiscountActivityArray count]<3){
-    
-        string2 = @" 没有更多优惠信息";
-    }
-    
+
     
     // Do any additional setup after loading the view.
 }
@@ -460,11 +425,9 @@ const NSString *text_html = @"text/html";
        
         if([shopDetailObjcModel.shopNewses count]>2){
             
-           
             return [delegateDataSourceForBusiniessNews count];
             
         }else{
-            
           
             return [shopDetailObjcModel.shopNewses count];
         }
@@ -584,191 +547,101 @@ const NSString *text_html = @"text/html";
 
 
 
-#pragma mark - footerView定义
-/**
- *  @Author frankfan, 14-11-11 10:11:21
- *
- *  这里是处理点击显示更多
- *
- *  @param CGFloat
- *
- *  @return
- */
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-
-    
-    if(section==2){
-        footerbutton1 =[UIButton buttonWithType:UIButtonTypeCustom];
-        footerbutton1.tag = 4002;
-        footerbutton1.frame = CGRectMake(0, 0, self.view.bounds.size.width-20, 30);
-        footerbutton1.backgroundColor = [UIColor whiteColor];
-        [footerbutton1 setTitleColor:baseTextColor forState:UIControlStateNormal];
-        footerbutton1.titleLabel.font =[UIFont systemFontOfSize:14];
-        
-        UIView *line1 =[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 1)];
-        line1.backgroundColor = customGrayColor;
-        [footerbutton1 addSubview:line1];
-        
-        [footerbutton1 setTitle:string1 forState:UIControlStateNormal];
-        [footerbutton1 addTarget:self action:@selector(footerViewDidClicked:) forControlEvents:UIControlEventTouchUpInside];
-        return footerbutton1;
-    }
-    
-    if(section==3){
-        UIButton *button =[UIButton buttonWithType:UIButtonTypeCustom];
-        button.tag = 4003;
-        button.frame = CGRectMake(0, 0, self.view.bounds.size.width-20, 30);
-        button.backgroundColor = [UIColor whiteColor];
-        [button setTitleColor:baseTextColor forState:UIControlStateNormal];
-        button.titleLabel.font =[UIFont systemFontOfSize:14];
-        
-        UIView *line1 =[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 1)];
-        line1.backgroundColor = customGrayColor;
-        [button addSubview:line1];
-        [button addTarget:self action:@selector(footerViewDidClicked:) forControlEvents:UIControlEventTouchUpInside];
-        
-        [button setTitle:string2 forState:UIControlStateNormal];
-        return button;
-    }
-
-    return nil;
-}
-
 
 
 #pragma mark - footerView触发事件
-- (void)footerViewDidClicked:(UIButton *)sender{
+- (void)footerViewCellDidselect{
 
-    if(sender.tag==4002){//商家资讯部分
+    NSMutableArray *indexPaths =[NSMutableArray array];
     
+    if([shopDetailObjcModel.shopNewses count]>2){//如果大于2,则允许点击扩展列表
         
-        NSMutableArray *indexPaths =[NSMutableArray array];
-        
-        if([shopDetailObjcModel.shopNewses count]>2){//如果大于2,则允许点击扩展列表
-           
-            for (int index = 2; index<[shopDetailObjcModel.shopNewses count]; index++) {
-                
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:2];
-                [indexPaths addObject:indexPath];
-            }
-
-            if(!businiessinfoClicked){//展开
-                
-                businiessinfoClicked = YES;
-                delegateDataSourceForBusiniessNews = shopDetailObjcModel.shopNewses;//更新数据源
-                
-                [self.tableView beginUpdates];
-                [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
-                [self.tableView endUpdates];
-                
-           
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    
-                    string1 = @"没有更多信息";
-                    [footerbutton1 setTitle:string1 forState:UIControlStateNormal];
-                    [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
-                    
-                });
-                
-                return;
-                
-            }
-        
-            if(businiessinfoClicked){//收起
-        
-                businiessinfoClicked = NO;
-                delegateDataSourceForBusiniessNews = [shopDetailObjcModel.shopNewses subarrayWithRange:NSMakeRange(0, 2)];
+        for (int index = 2; index<[shopDetailObjcModel.shopNewses count]; index++) {
             
-                [self.tableView beginUpdates];
-                [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
-                [self.tableView endUpdates];
-
-           
-
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    
-                    string1 = @"点击查看更多";
-                    [self.tableView reloadData];
-                    
-                });
-            }
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:2];
+            [indexPaths addObject:indexPath];
+        }
+        
+        if(!businiessinfoClicked){//展开
+            
+            businiessinfoClicked = YES;
+            
+            delegateDataSourceForBusiniessNews = [shopDetailObjcModel.shopNewses mutableCopy];//更新数据源
+            string1 = @"没有更多数据";
+            [delegateDataSourceForBusiniessNews addObject:string1];
+            
+            [self.tableView beginUpdates];
+            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
+            [self.tableView endUpdates];
+            
+            return;
             
         }
         
-        
-    }else if (sender.tag==4003){//特惠活动
-        
-    
-        NSMutableArray *indexPaths =[NSMutableArray array];
-        
-        if([shopDetailObjcModel.goodses count]>2){//如果大于2,则允许点击扩展列表
+        if(businiessinfoClicked){//收起
             
-            for (int index = 2; index<[shopDetailObjcModel.goodses count]; index++) {
-                
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:3];
-                [indexPaths addObject:indexPath];
-            }
-        
+            businiessinfoClicked = NO;
+            delegateDataSourceForBusiniessNews = [[shopDetailObjcModel.shopNewses subarrayWithRange:NSMakeRange(0, 2)]mutableCopy];
+            string1 = @"点击查看更多";
+            [delegateDataSourceForBusiniessNews addObject:string1];
             
-            if(!businiessActivityClicked){//展开
-                
-                businiessActivityClicked = YES;
-                delegateDataSouorceForBusiniessActivity = shopDetailObjcModel.goodses;//更新数据源
-                
-                [self.tableView beginUpdates];
-                [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
-                [self.tableView endUpdates];
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    
-                    string2 = @"没有更多信息";
-                    [self.tableView reloadData];
-                    
-                });
-                
-                return;
-                
-            }
-            
-            if(businiessActivityClicked){//收起
-                
-                businiessActivityClicked = NO;
-                delegateDataSouorceForBusiniessActivity = [shopDetailObjcModel.goodses subarrayWithRange:NSMakeRange(0, 2)];
-                
-                [self.tableView beginUpdates];
-                [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
-                [self.tableView endUpdates];
-                
-//                string2 = @"点击查看更多";
-//                [self.tableView reloadData];
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    
-                    string2 = @"点击查看更多";
-                    [self.tableView reloadData];
-                });
-            }
-        
+            [self.tableView beginUpdates];
+            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
+            [self.tableView endUpdates];
+ 
         }
         
     }
 
 }
 
+- (void)footerViewCellDidselect2{
 
-
-#pragma mark - footerView的高度
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-
-    if(section==2 || section==3){
+    NSMutableArray *indexPaths =[NSMutableArray array];
     
-        return 35;
+    if([shopDetailObjcModel.goodses count]>2){//如果大于2,则允许点击扩展列表
+        
+        for (int index = 2; index<[shopDetailObjcModel.goodses count]; index++) {
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:3];
+            [indexPaths addObject:indexPath];
+        }
+        
+        
+        if(!businiessActivityClicked){//展开
+            
+            businiessActivityClicked = YES;
+            delegateDataSouorceForBusiniessActivity = [shopDetailObjcModel.goodses mutableCopy];//更新数据源
+            string2 = @"没有更多数据";
+            [delegateDataSouorceForBusiniessActivity addObject:string2];
+            
+            [self.tableView beginUpdates];
+            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
+            [self.tableView endUpdates];
+            
+        
+            return;
+            
+        }
+        
+        if(businiessActivityClicked){//收起
+            
+            businiessActivityClicked = NO;
+            delegateDataSouorceForBusiniessActivity = [[shopDetailObjcModel.goodses subarrayWithRange:NSMakeRange(0, 2)]mutableCopy];
+            string2 = @"点击查看更多";
+            [delegateDataSouorceForBusiniessActivity addObject:string2];
+            
+            [self.tableView beginUpdates];
+            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
+            [self.tableView endUpdates];
+      
+        }
+        
     }
-    
-    return 0;
-
-
+   
 }
+
+
 
 
 
@@ -800,7 +673,17 @@ const NSString *text_html = @"text/html";
 
     if(indexPath.section==3){
     
-        return 70;
+        if(indexPath.row !=[delegateDataSouorceForBusiniessActivity count]-1){
+        
+            return 70;
+            
+        }else{
+        
+            return 45;
+        }
+        
+        
+        
     }
     
     if(indexPath.section==4){//用户评论
@@ -813,7 +696,6 @@ const NSString *text_html = @"text/html";
             tempDict =shopDetailObjcModel.comments[indexPath.row];
             userComment_local =[UserCommentsObjcModel modelWithDictionary:tempDict error:nil];
         }
-        
         
         
         if([userComment_local.content length]){
@@ -887,22 +769,42 @@ const NSString *text_html = @"text/html";
 
     if(indexPath.section==2){//商家资讯
         
-        ShopNewsObjcModel *shopNewsObjcModel_local = nil;
-        if([shopDetailObjcModel.shopNewses count]){
+        if(indexPath.row!=[delegateDataSourceForBusiniessNews count]-1){
         
-            NSDictionary *tempDict = shopDetailObjcModel.shopNewses[indexPath.row];
-            shopNewsObjcModel_local = [ShopNewsObjcModel modelWithDictionary:tempDict error:nil];
-        }
-        
-        if([shopNewsObjcModel_local.newsName length]){
-        
-            BusinessMenInfoViewController *businessMenInfo =[BusinessMenInfoViewController new];
-            businessMenInfo.htmlString = shopNewsObjcModel_local.newsName;
-            businessMenInfo.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:businessMenInfo animated:YES];
+            ShopNewsObjcModel *shopNewsObjcModel_local = nil;
+            if([shopDetailObjcModel.shopNewses count]){
+                
+                NSDictionary *tempDict = shopDetailObjcModel.shopNewses[indexPath.row];
+                shopNewsObjcModel_local = [ShopNewsObjcModel modelWithDictionary:tempDict error:nil];
+            }
+            
+            /**/
+            if([shopNewsObjcModel_local.newsName length]){
+                
+                BusinessMenInfoViewController *businessMenInfo =[BusinessMenInfoViewController new];
+                businessMenInfo.htmlString = shopNewsObjcModel_local.newsName;
+                businessMenInfo.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:businessMenInfo animated:YES];
+            }else{
+                
+                [ProgressHUD showError:@"暂无数据"];
+            }
+
         }else{
         
-            [ProgressHUD showError:@"暂无数据"];
+            UITableViewCell *cell =[self.tableView cellForRowAtIndexPath:indexPath];
+            UILabel *tempLabel = (UILabel *)[cell viewWithTag:40001];
+
+            if(businiessinfoClicked){
+                
+                tempLabel.text = @"点击加载更多";
+            }else{
+                
+                tempLabel.text = @"没有更多数据";
+            }
+            
+            [self footerViewCellDidselect];
+        
         }
         
         
@@ -910,10 +812,30 @@ const NSString *text_html = @"text/html";
     
     if(indexPath.section==3){//特惠活动
     
-        ActivityDetailViewController *activityDetail =[ActivityDetailViewController new];
-        activityDetail.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:activityDetail animated:YES];
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        if(indexPath.row!=[delegateDataSouorceForBusiniessActivity count]-1){
+        
+            ActivityDetailViewController *activityDetail =[ActivityDetailViewController new];
+            activityDetail.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:activityDetail animated:YES];
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+        }else{
+        
+            UITableViewCell *cell =[self.tableView cellForRowAtIndexPath:indexPath];
+            UILabel *tempLabel = (UILabel *)[cell viewWithTag:40002];
+            
+            if(businiessActivityClicked){
+                
+                tempLabel.text = @"点击加载更多";
+            }else{
+                
+                tempLabel.text = @"没有更多数据";
+            }
+            
+            [self footerViewCellDidselect2];
+
+        }
+        
     
     }
     
@@ -954,6 +876,8 @@ const NSString *text_html = @"text/html";
     static NSString *cellName2 = @"cellName2";
     static NSString *cellName3 = @"cellName3";
 //    static NSString *cellName4 = @"cellName4";
+
+    
     
     if(indexPath.section==0){//第一段
         
@@ -1134,8 +1058,8 @@ const NSString *text_html = @"text/html";
         
     }
     
-    if(indexPath.section==2){//第三段
-    
+    if(indexPath.section==2){//第二段-商家资讯
+        
         cell2 = [tableView dequeueReusableCellWithIdentifier:cellName2];
         if(!cell2){
             
@@ -1156,29 +1080,46 @@ const NSString *text_html = @"text/html";
             shopperInfoYear.font =[UIFont systemFontOfSize:14];
             shopperInfoYear.textColor = [UIColor colorWithWhite:0.75 alpha:1];
             [cell2.contentView addSubview:shopperInfoYear];
+            
+            //新增加的
+            UILabel *footViewContent =[[UILabel alloc]initWithFrame:cell2.bounds];
+            footViewContent.tag = 40001;
+            footViewContent.font =[UIFont systemFontOfSize:14];
+            footViewContent.textColor = baseTextColor;
+            footViewContent.textAlignment = NSTextAlignmentCenter;
+            [cell2.contentView addSubview:footViewContent];
         
         }
-        
+     
+        /*****/
         UILabel *shopperInfo =(UILabel *)[cell2 viewWithTag:3000];
         UILabel *shopperInfoYear = (UILabel *)[cell2 viewWithTag:3001];
+        UILabel *footViewContent = (UILabel *)[cell2 viewWithTag:40001];
      
-        
-        
         
         //商家资讯
         NSDictionary *tempDict = nil;
         ShopNewsObjcModel *shopNewsObjcModel_local  =nil;
-        if([shopDetailObjcModel.shopNewses count]){
+        if([shopDetailObjcModel.shopNewses count])
+        {
+            if(indexPath.row!=[delegateDataSourceForBusiniessNews count]-1){
             
-            tempDict = shopDetailObjcModel.shopNewses[indexPath.row];
-            shopNewsObjcModel_local=[ShopNewsObjcModel modelWithDictionary:tempDict error:nil];
+                tempDict = shopDetailObjcModel.shopNewses[indexPath.row];
+                shopNewsObjcModel_local=[ShopNewsObjcModel modelWithDictionary:tempDict error:nil];
+            }
         }
         
-        shopperInfo.text = shopNewsObjcModel_local.title;
-        shopperInfoYear.text = shopNewsObjcModel_local.createTime;
+        if(indexPath.row!=[delegateDataSourceForBusiniessNews count]-1){
+        
+            shopperInfo.text = shopNewsObjcModel_local.title;
+            shopperInfoYear.text = shopNewsObjcModel_local.createTime;
+        }else{
+        
+            footViewContent.text = [delegateDataSourceForBusiniessNews lastObject];
+        }
+   
         cell2.selectionStyle = NO;
         return cell2;
-        
     }
     
     
@@ -1210,6 +1151,16 @@ const NSString *text_html = @"text/html";
             price.textColor = baseTextColor;
             price.adjustsFontSizeToFitWidth = YES;
             [cell3.contentView addSubview:price];
+            
+            
+            //新增加的
+            UILabel *footViewContent_local =[[UILabel alloc]initWithFrame:cell3.bounds];
+            footViewContent_local.tag = 40002;
+            footViewContent_local.font =[UIFont systemFontOfSize:14];
+            footViewContent_local.textColor = baseTextColor;
+            footViewContent_local.textAlignment = NSTextAlignmentCenter;
+            [cell3.contentView addSubview:footViewContent_local];
+
         
         }
         
@@ -1217,26 +1168,38 @@ const NSString *text_html = @"text/html";
         GoodsObjcModel *goodObjcModel = nil;
         if([shopDetailObjcModel.goodses count]){
             
-            tempDict = shopDetailObjcModel.goodses[indexPath.row];
-            goodObjcModel =[GoodsObjcModel modelWithDictionary:tempDict error:nil];
+            if(indexPath.row!=[delegateDataSouorceForBusiniessActivity count]-1){
+          
+                tempDict = shopDetailObjcModel.goodses[indexPath.row];
+                goodObjcModel =[GoodsObjcModel modelWithDictionary:tempDict error:nil];
+            }
+            
         }
         
+        if(indexPath.row!=[delegateDataSouorceForBusiniessActivity count]-1){
         
+            UIImageView *headerImageView =(UIImageView *)[cell3 viewWithTag:3001];
+            headerImageView.backgroundColor =customGrayColor;
+            [headerImageView sd_setImageWithURL:[NSURL URLWithString:goodObjcModel.goodsPicture] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];
+            
+            //店铺名称/菜品名称
+            UILabel *shopperInfo =(UILabel *)[cell3 viewWithTag:3002];
+            shopperInfo.text = goodObjcModel.goodsName;
+            
+            //价格
+            double price = goodObjcModel.price;
+            UILabel *priceLabel =(UILabel *)[cell3 viewWithTag:3003];
+            priceLabel.text = [NSString stringWithFormat:@"￥%.2f",price];
+            
+        }else{
+            
+            UILabel *footerViewLabel_local = (UILabel *)[cell3 viewWithTag:40002];
+            footerViewLabel_local.text = [delegateDataSouorceForBusiniessActivity lastObject];
+        }
         
-        //头部图像
-        UIImageView *headerImageView =(UIImageView *)[cell3 viewWithTag:3001];
-        headerImageView.backgroundColor =customGrayColor;
-        [headerImageView sd_setImageWithURL:[NSURL URLWithString:goodObjcModel.goodsPicture] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];
-        
-        //店铺名称/菜品名称
-        UILabel *shopperInfo =(UILabel *)[cell3 viewWithTag:3002];
-        shopperInfo.text = goodObjcModel.goodsName;
-        
-        //价格
-        double price = goodObjcModel.price;
-        UILabel *priceLabel =(UILabel *)[cell3 viewWithTag:3003];
-        priceLabel.text = [NSString stringWithFormat:@"￥%.2f",price];
+        cell3.selectionStyle = NO;
         return cell3;
+        
     }
     
     if(indexPath.section==4){//第四段
