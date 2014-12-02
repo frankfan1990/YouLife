@@ -29,6 +29,7 @@
 #import "convert2.h"
 
 #import <MAMapKit/MAMapKit.h>
+#import "LocationManager.h"
 
 static NSInteger _start = 10;
 @interface FoodDetailViewController ()<MKMapViewDelegate,MAMapViewDelegate>
@@ -48,6 +49,7 @@ static NSInteger _start = 10;
     CLLocationCoordinate2D currentMarsLocation;//当前位置的火星坐标
  
     MAMapView *mamapView;
+    LocationManager *userCurrentLocation;//用户当前坐标
 }
 
 
@@ -210,20 +212,15 @@ static NSInteger _start = 10;
      *
      *  获取当前坐标
      *
-     *  @return 当前坐标
+     *  @return 当前坐标[火星坐标]
      */
-    
-    locationManager =[[CLLocationManager alloc]init];
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-   
-    //当前位置的火星坐标-这里待商榷是否需要转火星坐标
-    currentMarsLocation = transform(locationManager.location.coordinate);
 
-    
-    
-    
-    locationManager =[[CLLocationManager alloc] init];
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    userCurrentLocation =[[LocationManager alloc]init];
+    [userCurrentLocation getUserNowLocationInfoWithAlert:YES getUserLocationFinish:^(BOOL success, CLLocation *userLocation) {
+        
+        currentMarsLocation = userLocation.coordinate;
+    }];
+
     
     
 #pragma mark - 网络请求
@@ -319,8 +316,6 @@ static NSInteger _start = 10;
             bd_lng = [[tempDict objectForKey:@"lng"]doubleValue];
         }
         
-        
-        
         bd_decrypt(bd_lat, bd_lng, &mar_lat, &mar_longitude);//百度坐标转火星坐标
         
         
@@ -335,14 +330,11 @@ static NSInteger _start = 10;
                 
                 distanceAB = LantitudeLongitudeDist(currentMarsLocation.longitude, currentMarsLocation.latitude, bd_lng, bd_lat);
             }
-            
-            
+          
         }
         [self.distanceFromAtoB addObject:[NSNumber numberWithDouble:distanceAB]];
-        
-        
+       
     }
-
 
 }
 

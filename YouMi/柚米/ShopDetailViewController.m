@@ -25,6 +25,12 @@
 #import "ShopNewsObjcModel.h"
 #import "GoodsObjcModel.h"
 #import "UserCommentsObjcModel.h"
+#import "SignInViewController.h"
+#import "ShopCollectedObjcModel.h"
+#import <TMCache.h>
+
+const NSString *application_josn = @"application/json";
+const NSString *text_html = @"text/html";
 
 @interface ShopDetailViewController ()<UITableViewDelegate,UITableViewDataSource,EDStarRatingProtocol,UIAlertViewDelegate>
 {
@@ -34,6 +40,7 @@
     NSArray *itemTitles;//headerView上的文字
     
     NSString *string1;//第一个footerView的标题文字
+    
     NSString *string2;//第二个footerView的标题文字
     
     CycleScrollView *cyclePlayImage;//轮播控件
@@ -53,6 +60,8 @@
     BOOL businiessActivityClicked;
     
     UIButton *footerbutton1;
+    NSString *globalAttentionId;
+    NSDictionary *parameters2;
     
 }
 
@@ -122,6 +131,7 @@
     
     /*右侧按钮*/
     UIButton *searchButton =[UIButton buttonWithType:UIButtonTypeCustom];
+//    searchButton.enabled = NO;
     searchButton.tag = 1000;
     searchButton.frame = CGRectMake(0, 0, 30, 30);
     [searchButton setImage:[UIImage imageNamed:@"收藏"] forState:UIControlStateNormal];
@@ -173,8 +183,40 @@
     };
     
 
-    
+    /**
+     *  @author frankfan, 14-12-02 13:12:04
+     *
+     *  在这里请求网络，判断是否收藏
+     */
 
+    if([[TMCache sharedCache]objectForKey:kUserInfo][memberID]){
+    
+        NSDictionary *var_userInfo = [[TMCache sharedCache]objectForKey:kUserInfo];
+        AFHTTPRequestOperationManager *manager_isClooection =[self createNetworkObjc:application_josn];
+        NSDictionary *parameters3 =@{api_shopId:self.shopModel.shopId,memberID:var_userInfo[memberID]};
+        
+        [manager_isClooection GET:API_IsColltionShopOrProducation parameters:parameters3 success:^(AFHTTPRequestOperation *operation, id responseObject)
+         {
+             NSLog(@"收藏：%@",responseObject);
+             NSDictionary *resultDict = (NSDictionary *)responseObject[@"data"];
+             ShopCollectedObjcModel *shopCollectionModel = [ShopCollectedObjcModel modelWithDictionary:resultDict error:nil];
+             
+             if(shopCollectionModel.attention){
+             
+                 [searchButton setImage:[UIImage imageNamed:@"已收藏"] forState:UIControlStateNormal];
+                 globalAttentionId = resultDict[@"attentionId"];
+                 isCollectioned = YES;
+//                 searchButton.enabled = YES;
+             }
+             
+             
+         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+           
+             NSLog(@"%@",[error localizedDescription]);
+         }];
+    }
+    
+    
     
     /**
      *  @author frankfan, 14-11-26 11:11:35
@@ -203,9 +245,7 @@
                 delegateDataSouorceForBusiniessActivity = [shopDetailObjcModel.goodses subarrayWithRange:NSMakeRange(0, 2)];
             }
             
-            
-            
-            
+            /******/
             if([shopDetailObjcModel.shopNewses count]>2){
                 
                 string1 = @"点击查看更多";
@@ -226,11 +266,11 @@
                 string2 = @"没有更多信息";
             
             }
-
-            
+            /******/
+          
+            /******/
             [self.tableView reloadData];
             [self handleTheCyclePlayingImages:shopDetailObjcModel.pictures];
-            /*********/
             /********************/
             
             __weak ShopDetailViewController *_self = self;
@@ -529,9 +569,17 @@
 #pragma mark - 跳转到评论
 - (void)commentButtonClicked{
 
-    UserCommentListViewController *userCommentList =[UserCommentListViewController new];
-    userCommentList.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:userCommentList animated:YES];
+    if([shopDetailObjcModel.comments count] > 1){
+    
+        UserCommentListViewController *userCommentList =[UserCommentListViewController new];
+        userCommentList.hidesBottomBarWhenPushed = YES;
+        userCommentList.userComments = shopDetailObjcModel.comments;
+        [self.navigationController pushViewController:userCommentList animated:YES];
+    }else{
+    
+        [ProgressHUD showError:@"暂无更多评论"];
+    }
+   
 }
 
 
@@ -610,7 +658,7 @@
                 delegateDataSourceForBusiniessNews = shopDetailObjcModel.shopNewses;//更新数据源
                 
                 [self.tableView beginUpdates];
-                [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
                 [self.tableView endUpdates];
                 
            
@@ -618,7 +666,7 @@
                     
                     string1 = @"没有更多信息";
                     [footerbutton1 setTitle:string1 forState:UIControlStateNormal];
-                    [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+                    [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
                     
                 });
                 
@@ -632,7 +680,7 @@
                 delegateDataSourceForBusiniessNews = [shopDetailObjcModel.shopNewses subarrayWithRange:NSMakeRange(0, 2)];
             
                 [self.tableView beginUpdates];
-                [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationLeft];
                 [self.tableView endUpdates];
 
            
@@ -759,18 +807,18 @@
 
     
         NSDictionary *tempDict = nil;
-        UserCommentsObjcModel *userComment = nil;
+        UserCommentsObjcModel *userComment_local = nil;
         if([shopDetailObjcModel.comments count]){
             
             tempDict =shopDetailObjcModel.comments[indexPath.row];
-            userComment =[UserCommentsObjcModel modelWithDictionary:tempDict error:nil];
+            userComment_local =[UserCommentsObjcModel modelWithDictionary:tempDict error:nil];
         }
         
         
         
-        if([userComment.content length]){
+        if([userComment_local.content length]){
             
-            CGFloat commentContentHeight = [self caculateTheTextHeight:userComment.content andFontSize:14];
+            CGFloat commentContentHeight = [self caculateTheTextHeight:userComment_local.content andFontSize:14];
             return commentContentHeight+35;
         }else{
         
@@ -1266,7 +1314,6 @@
     appointmentDetail.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:appointmentDetail animated:YES];
 
-
 }
 
 
@@ -1280,25 +1327,74 @@
  */
 - (void)buttonClicked:(UIButton *)sender{
 
+    
     if(sender.tag==10006){//回退按钮
     
         [self.navigationController popViewControllerAnimated:YES];
     }
     
-    if(sender.tag==1000){//收藏
+    if(sender.tag==1000){//收藏模块
     
-        if(!isCollectioned){
-            
-            UIButton *button = (UIButton *)sender;
-            [button setImage:[UIImage imageNamed:@"已收藏"] forState:UIControlStateNormal];
-            
-            isCollectioned = YES;
-        }else{
-            
-            UIButton *button = (UIButton *)sender;
-            [button setImage:[UIImage imageNamed:@"收藏"] forState:UIControlStateNormal];
-            isCollectioned = NO;
+         NSDictionary *userInfo = [[TMCache sharedCache]objectForKey:kUserInfo];
+        AFHTTPRequestOperationManager *manager =[self createNetworkObjc:text_html];
+        AFHTTPRequestOperationManager *manager2 =[self createNetworkObjc:application_josn];
+        NSDictionary *parameters = nil;
+        if(userInfo[memberID]){
+        
+           parameters = @{memberID:userInfo[memberID],@"shopId":shopDetailObjcModel.shopId,@"attentionType":@1};//添加收藏
         }
+ 
+        
+        if(!isCollectioned){//如果还没收藏
+            
+            UIButton *button = (UIButton *)sender;
+            if(![userInfo[memberID] length]){//如果没有登录
+            
+                [ProgressHUD showError:@"请先登录" Interaction:NO];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    
+                    SignInViewController *signViewController =[SignInViewController new];
+                    [self.navigationController pushViewController:signViewController animated:YES];
+                });
+            
+            }else{//如果已登录
+                
+                [manager POST:API_CollectionShopOrProducation parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject)
+                {
+                    NSLog(@"~~~收藏:%@",responseObject);
+                    [button setImage:[UIImage imageNamed:@"已收藏"] forState:UIControlStateNormal];
+                    isCollectioned = YES;
+                  
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    
+                    NSLog(@"error:%@",[error localizedDescription]);
+                    [ProgressHUD showError:@"收藏失败" Interaction:NO];
+                }];
+               
+            }
+         
+            
+        }else{//如果早已收藏
+            
+            NSDictionary *parameters =@{@"attentionId":globalAttentionId};
+            [manager2 POST:API_DecollectionShopOrProducation parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject)
+            {
+                
+                 NSLog(@"2~~~取消收藏:%@",responseObject);
+                
+                UIButton *button = (UIButton *)sender;
+                [button setImage:[UIImage imageNamed:@"收藏"] forState:UIControlStateNormal];
+                isCollectioned = NO;
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                
+                 NSLog(@"error:%@",[error localizedDescription]);
+                [ProgressHUD showError:@"操作失败" Interaction:NO];
+            }];
+         
+
+        }
+       
     }
 
     if(sender.tag==1002){//分享
@@ -1308,8 +1404,18 @@
     
     }
 
-
 }
+
+
+//创建忘了请求实体对象
+- (AFHTTPRequestOperationManager *)createNetworkObjc:(const NSString *)contentType{
+    
+    AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:contentType];
+    
+    return manager;
+}
+
 
 
 /**
@@ -1340,7 +1446,6 @@
     
     return size.height;
 }
-
 
 
 

@@ -21,4 +21,5 @@
 @property (nonatomic,copy)NSString *createTime;
 @property (nonatomic,copy)NSString *fileName;
 @property (nonatomic,copy)NSString *shopId;
+@property (nonatomic,copy)NSString *goodsId;
 @end

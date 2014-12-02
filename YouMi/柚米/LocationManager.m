@@ -57,7 +57,7 @@
         _locManager = [[CLLocationManager alloc] init];
         _locManager.delegate = self;
         _locManager.desiredAccuracy = kCLLocationAccuracyBest;
-        _locManager.distanceFilter = 1000.0f;
+        _locManager.distanceFilter = 1000.00f;
         
 
         if (([[[UIDevice currentDevice] systemVersion] doubleValue] >= 8.0))

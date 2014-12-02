@@ -237,34 +237,6 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         }];
     }
 
-
-    
-//    /**
-//     *  @Author frankfan, 14-10-27 23:10:49
-//     *
-//     *  定位
-//     */
-//    
-//    // fix ios8 location issue
-//    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
-//#ifdef __IPHONE_8_0
-//        if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)])
-//        {
-//            NSLog(@"测试");
-//            [locationManager performSelector:@selector(requestAlwaysAuthorization)];//用这个方法，plist中需要NSLocationAlwaysUsageDescription
-//        }
-//        
-//        if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
-//        {
-//            NSLog(@"测试2");
-//            [locationManager performSelector:@selector(requestWhenInUseAuthorization)];//用这个方法，plist里要加字段NSLocationWhenInUseUsageDescription
-//        }
-//#endifs   
-//    }
-//    
-//    NSLog(@">>>>%f----%f",locationManager.location.coordinate.latitude,locationManager.location.coordinate.longitude);
-    
-
     
     Reachability *reachability =[Reachability reachabilityWithHostName:@"www.baidu.com"];
     
@@ -323,11 +295,6 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
  
      // Do any additional setup after loading the view.
 }
-
-
-
-
-
 
 
 /**

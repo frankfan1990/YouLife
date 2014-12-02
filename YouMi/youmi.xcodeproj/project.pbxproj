@@ -89,6 +89,7 @@
 		634130081A07913A00ED5273 /* 加.png in Resources */ = {isa = PBXBuildFile; fileRef = 634130071A07913A00ED5273 /* 加.png */; };
 		6341300D1A07E04200ED5273 /* 红色地标.png in Resources */ = {isa = PBXBuildFile; fileRef = 6341300C1A07E04200ED5273 /* 红色地标.png */; };
 		6341300F1A07E33B00ED5273 /* cancel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6341300E1A07E33B00ED5273 /* cancel@2x.png */; };
+		6345C3861A2D879B002984FA /* ShopCollectedObjcModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6345C3851A2D879B002984FA /* ShopCollectedObjcModel.m */; };
 		63541B0919FE2103001EC683 /* ChineseInclude.m in Sources */ = {isa = PBXBuildFile; fileRef = 63541AFB19FE2103001EC683 /* ChineseInclude.m */; };
 		63541B0A19FE2103001EC683 /* ChineseToPinyinResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 63541AFD19FE2103001EC683 /* ChineseToPinyinResource.m */; };
 		63541B0B19FE2103001EC683 /* HanyuPinyinOutputFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 63541AFF19FE2103001EC683 /* HanyuPinyinOutputFormat.m */; };
@@ -481,6 +482,8 @@
 		634130071A07913A00ED5273 /* 加.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "加.png"; sourceTree = "<group>"; };
 		6341300C1A07E04200ED5273 /* 红色地标.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "红色地标.png"; sourceTree = "<group>"; };
 		6341300E1A07E33B00ED5273 /* cancel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel@2x.png"; sourceTree = "<group>"; };
+		6345C3841A2D879B002984FA /* ShopCollectedObjcModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopCollectedObjcModel.h; sourceTree = "<group>"; };
+		6345C3851A2D879B002984FA /* ShopCollectedObjcModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopCollectedObjcModel.m; sourceTree = "<group>"; };
 		63541AFA19FE2103001EC683 /* ChineseInclude.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChineseInclude.h; sourceTree = "<group>"; };
 		63541AFB19FE2103001EC683 /* ChineseInclude.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChineseInclude.m; sourceTree = "<group>"; };
 		63541AFC19FE2103001EC683 /* ChineseToPinyinResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChineseToPinyinResource.h; sourceTree = "<group>"; };
@@ -991,6 +994,8 @@
 				632CEB201A1DC13200DDD535 /* ShopObjectModel.m */,
 				63EEFC881A258912005E63EC /* ShopDetailObjcModel.h */,
 				63EEFC891A258912005E63EC /* ShopDetailObjcModel.m */,
+				6345C3841A2D879B002984FA /* ShopCollectedObjcModel.h */,
+				6345C3851A2D879B002984FA /* ShopCollectedObjcModel.m */,
 				63EEFC851A2578AF005E63EC /* ShopPicsObjcModel.h */,
 				63EEFC861A2578AF005E63EC /* ShopPicsObjcModel.m */,
 				631224CF1A26B20200B3E9EF /* ShopBusiniessInfoObjcModel.h */,
@@ -1347,7 +1352,7 @@
 		635C3A5619EE6AED0090DE16 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				6394C15E1A28D4C400BB4714 /* Garbage */,
+				6394C15E1A28D4C400BB4714 /* Locater */,
 				631224B51A25D45A00B3E9EF /* CoodinateSystemTransform */,
 				632CEB1A1A1C3DCD00DDD535 /* NSDataHelper */,
 				63E378D819EF94D600C0D02A /* ReachAbility */,
@@ -1456,7 +1461,7 @@
 			name = GoodsObjects;
 			sourceTree = "<group>";
 		};
-		6394C15E1A28D4C400BB4714 /* Garbage */ = {
+		6394C15E1A28D4C400BB4714 /* Locater */ = {
 			isa = PBXGroup;
 			children = (
 				631224B61A25D4FC00B3E9EF /* ValueKeyConfig.m */,
@@ -1464,7 +1469,7 @@
 				631224B21A25D45500B3E9EF /* LocationManager.m */,
 				631224B31A25D45500B3E9EF /* LocationManager.h */,
 			);
-			name = Garbage;
+			name = Locater;
 			sourceTree = "<group>";
 		};
 		63970F6E19B0609600793A3D /* CCSegmentedControl */ = {
@@ -2269,6 +2274,7 @@
 				63B915BC19B99D55006F09EC /* UIImageView+WebCache.m in Sources */,
 				63901DCD19C150A5006C4158 /* EducationViewController.m in Sources */,
 				633E46E219AE28C8001D8F75 /* ADScaleTransition.m in Sources */,
+				6345C3861A2D879B002984FA /* ShopCollectedObjcModel.m in Sources */,
 				63541B0919FE2103001EC683 /* ChineseInclude.m in Sources */,
 				635C390A19EB709F0090DE16 /* SignInViewController.m in Sources */,
 				63B915B119B99D55006F09EC /* SDWebImageCompat.m in Sources */,

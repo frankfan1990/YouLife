@@ -85,8 +85,7 @@
         _commentContent.lineBreakMode = NSLineBreakByWordWrapping;
         [self.contentView addSubview:_commentContent];
         
-        
-        
+    
     }
 
     return self;
@@ -106,8 +105,6 @@
     return cell;
 
 }
-
-
 
 
 /**

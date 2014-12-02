@@ -18,7 +18,6 @@
 
 @interface ShopObjectModel : MTLModel
 
-
 @property (nonatomic,copy)NSString *shopId;//商铺编号
 @property (nonatomic,copy)NSString *shopName;//商铺名称
 @property (nonatomic,copy)NSString *circleId;//商圈地址
@@ -52,4 +51,7 @@
 @property (nonatomic,strong)NSArray *comments;//评价
 @property (nonatomic,copy)NSArray *businesses;
 @property (nonatomic,copy)NSString *shopTitle;//满100送50
+
+@property (nonatomic,copy)NSString *attentionId;
+@property (nonatomic,assign)BOOL attention;
 @end

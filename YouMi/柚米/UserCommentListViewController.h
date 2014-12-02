@@ -10,4 +10,5 @@
 
 @interface UserCommentListViewController : UIViewController
 
+@property (nonatomic,strong)NSArray *userComments;
 @end

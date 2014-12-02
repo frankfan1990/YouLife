@@ -1,19 +1,21 @@
 //
-//  ShopDetailObjcModel.h
+//  ShopCollectedObjcModel.h
 //  youmi
 //
-//  Created by frankfan on 14/11/26.
+//  Created by frankfan on 14/12/2.
 //  Copyright (c) 2014年 ruizhou. All rights reserved.
 //
-/*
- *商铺详情数据层
+/**
+ *  @author frankfan, 14-12-02 13:12:41
+ *
+ *  收藏-店铺是否收藏
  */
 
 #import "MTLModel.h"
 
-@interface ShopDetailObjcModel : MTLModel
+@interface ShopCollectedObjcModel : MTLModel
 
-@property (nonatomic,copy)NSString *shopId;//商铺编号
+
 @property (nonatomic,copy)NSString *shopName;//商铺名称
 @property (nonatomic,copy)NSString *circleId;//商圈地址
 @property (nonatomic,copy)NSString *circleName;
@@ -47,6 +49,8 @@
 @property (nonatomic,copy)NSArray *businesses;
 @property (nonatomic,copy)NSString *shopTitle;//满100送50
 
-@property (nonatomic,copy)NSString *attentionId;
-@property (nonatomic,assign)BOOL attention;
+@property (nonatomic,copy)NSString *shopId;//商铺编号
+@property (nonatomic,copy)NSString *memberId;
+@property (nonatomic,copy)NSString *attentionId;//收藏Id
+@property (nonatomic,assign)BOOL attention;//是否收藏
 @end

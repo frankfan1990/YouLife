@@ -8,6 +8,7 @@
 
 #import "UserCommentListViewController.h"
 #import "UserCommentTableViewCell.h"
+#import "UserCommentsObjcModel.h"
 
 @interface UserCommentListViewController ()<UITableViewDelegate,UITableViewDataSource>
 {
@@ -64,10 +65,6 @@
     [self.view addSubview:self.tableView];
     
     
-    
-    
-    
-    
     // Do any additional setup after loading the view.
 }
 
@@ -75,19 +72,22 @@
 #pragma mark - cell的个数
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
-    return [userCommentContent count];
+    return [self.userComments count];
 }
 
 #pragma mark - cell的高度
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
 
     CGFloat contentHeight;
-    if([userCommentContent count]){
+    if([self.userComments count]){
     
-     contentHeight = [self caculateTheTextHeight:userCommentContent[indexPath.row] andFontSize:14]+35;
+        NSDictionary *tempDict = self.userComments[indexPath.row];
+        UserCommentsObjcModel *userCommentObjcModel =[UserCommentsObjcModel modelWithDictionary:tempDict error:nil];
+        
+        contentHeight = [self caculateTheTextHeight:userCommentObjcModel.content andFontSize:14]+35;
         
     }else{
-    
+        
         contentHeight = 10+35;
     }
     
@@ -117,24 +117,26 @@
         contentHeight = 0;
     }
 
+    //
+    NSDictionary *tempDict = self.userComments[indexPath.row];
+    UserCommentsObjcModel *shopCommentObjcModel = [UserCommentsObjcModel modelWithDictionary:tempDict error:nil];
+    
+    NSArray *timeArray = [shopCommentObjcModel.createTime componentsSeparatedByString:@" "];
+    
     
     cell.commentContent.frame = CGRectMake(10, 36, self.view.bounds.size.width-40, contentHeight);
     //用户评论内容
-    cell.commentContent.text = userCommentContent[indexPath.row];
+    cell.commentContent.text = shopCommentObjcModel.content;
     //来自某人
-    cell.theCommenter.text = @"frankfan";
+    cell.theCommenter.text = shopCommentObjcModel.userName;
     //来自某天
-    cell.theDay.text = @"2014-9-25";
+    cell.theDay.text = timeArray[0];
     //来自某刻
-    cell.theTime.text = @"20:33";
+    cell.theTime.text = timeArray[1];
     
     return cell;
 
 }
-
-
-
-
 
 
 /**
