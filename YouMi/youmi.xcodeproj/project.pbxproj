@@ -39,6 +39,7 @@
 		6312572019CC270D00436C39 /* CommunityDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6312571F19CC270D00436C39 /* CommunityDetailsViewController.m */; };
 		6317A56819F63FCE009E332F /* ModBindPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6317A56719F63FCE009E332F /* ModBindPhoneViewController.m */; };
 		6317A57219F6A1F7009E332F /* 确定.png in Resources */ = {isa = PBXBuildFile; fileRef = 6317A57119F6A1F7009E332F /* 确定.png */; };
+		6323AD961A2EDC0300454737 /* CycleDisplayImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323AD951A2EDC0300454737 /* CycleDisplayImage.m */; };
 		6325D8D71A020F73001DA5BD /* MyUBiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8D61A020F73001DA5BD /* MyUBiViewController.m */; };
 		6325D8DA1A021514001DA5BD /* MyCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8D91A021514001DA5BD /* MyCommentViewController.m */; };
 		6325D8DE1A022481001DA5BD /* CourseDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8DD1A022481001DA5BD /* CourseDetailsViewController.m */; };
@@ -385,6 +386,8 @@
 		6317A56619F63FCD009E332F /* ModBindPhoneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModBindPhoneViewController.h; sourceTree = "<group>"; };
 		6317A56719F63FCE009E332F /* ModBindPhoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModBindPhoneViewController.m; sourceTree = "<group>"; };
 		6317A57119F6A1F7009E332F /* 确定.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "确定.png"; sourceTree = "<group>"; };
+		6323AD941A2EDC0300454737 /* CycleDisplayImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CycleDisplayImage.h; sourceTree = "<group>"; };
+		6323AD951A2EDC0300454737 /* CycleDisplayImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CycleDisplayImage.m; sourceTree = "<group>"; };
 		6325D8D51A020F73001DA5BD /* MyUBiViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyUBiViewController.h; sourceTree = "<group>"; };
 		6325D8D61A020F73001DA5BD /* MyUBiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyUBiViewController.m; sourceTree = "<group>"; };
 		6325D8D81A021514001DA5BD /* MyCommentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCommentViewController.h; sourceTree = "<group>"; };
@@ -1457,6 +1460,8 @@
 				631224DA1A28498400B3E9EF /* GoodsObjcModel.m */,
 				6394C15B1A28509100BB4714 /* RuleDetail.h */,
 				6394C15C1A28509100BB4714 /* RuleDetail.m */,
+				6323AD941A2EDC0300454737 /* CycleDisplayImage.h */,
+				6323AD951A2EDC0300454737 /* CycleDisplayImage.m */,
 			);
 			name = GoodsObjects;
 			sourceTree = "<group>";
@@ -2328,6 +2333,7 @@
 				636A99171A1104A50014F9ED /* ShopDetailViewController.m in Sources */,
 				6397102219B451CB00793A3D /* POPVector.mm in Sources */,
 				63E78BFF19D001D5002755E9 /* VillageDynamicTableViewCell.m in Sources */,
+				6323AD961A2EDC0300454737 /* CycleDisplayImage.m in Sources */,
 				63970F7119B0609600793A3D /* CCSegmentedControl.m in Sources */,
 				63EEA93B19F8A80B00F5A8A5 /* ForgetPasswordViewController.m in Sources */,
 				6356263819C83CAB0011B926 /* BusinessInfoTableViewCell.m in Sources */,

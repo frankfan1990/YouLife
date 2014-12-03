@@ -10,4 +10,7 @@
 
 @interface ActivityDetailViewController : UIViewController
 
+@property (nonatomic,copy)NSString *goodsId;
+@property (nonatomic,copy)NSString *shopAddress;
+@property (nonatomic,copy)NSString *phoneNumber;
 @end

@@ -14,8 +14,20 @@
 #import "UserCommentTableViewCell.h"
 #import "BuyNowViewController.h"
 
+#import "ProgressHUD.h"
+#import <AFNetworking.h>
+#import "GoodsObjcModel.h"
+#import "RuleDetail.h"
+#import "CycleDisplayImage.h"
+#import "RTLabel.h"
+
+
+const NSString *text_html_goods = @"text/html";
+const NSString *application_json_goods = @"application/json";
+
 @interface ActivityDetailViewController ()<UITableViewDelegate,UITableViewDataSource,UIWebViewDelegate,UITextFieldDelegate>
 {
+    
 
     /*收藏按钮是否点击*/
     BOOL isCollectioned;
@@ -33,6 +45,17 @@
     UIView *courseAppointLoadView;//创建底部loadView
     UITextField *memberField;//显示购物的数量
     NSInteger gloabalAcount;
+    
+    NSDictionary *globalDict;//全局字数据典
+    CGFloat webViewHeight;
+    CGFloat webViewHeight2;
+    
+    NSInteger webViewLoads_;
+    
+    RTLabel *rtLabel2;
+
+    
+    
 }
 @property (nonatomic,strong)UITableView *tableView;
 
@@ -110,97 +133,21 @@
     
     
     /**
-     *  @Author frankfan, 14-11-13 11:11:40
-     *
-     *  创建轮播
-     *
-     *  @param NSInteger
-     *
-     *  @return
-     */
-#warning fake data
-    self.cycleImageArrayURLs = [@[@"http://vip.biznav.cn/20090615162541/pic/20090701134141962.jpg",@"http://a3.att.hudong.com/10/45/01300001024098130129454552574.jpg",@"http://qic.tw/upload/school/MID_20110503003627550.jpg",@"http://img5.imgtn.bdimg.com/it/u=2127817408,3685587629&fm=23&gp=0.jpg",@"http://image.3607.com/2012/03/31/20120320180128640.jpg"]mutableCopy];
-    
-    /*保证图片数组里元素不大于5个*/
-    NSArray *imageArrays = nil;
-    if([self.cycleImageArrayURLs count]){
-        
-        if([self.cycleImageArrayURLs count]>5){
-            
-            imageArrays =[self.cycleImageArrayURLs subarrayWithRange:NSMakeRange(0, 5)];
-            
-        }
-        
-    }
-    
-    if(!imageArrays){
-        
-        for (NSString *urlString in self.cycleImageArrayURLs) {
-            
-            NSURL *imageURL =[NSURL URLWithString:urlString];
-            
-            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)];
-            [imageView sd_setImageWithURL:imageURL placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];
-            [self.iamgeViewArrays addObject:imageView];
-            
-        }
-        
-    }else{
-        
-        
-        for (NSString *urlString in imageArrays) {
-            
-            NSURL *imageURL =[NSURL URLWithString:urlString];
-            
-            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)];
-            [imageView sd_setImageWithURL:imageURL placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];
-            [self.iamgeViewArrays addObject:imageView];
-            
-        }
-        
-        
-    }
-
-    
-    /**
-     创建轮播控件部分
-     */
-    cyclePlayImage =[[CycleScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)
-                                        animationDuration:2.8];
-    cyclePlayImage.userInteractionEnabled = YES;
-    
-    __weak ActivityDetailViewController *_self = self;
-    cyclePlayImage.totalPagesCount = ^NSInteger{
-        
-        return [_self.iamgeViewArrays count];
-    };
-    
-    cyclePlayImage.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
-        
-        return _self.iamgeViewArrays[pageIndex];
-    };
-
-    
-    
-    
-    /**
      活动介绍
      */
     webView1 = webView1 =[[UIWebView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width-20, 84)];
     webView1.tag = 2001;
     webView1.delegate = self;
     webView1.scrollView.scrollEnabled = NO;
-    [webView1 loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://image.baidu.com"]]];
+
 
     
     /**
      商品详情
      */
-    webView2 =[[UIWebView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width-20, 99)];
-    webView2.tag = 2002;
-    webView2.delegate = self;
-    webView2.scrollView.scrollEnabled = NO;
-    [webView2 loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]]];
+    rtLabel2 =[[RTLabel alloc]initWithFrame:CGRectMake(10, 10, self.view.bounds.size.width-30, 0)];
+    
+    
     
     
     /**
@@ -210,7 +157,7 @@
     webView3.tag = 2003;
     webView3.delegate = self;
     webView3.scrollView.scrollEnabled = NO;
-    [webView3 loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]]];
+
     
     
     //立即购买
@@ -229,14 +176,182 @@
     appointmentNow.backgroundColor = baseRedColor;
     appointmentNow.tag = 5002;
     appointmentNow.titleLabel.font =[UIFont systemFontOfSize:14];
-    [appointmentNow setTitle:@"预约课程" forState:UIControlStateNormal];
+    [appointmentNow setTitle:@"预约商品" forState:UIControlStateNormal];
     [appointmentNow addTarget:self action:@selector(bottomButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:appointmentNow];
-
     
+    
+    /**
+     创建轮播控件部分
+     */
+    cyclePlayImage =[[CycleScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)
+                                        animationDuration:2.8];
+    cyclePlayImage.userInteractionEnabled = YES;
+    
+    __weak ActivityDetailViewController *_self = self;
+    cyclePlayImage.totalPagesCount = ^NSInteger{
+        
+        return [_self.iamgeViewArrays count];
+    };
+    
+    cyclePlayImage.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
+        
+        return _self.iamgeViewArrays[pageIndex];
+    };
+    
+    
+#pragma mark - 进行网络请求
+    /**
+     *  @author frankfan, 14-12-03 10:12:50
+     *
+     *  进行网络请求-获取页面内容
+     *
+     *  @return nil
+     */
+    
+    AFHTTPRequestOperationManager *manager =[self createNetworkingRequestObjc:application_json_goods];
+    NSDictionary *parameters = @{@"goodsId":self.goodsId};
+    [manager GET:API_GoodsDetail parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        globalDict = (NSDictionary *)responseObject[@"data"];
+        GoodsObjcModel *goodsObjcModel =[GoodsObjcModel modelWithDictionary:globalDict error:nil];
+
+        [webView1 loadHTMLString:goodsObjcModel.introduction baseURL:nil];
+        
+        rtLabel2.text = [self handleStringForRTLabel:goodsObjcModel.detailContent];
+        CGSize size2 = rtLabel2.optimumSize;
+        rtLabel2.frame = CGRectMake(10, 10, self.view.bounds.size.width-30, size2.height+20);
+        webViewHeight2 = size2.height+20;
+        [self.tableView reloadData];
+        
+        
+        //
+        [self handleTheCyclePlayingImages:goodsObjcModel.pictures];
+        
+        __weak ActivityDetailViewController *_self = self;
+        cyclePlayImage.totalPagesCount = ^NSInteger{
+            
+            return [_self.iamgeViewArrays count];
+        };
+        
+        cyclePlayImage.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
+            
+            return _self.iamgeViewArrays[pageIndex];
+        };
+
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        NSLog(@"error:%@",[error localizedDescription]);
+        [ProgressHUD showError:@"网络错误"];
+        
+    }];
+    
+  
     
     // Do any additional setup after loading the view.
 }
+
+#pragma mark - webView加载完成
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+
+    if(webView.tag ==2001){
+        
+        CGRect frame = webView.frame;
+        frame.size.height = 1;
+        webView.frame = frame;
+        CGSize fittingSize = [webView sizeThatFits:CGSizeZero];
+        frame.size = fittingSize;
+        webView.frame = frame;
+        webViewHeight = fittingSize.height+5;
+        
+        [self.tableView reloadData];
+       
+    }
+  
+}
+
+- (void)webView:(UIWebView*)webView didFailLoadWithError:(NSError*)error {
+//    webViewLoads_--;
+    NSLog(@"error:%@",[error localizedDescription]);
+
+}
+
+
+
+
+
+#pragma mark - 处理轮播图片的URL以及标题
+- (void)handleTheCyclePlayingImages:(NSArray *)pics{
+    
+    NSArray *imageArrays = nil;
+    if([pics count]){
+        
+        if([pics count]>5){
+            
+            imageArrays =[pics subarrayWithRange:NSMakeRange(0, 5)];
+            
+        }else{
+            
+            imageArrays = pics;
+        }
+        
+    }
+    
+    
+    if(!imageArrays){
+        
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)];
+        
+        
+        UILabel *titleLabel =[[UILabel alloc]initWithFrame:CGRectMake(0, 160, self.view.bounds.size.width-10, 20)];
+        titleLabel.backgroundColor = [UIColor colorWithWhite:0.35 alpha:0.22];
+        titleLabel.text = @"暂无数据";
+        titleLabel.font = [UIFont systemFontOfSize:14];
+        titleLabel.textColor = [UIColor whiteColor];
+        titleLabel.textAlignment = NSTextAlignmentCenter;
+        [imageView addSubview:titleLabel];
+        
+        [imageView sd_setImageWithURL:nil placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];
+        [self.iamgeViewArrays addObject:imageView];
+        
+        
+    }else{
+        
+        
+        for (NSDictionary *picsDict in imageArrays) {
+            
+            CycleDisplayImage *cycleDisplayImageObjc =[CycleDisplayImage modelWithDictionary:picsDict error:nil];
+            
+            
+            NSURL *imageURL =[NSURL URLWithString:cycleDisplayImageObjc.fileCopy];
+            
+            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)];
+            
+            UILabel *backLabel =[[UILabel alloc]initWithFrame:CGRectMake(self.view.bounds.size.width-150, 160, 150, 20)];
+            backLabel.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.4];
+            [imageView addSubview:backLabel];
+            
+            UILabel *titleLabel =[[UILabel alloc]initWithFrame:CGRectMake(0, 160, self.view.bounds.size.width-150, 20)];
+            titleLabel.tag = 10087;
+            titleLabel.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.4];
+            titleLabel.textColor =[UIColor whiteColor];
+            titleLabel.textAlignment = NSTextAlignmentLeft;
+            titleLabel.font =[UIFont systemFontOfSize:14];
+            titleLabel.adjustsFontSizeToFitWidth = YES;
+            [imageView addSubview:titleLabel];
+            
+            titleLabel.text =[NSString stringWithFormat:@" %@",cycleDisplayImageObjc.pictureName];
+            
+            [imageView sd_setImageWithURL:imageURL placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];
+            [self.iamgeViewArrays addObject:imageView];
+        }
+        
+    }
+    
+}
+
+
 
 #pragma mark - 底部按钮点击触发【立即购买预约课程】
 - (void)bottomButtonClicked:(UIButton *)sender{
@@ -585,10 +700,10 @@
             return 70;
         }
         
-        if(indexPath.row==1){
+        if(indexPath.row==1){//商品介绍
         
-            
-            return 85;
+            return webViewHeight;
+//            return 85;
         }
         
         if(indexPath.row==2 || indexPath.row==3 ||indexPath.row==4){
@@ -602,7 +717,7 @@
     if(indexPath.section==2){
     
         
-        return 100;
+        return webViewHeight2;
     }
     
     if(indexPath.section==3){
@@ -657,6 +772,8 @@
     
     UserCommentTableViewCell *userCommentContentCell = nil;
     
+    GoodsObjcModel *goodsObjcModel = nil;
+    
     if(indexPath.section==0){//轮播图
     
         headerViewCell =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
@@ -672,10 +789,7 @@
         
             cell1_0 =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
             cell1_0.selectionStyle = NO;
-            
-            UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, 69, cell1_0.bounds.size.width, 1)];
-            line.backgroundColor =customGrayColor;
-            [cell1_0.contentView addSubview:line];
+
             
             //info1_0_0
             UILabel *info1_0 =[[UILabel alloc]initWithFrame:CGRectMake(10, 0, 200, 35)];
@@ -685,19 +799,50 @@
             [cell1_0.contentView addSubview:info1_0];
             
             //info1_0_1
-            UILabel *info1_0_1 =[[UILabel alloc]initWithFrame:CGRectMake(10, 20, 200, 55)];
+            UILabel *info1_0_1 =[[UILabel alloc]initWithFrame:CGRectMake(10, 20, 100, 55)];
+            info1_0_1.adjustsFontSizeToFitWidth = YES;
             info1_0_1.tag = 1002;
             info1_0_1.font =[UIFont systemFontOfSize:22];
             info1_0_1.textColor = baseRedColor;
             [cell1_0.contentView addSubview:info1_0_1];
+            
+           
+            //info1_0_2
+            UILabel *info1_0_2 =[[UILabel alloc]initWithFrame:CGRectMake(115, 20, 100, 55)];
+            info1_0_2.adjustsFontSizeToFitWidth = YES;
+            info1_0_2.tag = 1003;
+            info1_0_2.font =[UIFont systemFontOfSize:14];
+            info1_0_2.textColor = [UIColor colorWithWhite:0.75 alpha:1];
+            [cell1_0.contentView addSubview:info1_0_2];
 
             
+            //
             
-            //cell1_0上得信息
-            info1_0.text = @"今天打折扣哦！";
-            
-            //cell1_0_1上得信息
-            info1_0_1.text = @"￥35";
+            if([[globalDict allKeys]count]){
+                
+                goodsObjcModel = [GoodsObjcModel modelWithDictionary:globalDict error:nil];
+                //cell1_0上得信息
+                info1_0.text = goodsObjcModel.goodsName;
+                
+                //cell1_0_1上得信息
+                NSString *price = [NSString stringWithFormat:@"￥%.2f",goodsObjcModel.price];
+                info1_0_1.text = price;
+                
+                //cell1_0_2上得信息
+                NSString *promotorPrice =[NSString stringWithFormat:@"原价:￥%.2d",goodsObjcModel.promotePrice];
+                info1_0_2.text = promotorPrice;
+             
+                
+            }else{
+                
+                //cell1_0上得信息
+                info1_0.text = @"暂无数据";
+                
+                //cell1_0_1上得信息
+                info1_0_1.text = @"暂无数据";
+                
+                info1_0_2.text = @"暂无数据";
+            }
             
             return cell1_0;
             
@@ -708,13 +853,19 @@
             cell1_1 =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
             cell1_1.selectionStyle = NO;
             
-            UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, 84, cell1_1.bounds.size.width, 1)];
-            line.backgroundColor =customGrayColor;
-            [cell1_1.contentView addSubview:line];
-            
             //webView显示内容
             [cell1_1.contentView addSubview:webView1];
-           
+            
+            if(![[globalDict allKeys]count]){
+            
+                [webView1 loadHTMLString:@"暂无数据" baseURL:nil];
+
+            }
+            
+            UIView *topline =[[UIView alloc]initWithFrame:CGRectMake(0, 0 ,cell1_1.bounds.size.width, 1)];
+            topline.backgroundColor =customGrayColor;
+            [cell1_1.contentView addSubview:topline];
+            
             return cell1_1;
         }
         
@@ -722,6 +873,11 @@
         
             cell1_2 =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
             cell1_2.selectionStyle = NO;
+            
+            UIView *topLine =[[UIView alloc]initWithFrame:CGRectMake(0, 0, cell1_2.bounds.size.width, 1)];
+            topLine.backgroundColor = customGrayColor;
+            [cell1_2.contentView addSubview:topLine];
+            
             
             UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, 43, cell1_2.bounds.size.width, 1)];
             line.backgroundColor =customGrayColor;
@@ -763,19 +919,47 @@
             //对勾1
             UIImageView *mark1 =[[UIImageView alloc]initWithFrame:CGRectMake(10, 15, 15, 15)];
             mark1.image =[UIImage imageNamed:@"绿色勾"];
-            [cell1_2.contentView addSubview:mark1];
-            
+     
             //对勾2
             UIImageView *mark2 =[[UIImageView alloc]initWithFrame:CGRectMake(115, 15, 15, 15)];
             mark2.image =[UIImage imageNamed:@"绿色勾"];
-            [cell1_2.contentView addSubview:mark2];
             
             
             //对勾3
             UIImageView *mark3 =[[UIImageView alloc]initWithFrame:CGRectMake(220, 15, 15, 15)];
             mark3.image =[UIImage imageNamed:@"绿色勾"];
-            [cell1_2.contentView addSubview:mark3];
+            
+            if([[globalDict allKeys]count]){
+                
+                goodsObjcModel =[GoodsObjcModel modelWithDictionary:globalDict error:nil];
+                if(goodsObjcModel.readyToRetire){
+                    
+                    [cell1_2.contentView addSubview:mark1];
+                }else{
+                
+                    supportPayback.frame = CGRectMake(15, 0, 80, 43);
+                }
+                
+                if(goodsObjcModel.expiredRetreat){
+                
+                    [cell1_2.contentView addSubview:mark2];
 
+                }else{
+                
+                    supportDelay.frame = CGRectMake(120, 0, 80, 43);
+                }
+                
+                if(goodsObjcModel.noAppoinment){
+                
+                    [cell1_2.contentView addSubview:mark3];
+
+                }else{
+                
+                    noAppointment.frame = CGRectMake(225, 0, 80, 43);
+                }
+            
+            
+            }
             
             return cell1_2;
         }
@@ -791,7 +975,7 @@
 
             UIImageView *view =[[UIImageView alloc]initWithFrame:CGRectMake(10, 15, 15, 17)];
             
-            UILabel *infoLabel =[[UILabel alloc]initWithFrame:CGRectMake(25, 5, 200, 35)];
+            UILabel *infoLabel =[[UILabel alloc]initWithFrame:CGRectMake(25, 5, self.view.bounds.size.width-50, 35)];
             infoLabel.font =[UIFont systemFontOfSize:14];
             infoLabel.textColor =baseTextColor;
             infoLabel.adjustsFontSizeToFitWidth = YES;
@@ -802,11 +986,11 @@
             if(indexPath.row==3){//店铺地址
             
                 view.image =[UIImage imageNamed:@"地标"];
-                infoLabel.text = @"长沙岳麓区天马小区";
+                infoLabel.text = self.shopAddress;
             }else{//电话号码
             
                 view.image =[UIImage imageNamed:@"电话"];
-                infoLabel.text = @"15575829007";
+                infoLabel.text = self.phoneNumber;
             }
             
             return cell1_3_4;
@@ -819,7 +1003,12 @@
         cell2 =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
         cell2.selectionStyle = NO;
         
-        [cell2.contentView addSubview:webView2];
+        [cell2.contentView addSubview:rtLabel2];
+        if(![[globalDict allKeys]count]){
+        
+            rtLabel2.text = @"暂无数据";
+        }
+        
         
         return cell2;
     
@@ -908,13 +1097,6 @@
 }
 
 
-#pragma mark 调试用 webView
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
-
-    NSLog(@"error:%@",[error localizedDescription]);
-}
-
-
 
 #pragma mark - 导航栏按钮触发
 - (void)buttonClicked:(UIButton *)sender{
@@ -985,6 +1167,25 @@
 }
 
 
+
+#pragma mark - 创建网络请求实体对象
+- (AFHTTPRequestOperationManager *)createNetworkingRequestObjc:(const NSString *)content_type{
+
+    AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:content_type];
+    
+    return manager;
+}
+
+#pragma mark - 处理富文本格式字符串，使之适配RTLabel的使用
+- (NSString *)handleStringForRTLabel:(NSString *)htmlString{
+    
+    NSString *tempString = [htmlString stringByReplacingOccurrencesOfString:@"<br>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [htmlString length])];
+    
+    NSString *resultString =[tempString stringByReplacingOccurrencesOfString:@"div" withString:@"br" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [tempString length])];
+    
+    return resultString;
+}
 
 
 

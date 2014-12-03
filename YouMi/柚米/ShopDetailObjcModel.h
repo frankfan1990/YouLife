@@ -13,6 +13,7 @@
 
 @interface ShopDetailObjcModel : MTLModel
 
+@property (nonatomic,copy)NSString *memberId;
 @property (nonatomic,copy)NSString *shopId;//商铺编号
 @property (nonatomic,copy)NSString *shopName;//商铺名称
 @property (nonatomic,copy)NSString *circleId;//商圈地址

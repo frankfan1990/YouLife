@@ -163,6 +163,7 @@ const NSString *text_html = @"text/html";
     self.tableView.backgroundColor = customGrayColor;
     [self.view addSubview:self.tableView];
     self.tableView.showsVerticalScrollIndicator = NO;
+    self.tableView.separatorStyle = NO;
     
     /**
      创建轮播控件
@@ -191,7 +192,7 @@ const NSString *text_html = @"text/html";
     if([[TMCache sharedCache]objectForKey:kUserInfo][memberID]){
     
         NSDictionary *var_userInfo = [[TMCache sharedCache]objectForKey:kUserInfo];
-        AFHTTPRequestOperationManager *manager_isClooection =[self createNetworkObjc:application_josn];
+        AFHTTPRequestOperationManager *manager_isClooection =[self createNetworkObjc:text_html];
         NSDictionary *parameters3 =@{api_shopId:self.shopModel.shopId,memberID:var_userInfo[memberID]};
         
         [manager_isClooection GET:API_IsColltionShopOrProducation parameters:parameters3 success:^(AFHTTPRequestOperation *operation, id responseObject)
@@ -211,7 +212,7 @@ const NSString *text_html = @"text/html";
              
          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
            
-             NSLog(@"%@",[error localizedDescription]);
+             NSLog(@"215-%@",[error localizedDescription]);
          }];
     }
     
@@ -270,7 +271,7 @@ const NSString *text_html = @"text/html";
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
             [ProgressHUD showError:@"数据错误" Interaction:NO];
-            NSLog(@"error:%@",[error localizedDescription]);
+            NSLog(@"274-error:%@",[error localizedDescription]);
         }];
         
 
@@ -816,9 +817,33 @@ const NSString *text_html = @"text/html";
         
             ActivityDetailViewController *activityDetail =[ActivityDetailViewController new];
             activityDetail.hidesBottomBarWhenPushed = YES;
+            
+            NSArray *googsObjc = shopDetailObjcModel.goodses;
+            NSDictionary *tempDict = googsObjc[indexPath.row];
+            GoodsObjcModel *good = [GoodsObjcModel modelWithDictionary:tempDict error:nil];
+            
+            activityDetail.goodsId = good.goodsId;
+            activityDetail.shopAddress = self.shopModel.address;
+            
+            NSString *contactNumber = nil;
+            if([self.shopModel.contact length]){
+                
+                NSArray *phoneNumbers = [self.shopModel.contact componentsSeparatedByString:@" "];
+                if([phoneNumbers count]>=2){
+                    
+                    contactNumber = [phoneNumbers firstObject];
+                }else{
+                    
+                    contactNumber = self.shopModel.contact;
+                }
+                
+            }
+
+            
+            activityDetail.phoneNumber = contactNumber;
             [self.navigationController pushViewController:activityDetail animated:YES];
             [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        
+    
         }else{
         
             UITableViewCell *cell =[self.tableView cellForRowAtIndexPath:indexPath];
@@ -841,6 +866,15 @@ const NSString *text_html = @"text/html";
     
 }
 
+
+/*创建分割线*/
+- (UIView *)createSeperatorLine:(CGRect)frame{
+    
+    UIView *line =[[UIView alloc]initWithFrame:CGRectMake(frame.origin.x, frame.size.height-1, frame.size.width, 1)];
+    line.backgroundColor = customGrayColor;
+    
+    return line;
+}
 
 
 #pragma mark - 创建tableViewCell
@@ -870,13 +904,13 @@ const NSString *text_html = @"text/html";
     UITableViewCell *cell3 = nil;
     
     //section==4
-//    UITableViewCell *cell4 = nil;
     UserCommentTableViewCell *cell4 = nil;
     
     static NSString *cellName2 = @"cellName2";
     static NSString *cellName3 = @"cellName3";
-//    static NSString *cellName4 = @"cellName4";
-
+    
+    UITableViewCell *footeCell1 = nil;
+    UITableViewCell *footeCell2 = nil;
     
     
     if(indexPath.section==0){//第一段
@@ -950,6 +984,9 @@ const NSString *text_html = @"text/html";
                 goldAbout.text = @"暂无数据";
             }
             
+            UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, cell1_0.bounds.size.height-1+20, cell1_0.bounds.size.width, 1)];
+            line.backgroundColor = customGrayColor;
+            [cell1_0.contentView addSubview:line];
             return cell1_0;
        }
         
@@ -982,6 +1019,8 @@ const NSString *text_html = @"text/html";
             arrowImageView.image =[UIImage imageNamed:@"箭头icon"];
             [cell1_1.contentView addSubview:arrowImageView];
             
+            UIView *line =[self createSeperatorLine:cell1_1.bounds];
+            [cell1_1.contentView addSubview:line];
             return cell1_1;
         
         }
@@ -1003,6 +1042,8 @@ const NSString *text_html = @"text/html";
             //地址
             shopAddress.text = self.shopModel.address;
             
+            UIView *line =[self createSeperatorLine:cell1_2.bounds];
+            [cell1_2.contentView addSubview:line];
             return cell1_2;
         }
         
@@ -1052,6 +1093,8 @@ const NSString *text_html = @"text/html";
             
             [phoneNumLabel setTitle:contactNumber forState:UIControlStateNormal];
             
+            UIView *line =[self createSeperatorLine:cell1_3.bounds];
+            [cell1_3.contentView addSubview:line];
             return cell1_3;
         
         }
@@ -1080,21 +1123,28 @@ const NSString *text_html = @"text/html";
             shopperInfoYear.font =[UIFont systemFontOfSize:14];
             shopperInfoYear.textColor = [UIColor colorWithWhite:0.75 alpha:1];
             [cell2.contentView addSubview:shopperInfoYear];
+        
+        }
+        
+        if(!footeCell1){
+        
+            footeCell1 =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
             
             //新增加的
-            UILabel *footViewContent =[[UILabel alloc]initWithFrame:cell2.bounds];
+            UILabel *footViewContent =[[UILabel alloc]initWithFrame:footeCell1.bounds];
             footViewContent.tag = 40001;
             footViewContent.font =[UIFont systemFontOfSize:14];
             footViewContent.textColor = baseTextColor;
             footViewContent.textAlignment = NSTextAlignmentCenter;
-            [cell2.contentView addSubview:footViewContent];
-        
+            [footeCell1.contentView addSubview:footViewContent];
+
         }
+        
      
         /*****/
         UILabel *shopperInfo =(UILabel *)[cell2 viewWithTag:3000];
         UILabel *shopperInfoYear = (UILabel *)[cell2 viewWithTag:3001];
-        UILabel *footViewContent = (UILabel *)[cell2 viewWithTag:40001];
+        UILabel *footViewContent = (UILabel *)[footeCell1 viewWithTag:40001];
      
         
         //商家资讯
@@ -1113,13 +1163,23 @@ const NSString *text_html = @"text/html";
         
             shopperInfo.text = shopNewsObjcModel_local.title;
             shopperInfoYear.text = shopNewsObjcModel_local.createTime;
-        }else{
-        
-            footViewContent.text = [delegateDataSourceForBusiniessNews lastObject];
         }
-   
+        
+        footViewContent.text = [delegateDataSourceForBusiniessNews lastObject];
         cell2.selectionStyle = NO;
-        return cell2;
+        
+        UIView *line =[self createSeperatorLine:cell2.bounds];
+        [cell2.contentView addSubview:line];
+        
+        if(indexPath.row!=[delegateDataSourceForBusiniessNews count]-1){
+        
+            return cell2;
+        }else{
+            
+            footeCell1.selectionStyle = NO;
+            return footeCell1;
+        }
+        
     }
     
     
@@ -1153,15 +1213,25 @@ const NSString *text_html = @"text/html";
             [cell3.contentView addSubview:price];
             
             
+            UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, 35+29, cell3.bounds.size.width, 1)];
+            line.backgroundColor = customGrayColor;
+            [cell3.contentView addSubview:line];
+
+            
+        }
+        
+        if(!footeCell2){
+        
+            footeCell2 =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+            
             //新增加的
-            UILabel *footViewContent_local =[[UILabel alloc]initWithFrame:cell3.bounds];
+            UILabel *footViewContent_local =[[UILabel alloc]initWithFrame:footeCell2.bounds];
             footViewContent_local.tag = 40002;
             footViewContent_local.font =[UIFont systemFontOfSize:14];
             footViewContent_local.textColor = baseTextColor;
             footViewContent_local.textAlignment = NSTextAlignmentCenter;
-            [cell3.contentView addSubview:footViewContent_local];
+            [footeCell2.contentView addSubview:footViewContent_local];
 
-        
         }
         
         NSDictionary *tempDict = nil;
@@ -1191,15 +1261,22 @@ const NSString *text_html = @"text/html";
             UILabel *priceLabel =(UILabel *)[cell3 viewWithTag:3003];
             priceLabel.text = [NSString stringWithFormat:@"￥%.2f",price];
             
-        }else{
-            
-            UILabel *footerViewLabel_local = (UILabel *)[cell3 viewWithTag:40002];
-            footerViewLabel_local.text = [delegateDataSouorceForBusiniessActivity lastObject];
         }
         
-        cell3.selectionStyle = NO;
-        return cell3;
+        UILabel *footViewContent_local = (UILabel *)[footeCell2 viewWithTag:40002];
+        footViewContent_local.text = [delegateDataSouorceForBusiniessActivity lastObject];
         
+            if(indexPath.row!=[delegateDataSouorceForBusiniessActivity count]-1){
+            
+                cell3.selectionStyle = NO;
+                
+                return cell3;
+            }else{
+            
+                footeCell2.selectionStyle = NO;
+                return footeCell2;
+            }
+            
     }
     
     if(indexPath.section==4){//第四段
@@ -1249,11 +1326,10 @@ const NSString *text_html = @"text/html";
             //评论时间time
             cell4.theTime.text = tempArray[1];
         }
-        
+
         return cell4;
     
     }
-    
     
     return nil;
     
@@ -1330,7 +1406,7 @@ const NSString *text_html = @"text/html";
                   
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                     
-                    NSLog(@"error:%@",[error localizedDescription]);
+                    NSLog(@"1390-error:%@",[error localizedDescription]);
                     [ProgressHUD showError:@"收藏失败" Interaction:NO];
                 }];
                
@@ -1351,7 +1427,7 @@ const NSString *text_html = @"text/html";
                 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 
-                 NSLog(@"error:%@",[error localizedDescription]);
+                 NSLog(@"1411-error:%@",[error localizedDescription]);
                 [ProgressHUD showError:@"操作失败" Interaction:NO];
             }];
          

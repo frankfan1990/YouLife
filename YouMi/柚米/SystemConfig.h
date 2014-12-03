@@ -247,7 +247,7 @@
 /**
  *  @author frankfan, 14-12-01 16:12:09
  *
- *  根据goodsID获取商品详情
+ *  根据goodsID获取商品详情-废弃接口
  */
 //接口
 #define API_GoodDetails @"http://120.24.71.104:8080/youmi/goods/getGoodsById"
@@ -258,16 +258,16 @@
  *
  *  收藏店铺/商品
  */
-//#define API_CollectionShopOrProducation @"http://120.24.71.104:8080/youmi/member/attention"
-#define API_CollectionShopOrProducation @"http://192.168.1.116:8080/youmi/member/attention"
+#define API_CollectionShopOrProducation @"http://120.24.71.104:8080/youmi/member/attention"
+//#define API_CollectionShopOrProducation @"http://192.168.1.116:8080/youmi/member/attention"
 
 /**
  *  @author frankfan, 14-12-01 22:12:51-120.24.71.104:8080
  *
  *  取消收藏店铺/商品
  */
-//#define API_DecollectionShopOrProducation @"http://120.24.71.104:8080/youmi/member/deleteAttention"
-#define API_DecollectionShopOrProducation @"http://192.168.1.116:8080/youmi/member/deleteAttention"
+#define API_DecollectionShopOrProducation @"http://120.24.71.104:8080/youmi/member/deleteAttention"
+//#define API_DecollectionShopOrProducation @"http://192.168.1.116:8080/youmi/member/deleteAttention"
 
 
 
@@ -276,6 +276,18 @@
  *
  *  判断是否收藏
  */
-#define API_IsColltionShopOrProducation @"http://192.168.1.116:8080/youmi/member/isAttention"
+//#define API_IsColltionShopOrProducation @"http://192.168.1.116:8080/youmi/member/isAttention"
+#define API_IsColltionShopOrProducation @"http://120.24.71.104:8080/youmi/member/isAttention"
+
+
+/**
+ *  @author frankfan, 14-12-02 21:12:17
+ *
+ *  获取商品详情-最新
+ */
+//#define API_GoodsDetail @"http://192.168.1.116:8080/youmi/goods/getGoods"
+#define API_GoodsDetail @"http://120.24.71.104:8080/youmi/goods/getGoods"
+
+
 
 #endif

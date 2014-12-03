@@ -16,6 +16,9 @@
 
 @interface GoodsObjcModel : MTLModel
 
+@property (nonatomic,assign)BOOL attention;
+@property (nonatomic,copy)NSString *attentionId;
+@property (nonatomic,copy)NSString *memberId;
 @property (nonatomic,copy)NSString *goodsId;    //商品编号
 @property (nonatomic,copy)NSString *goodsName;  //商品名称
 @property (nonatomic,copy)NSString *shopId;     //商铺编号
@@ -35,9 +38,9 @@
 @property (nonatomic,assign)NSInteger freePost;
 @property (nonatomic,copy)NSString *remark;
 @property (nonatomic,copy)NSString *createTime;
-@property (nonatomic,assign)NSInteger readyToRetire;
-@property (nonatomic,assign)NSInteger expiredRetreat;
-@property (nonatomic,assign)NSInteger noAppoinment;
+@property (nonatomic,assign)BOOL readyToRetire;//支持随时退
+@property (nonatomic,assign)BOOL expiredRetreat;//支持过期退
+@property (nonatomic,assign)BOOL noAppoinment;//无需预约
 @property (nonatomic,copy)NSString *introduction;
 @property (nonatomic,strong)RuleDetail *activityRules;
 @property (nonatomic,assign)NSInteger sortOrder;
