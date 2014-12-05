@@ -10,4 +10,7 @@
 
 @interface MoreActivityDetailViewController : UIViewController
 
+@property (nonatomic,copy)NSString *activityContents;//活动详情
+@property (nonatomic,copy)NSString *needToKnow;//购买须知
+@property (nonatomic,copy)NSString *tips;//温馨提示
 @end

@@ -57,7 +57,7 @@
         self.theTime =[[UILabel alloc]initWithFrame:CGRectMake(245, 0, 50, 35)];
         self.theTime.font =[UIFont systemFontOfSize:13];
         self.theTime.textColor = [UIColor colorWithWhite:0.55 alpha:1];
-//        self.theTime.adjustsFontSizeToFitWidth = YES;
+        self.theTime.adjustsFontSizeToFitWidth = YES;
         self.theTime.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:self.theTime];
 
@@ -134,7 +134,7 @@
     CGSize size = rect.size;
     
     
-    return size.height;
+    return size.height+10;
 }
 
 

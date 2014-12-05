@@ -105,8 +105,9 @@
     line.backgroundColor =customGrayColor;
     [cell.contentView addSubview:line];
     
-    
-    cell.commentContent.text = userCommentContent[indexPath.row];
+    NSDictionary *tempDict = self.userComments[indexPath.row];
+    UserCommentsObjcModel *commentsModel = [UserCommentsObjcModel modelWithDictionary:tempDict error:nil];
+    cell.commentContent.text = commentsModel.content;
     
     CGFloat contentHeight;
     if([cell.commentContent.text length]){
@@ -118,8 +119,8 @@
     }
 
     //
-    NSDictionary *tempDict = self.userComments[indexPath.row];
-    UserCommentsObjcModel *shopCommentObjcModel = [UserCommentsObjcModel modelWithDictionary:tempDict error:nil];
+    NSDictionary *tempDict2 = self.userComments[indexPath.row];
+    UserCommentsObjcModel *shopCommentObjcModel = [UserCommentsObjcModel modelWithDictionary:tempDict2 error:nil];
     
     NSArray *timeArray = [shopCommentObjcModel.createTime componentsSeparatedByString:@" "];
     
@@ -128,7 +129,7 @@
     //用户评论内容
     cell.commentContent.text = shopCommentObjcModel.content;
     //来自某人
-    cell.theCommenter.text = shopCommentObjcModel.userName;
+    cell.theCommenter.text = shopCommentObjcModel.nickName;
     //来自某天
     cell.theDay.text = timeArray[0];
     //来自某刻

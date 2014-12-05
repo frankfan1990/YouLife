@@ -261,7 +261,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         lcmanager =[[LocationManager alloc]init];
         [lcmanager getUserNowLocationInfoWithAlert:YES getUserLocationFinish:^(BOOL success, CLLocation *userLocation) {
             
-            NSLog(@"userLocation:%@",userLocation);
+            NSLog(@"userLocation...:%@",userLocation);
         }];
 
     }else{

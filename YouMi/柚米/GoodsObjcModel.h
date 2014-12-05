@@ -42,7 +42,7 @@
 @property (nonatomic,assign)BOOL expiredRetreat;//支持过期退
 @property (nonatomic,assign)BOOL noAppoinment;//无需预约
 @property (nonatomic,copy)NSString *introduction;
-@property (nonatomic,strong)RuleDetail *activityRules;
+@property (nonatomic,strong)NSDictionary *activityRules;
 @property (nonatomic,assign)NSInteger sortOrder;
 @property (nonatomic,assign)NSInteger isPromote;  //是否促销产品
 @property (nonatomic,assign)NSInteger promotePrice;
@@ -52,6 +52,8 @@
 @property (nonatomic,copy)NSString *tips;
 @property (nonatomic,copy)NSString *details;
 @property (nonatomic,strong)NSArray *pictures;//轮播
+@property (nonatomic,strong)NSArray *comments;//评论
+@property (nonatomic,strong)NSDictionary *ruleDetail;
 @end
 
 

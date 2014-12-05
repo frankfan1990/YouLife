@@ -228,7 +228,8 @@ const NSString *text_html = @"text/html";
     
     NSDictionary *parameters = @{api_shopId:self.shopModel.shopId};
     if([reachability isReachable]){
-    
+        
+        [ProgressHUD show:nil];
         [manager GET:API_ShopDetails parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             NSArray *tempArray = (NSArray *)responseObject[@"data"];
@@ -267,6 +268,7 @@ const NSString *text_html = @"text/html";
                 return _self.iamgeViewArrays[pageIndex];
             };
             
+            [ProgressHUD dismiss];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
@@ -702,7 +704,7 @@ const NSString *text_html = @"text/html";
         if([userComment_local.content length]){
             
             CGFloat commentContentHeight = [self caculateTheTextHeight:userComment_local.content andFontSize:14];
-            return commentContentHeight+35;
+            return commentContentHeight+35+10;
         }else{
         
             return 10+35;
@@ -1309,7 +1311,7 @@ const NSString *text_html = @"text/html";
         cell4.commentContent.frame = CGRectMake(10, 36, self.view.bounds.size.width-40, contentHeight);
         
         //来自某用户评论
-        cell4.theCommenter.text = userComments.userName;
+        cell4.theCommenter.text = userComments.nickName;
         //评论时间
         NSArray *tempArray = nil;
         if([shopDetailObjcModel.comments count]){
@@ -1486,6 +1488,13 @@ const NSString *text_html = @"text/html";
     return size.height;
 }
 
+- (void)dealloc{
+
+    if([ProgressHUD shared]){
+    
+        [ProgressHUD dismiss];
+    }
+}
 
 
 - (void)didReceiveMemoryWarning {
