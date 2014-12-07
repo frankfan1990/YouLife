@@ -11,11 +11,16 @@
 #import "ADNavigationControllerDelegate.h"
 #import "MMLocationManager.h"
 #import <MAMapKit/MAMapKit.h>
+#import "LocationManager.h"
 
 @interface AppDelegate ()
 {
   
-      ADNavigationControllerDelegate *delegate;
+
+    ADNavigationControllerDelegate *delegate;
+    LocationManager *_lcManager;
+    
+    
 }
 
 @end
@@ -40,7 +45,7 @@
      */
     
     [MAMapServices sharedServices].apiKey = @"461e3b5c277c297c4fd64ed54c9fa634";
-    
+    _lcManager =[[LocationManager alloc]init];
     
     
     /**
@@ -174,9 +179,36 @@
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
+
+#pragma mark - 定位当前坐标
+/**
+ *  @author frankfan, 14-12-06 11:12:27
+ *
+ *  每当app被唤醒时都进行定位，并存储当前位置
+ *
+ *  @param application
+ */
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [_lcManager getUserNowLocationInfoWithAlert:YES getUserLocationFinish:^(BOOL success, CLLocation *userLocation) {
+        
+        if(userLocation){
+        
+            double _lat = userLocation.coordinate.latitude;
+            double _lng = userLocation.coordinate.longitude;
+            
+            NSNumber *_latNumber =[NSNumber numberWithDouble:_lat];
+            NSNumber *_lngNumber =[NSNumber numberWithDouble:_lng];
+            
+            if(_latNumber && _lngNumber){
+            
+                NSDictionary *userLocation =@{@"lat":_latNumber,@"lng":_lngNumber};
+                [[NSUserDefaults standardUserDefaults]setObject:userLocation forKey:kUserLocation];
+
+            }
+  
+        }
+    }];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

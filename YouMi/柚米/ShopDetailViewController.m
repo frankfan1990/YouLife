@@ -168,20 +168,10 @@ const NSString *text_html = @"text/html";
     /**
      创建轮播控件
      */
+    
     cyclePlayImage =[[CycleScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)
                                         animationDuration:2.8];
     cyclePlayImage.userInteractionEnabled = YES;
-    __weak ShopDetailViewController *_self2 = self;
-    cyclePlayImage.totalPagesCount = ^NSInteger{
-        
-        return [_self2.iamgeViewArrays count];
-    };
-    
-    cyclePlayImage.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
-        
-        return _self2.iamgeViewArrays[pageIndex];
-    };
-    
 
     /**
      *  @author frankfan, 14-12-02 13:12:04
@@ -229,7 +219,6 @@ const NSString *text_html = @"text/html";
     NSDictionary *parameters = @{api_shopId:self.shopModel.shopId};
     if([reachability isReachable]){
         
-        [ProgressHUD show:nil];
         [manager GET:API_ShopDetails parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             NSArray *tempArray = (NSArray *)responseObject[@"data"];
@@ -268,7 +257,6 @@ const NSString *text_html = @"text/html";
                 return _self.iamgeViewArrays[pageIndex];
             };
             
-            [ProgressHUD dismiss];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             

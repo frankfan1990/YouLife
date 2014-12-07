@@ -29,6 +29,7 @@
 
 #define kUserCity @"city"//用户当前城市
 #define kUserLocationCity @"currentCity"//定位到当前城市
+#define kUserLocation @"userCurrentLocation"//用户当前位置【经纬度坐标】
 
 #define kGaoDeAppKey @"461e3b5c277c297c4fd64ed54c9fa634"//高德appKey
 

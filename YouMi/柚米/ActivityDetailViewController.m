@@ -34,7 +34,7 @@ const NSString *application_json_goods = @"application/json";
     /*收藏按钮是否点击*/
     BOOL isCollectioned;
     
-     NSArray *itemTitles;//headerView上的文字
+    NSArray *itemTitles;//headerView上的文字
     
     CycleScrollView *cyclePlayImage;//轮播控件
 
@@ -49,12 +49,11 @@ const NSString *application_json_goods = @"application/json";
     NSInteger gloabalAcount;
     
     NSDictionary *globalDict;//全局字数据典
-    CGFloat webViewHeight;
+    
+    CGFloat webViewHeight;//富文本高度
     CGFloat webViewHeight2;
     CGFloat webViewHeight3;
-    
-    NSInteger webViewLoads_;
-    
+   
     RTLabel *rtLabel2;
     RTLabel *rtLable3;
     
@@ -190,17 +189,7 @@ const NSString *application_json_goods = @"application/json";
                                         animationDuration:2.8];
     cyclePlayImage.userInteractionEnabled = YES;
     
-    __weak ActivityDetailViewController *_self = self;
-    cyclePlayImage.totalPagesCount = ^NSInteger{
-        
-        return [_self.iamgeViewArrays count];
-    };
-    
-    cyclePlayImage.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
-        
-        return _self.iamgeViewArrays[pageIndex];
-    };
-    
+  
     
 #pragma mark - 进行网络请求
     
@@ -236,14 +225,6 @@ const NSString *application_json_goods = @"application/json";
     
     }
     
-   
-    
-    
-    
-    
-    
-    
-    
     
     /**
      *  @author frankfan, 14-12-03 10:12:50
@@ -274,9 +255,6 @@ const NSString *application_json_goods = @"application/json";
         CGSize size3 = rtLable3.optimumSize;
         rtLable3.frame = CGRectMake(10, 10, self.view.bounds.size.width-30, size2.height+20);
         webViewHeight3 = size3.height+20;
-        
-        
-        
         
         [self.tableView reloadData];
         
@@ -442,7 +420,7 @@ const NSString *application_json_goods = @"application/json";
         goodsname.textAlignment = NSTextAlignmentLeft;
         goodsname.adjustsFontSizeToFitWidth = YES;
         goodsname.textColor = baseTextColor;
-#warning fake data
+
         goodsname.text = @"商品名";
         [courseAppointLoadView addSubview:goodsname];
         
@@ -452,7 +430,7 @@ const NSString *application_json_goods = @"application/json";
         price.textColor = baseTextColor;
         price.textAlignment = NSTextAlignmentLeft;
         price.adjustsFontSizeToFitWidth = YES;
-#warning fake data
+
         price.text = @"价格";
         [courseAppointLoadView addSubview:price];
         
@@ -557,8 +535,6 @@ const NSString *application_json_goods = @"application/json";
     
 }
 
-
-
 #pragma mark - textField 代理方法
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     
@@ -606,13 +582,13 @@ const NSString *application_json_goods = @"application/json";
         NSInteger tempacount = [memberField.text integerValue];
         if(tempacount>1){
             
-            memberField.text =[NSString stringWithFormat:@"%ld",tempacount-1];
+            memberField.text =[NSString stringWithFormat:@"%d",tempacount-1];
             
         }
     }else{
         
         NSInteger tempacount = [memberField.text integerValue];
-        memberField.text =[NSString stringWithFormat:@"%ld",tempacount+1];
+        memberField.text =[NSString stringWithFormat:@"%d",tempacount+1];
         
     }
     
@@ -633,9 +609,6 @@ const NSString *application_json_goods = @"application/json";
     [memberField resignFirstResponder];
     
 }
-
-
-
 
 
 #pragma mark - 确定预定按钮触发
@@ -713,11 +686,17 @@ const NSString *application_json_goods = @"application/json";
             button.frame = CGRectMake(255, 0, 45, 30);
             [button setTitleColor:[UIColor colorWithWhite:0.55 alpha:1] forState:UIControlStateNormal];
             button.titleLabel.font =[UIFont systemFontOfSize:14];
+            
+            GoodsObjcModel *goodObjcModel = nil;
+            if([[globalDict allKeys]count]){
+            
+                goodObjcModel = [GoodsObjcModel modelWithDictionary:globalDict error:nil];
+            }
+            
             //在这里显示一共有多少条评论
-            [button setTitle:[NSString stringWithFormat:@"%@条",@111] forState:UIControlStateNormal];
+            [button setTitle:[NSString stringWithFormat:@"%lu条",(unsigned long)[goodObjcModel.comments count]] forState:UIControlStateNormal];
             [backView addSubview:button];
             [button addTarget:self action:@selector(commentButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-
         
         }
         
@@ -734,7 +713,19 @@ const NSString *application_json_goods = @"application/json";
     
     UserCommentListViewController *userCommentList =[UserCommentListViewController new];
     userCommentList.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:userCommentList animated:YES];
+    GoodsObjcModel *goodObjcModel = nil;
+    if([[globalDict allKeys]count]){
+    
+        goodObjcModel =[GoodsObjcModel modelWithDictionary:globalDict error:nil];
+    }
+    
+    if([goodObjcModel.comments count]>1){
+    
+        userCommentList.userComments = goodObjcModel.comments;
+        [self.navigationController pushViewController:userCommentList animated:YES];
+    }
+    
+    
 }
 
 
@@ -783,10 +774,8 @@ const NSString *application_json_goods = @"application/json";
             return 50;
         }
     
-        
     }
 
-    
     if(indexPath.section==4){//评论
     
         if([[globalDict allKeys]count]){
@@ -807,9 +796,8 @@ const NSString *application_json_goods = @"application/json";
     }
     
     return 0;
-    
+  
 }
-
 
 
 #pragma mark - 创建tableViewCell
@@ -1188,7 +1176,6 @@ const NSString *application_json_goods = @"application/json";
  
 }
 
-
 #pragma mark - 导航栏按钮触发
 - (void)buttonClicked:(UIButton *)sender{
 
@@ -1260,8 +1247,7 @@ const NSString *application_json_goods = @"application/json";
             }
             
         }
-        
-    
+      
     }
     
     if(sender.tag==1002){//分享
@@ -1272,8 +1258,6 @@ const NSString *application_json_goods = @"application/json";
     }
 
 }
-
-
 
 
 /**

@@ -25,14 +25,7 @@
     [super viewDidLoad];
     self.view.backgroundColor =[UIColor whiteColor];
     //
-    /**
-     在这里初始化参数
-     */
-    
-    userCommentContent = [NSMutableArray arrayWithObjects:@"这是用户评论1，这里的菜还是不错的,不过佐料放得有点猛啊！辣椒太辣了！受不了，基本来说可以给个3星半吧",@"这是用户评论，这里的菜真是烂啊啊 啊啊啊",@"这里的菜还是很好的，啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",@"这是用户评论,一个简单的测试啊啊啊啊",@"这里的菜好垃圾啊好垃圾啊这里的菜好垃圾啊好垃圾啊这里的菜好垃圾啊好垃圾啊这里的菜好垃圾啊好垃圾啊这里的菜好垃圾啊好垃圾啊这里的菜好垃圾啊好垃圾啊这里的菜好垃圾啊好垃圾啊",@"额。。。菜还是一般般的啦。。。额",@"算了，我写不动了！", nil];
-    
-    
-    
+   
     /*title*/
     UILabel *title =[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 30, 40)];
     title.text = @"用户评论";
@@ -84,7 +77,7 @@
         NSDictionary *tempDict = self.userComments[indexPath.row];
         UserCommentsObjcModel *userCommentObjcModel =[UserCommentsObjcModel modelWithDictionary:tempDict error:nil];
         
-        contentHeight = [self caculateTheTextHeight:userCommentObjcModel.content andFontSize:14]+35;
+        contentHeight = [self caculateTheTextHeight:userCommentObjcModel.content andFontSize:14]+35+10;
         
     }else{
         
@@ -179,11 +172,6 @@
     [self.navigationController popViewControllerAnimated:YES];
 
 }
-
-
-
-
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

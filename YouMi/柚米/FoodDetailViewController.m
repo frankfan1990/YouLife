@@ -534,6 +534,15 @@ static NSInteger _start = 10;
             cell.TheShopAddress.text = [NSString stringWithFormat:@"%@ | %@",shopModel.typeName,shopModel.circleName];//商铺地址
             [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//店铺头像
          
+            if(shopModel.perCpitaConsumption){
+            
+                cell.averageMoney.text = [NSString stringWithFormat:@"%f",shopModel.perCpitaConsumption];
+                
+            }else{
+            
+                cell.averageMoney.text = @"暂无数据";
+            }
+            
             
             if([self.distanceFromAtoB count]){
             
@@ -564,6 +573,17 @@ static NSInteger _start = 10;
         cell.TheShopName.text = shopModel.shopName;//商铺名
         cell.TheShopAddress.text = [NSString stringWithFormat:@"%@ | %@",shopModel.typeName,shopModel.circleName];//商铺地址
         [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//店铺头像
+        
+        if(shopModel.perCpitaConsumption){
+            
+            cell.averageMoney.text = [NSString stringWithFormat:@"%f",shopModel.perCpitaConsumption];
+            
+        }else{
+            
+            cell.averageMoney.text = @"暂无数据";
+        }
+        
+
         
         if([self.distanceFromAtoB count]){
             

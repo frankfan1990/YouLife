@@ -75,6 +75,7 @@
         self.averageMoney.font = [UIFont systemFontOfSize:12];
         [self.contentView addSubview:self.averageMoney];
         self.averageMoney.text = @"20";
+        self.averageMoney.adjustsFontSizeToFitWidth = YES;
         
         /*位置小标志*/
         _locationView =[[UIImageView alloc]initWithFrame:CGRectMake(240+5, 58, 16, 17)];

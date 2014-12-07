@@ -13,7 +13,18 @@
 #import <TMCache.h>
 #import "POP/POP.h"//用来处理“三大模块”的标示旋转动画
 
+#import <AFNetworking.h>
+#import "Reachability.h"
+#import "ProgressHUD.h"
+#import "UIImageView+WebCache.h"
+#import "ShopObjectModel.h"
+#import "convert2_new.h"
+#import "convert_oc.h"
 
+const NSString *text_html_sports = @"text/html";
+const NSString *application_json_sports = @"application/json";
+
+static NSInteger _start = 10;
 
 @interface SportsFitnessViewController ()
 {
@@ -22,7 +33,10 @@
     NSMutableArray *statuRecode_array;
     /*modul_end*////
     NSMutableArray *storeTheTag;//存储点击的tag
-
+    
+    //
+    NSMutableArray *shopObjcList_sports;
+    Reachability *_reachAbility_sports;
 
 }
 
@@ -35,7 +49,7 @@
 @property (nonatomic,strong)UIImageView *arrow3;
 
 @property (nonatomic,strong)PdownMenuViewController *downMenu;
-
+@property (nonatomic,strong)TMCache *tmcache_sports;
 @end
 
 @implementation SportsFitnessViewController
@@ -154,8 +168,50 @@
     [self.view addSubview:headerLine];
     
     
+#pragma mark - 网络请求开始
+    /**
+     *  @author frankfan, 14-12-06 21:12:26
+     *
+     *  开始进行网络请求
+     *
+     *  @return
+     */
+    
+    self.tmcache_sports =[[TMCache alloc]initWithName:@"sportShop_cache"];//初始化一个缓存对象
+    _reachAbility_sports =[Reachability reachabilityWithHostName:@"www.baidu.com"];
+    
+    if([self.tmcache_sports objectForKey:@"key_sportShop_cache"]){
+        
+        NSDictionary *resultDict = [self.tmcache_sports objectForKey:@"key_sportShop_cache"];
+        shopObjcList_sports = [[resultDict objectForKey:@"data"] mutableCopy];
+    }
     
     
+    AFHTTPRequestOperationManager *manager =[self createNetworkRequestObjc:application_json_sports];
+    NSDictionary *parameters = @{api_typeId:self.shopType_sports,api_start:@0,api_limit:@10};
+    if([_reachAbility_sports isReachable]){//网络正常
+    
+        [manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSDictionary *tempDict = (NSDictionary *)responseObject;
+            shopObjcList_sports = [tempDict[@"data"]mutableCopy];
+            
+            [self.tableView reloadData];
+            [self.tmcache_sports setObject:tempDict forKey:@"key_sportShop_cache"];
+            
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@"error:%@",[error localizedDescription]);
+            [ProgressHUD showError:@"网络异常"];
+        }];
+        
+
+    
+    }else{//网络异常
+    
+        [ProgressHUD showError:@"网络异常"];
+    }
     
     
     
@@ -324,13 +380,6 @@
         [[NSNotificationCenter defaultCenter]postNotificationName:kPassLeftData_0 object:flag];
     }
     
-    
-    
-    
-    
-    
-    
-    
 }
 
 
@@ -340,7 +389,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     
-    return 10+2;/*fake date*/
+    return [shopObjcList_sports count];
 }
 
 
@@ -349,6 +398,66 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     MainPageCustomTableViewCell *cell =[MainPageCustomTableViewCell cellWithTableView:tableView];
+    if([shopObjcList_sports count]){
+    
+        NSDictionary *tempDict = shopObjcList_sports[indexPath.row];
+        ShopObjectModel *shopObjcModel =[ShopObjectModel modelWithDictionary:tempDict error:nil];
+        
+        [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopObjcModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//头像
+
+        cell.TheShopName.text = shopObjcModel.shopName;//店铺名
+        
+        cell.aboutUpay.text = shopObjcModel.shopTitle;//U币
+        
+        if([shopObjcModel.tagWords length] && [shopObjcModel.circleName length]){//标签&所属商圈
+        
+            cell.TheShopAddress.text = [NSString stringWithFormat:@"%@ | %@",shopObjcModel.tagWords,shopObjcModel.circleName];
+            
+        }else{
+            
+            if([shopObjcModel.tagWords length]){
+            
+                cell.TheShopAddress.text = shopObjcModel.tagWords;
+                
+            }else{
+                
+                cell.TheShopAddress.text = shopObjcModel.circleName;
+            }
+        
+        }
+        
+        if(shopObjcModel.perCpitaConsumption){//人均消费
+            
+            cell.averageMoney.text = [NSString stringWithFormat:@"%f",shopObjcModel.perCpitaConsumption];
+        }else{
+        
+            cell.averageMoney.text = @"暂无数据";
+        }
+        
+        if([[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation][@"lat"] && shopObjcModel.lat){//已有定位数据
+        
+            //将对象坐标转成火星坐标
+            double mar_lat,mar_lng;//目的坐标
+            NSDictionary *destinationDict = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation];
+            double originLat = [destinationDict[@"lat"]doubleValue];//当前坐标
+            double originLng = [destinationDict[@"lng"]doubleValue];
+            
+            bd_decrypt_new(shopObjcModel.lat, shopObjcModel.lng, &mar_lat, &mar_lng);
+            double distanceFromAToB = [convert_oc LantitudeLongitudeDist:mar_lng andlat:mar_lat andlon2:originLng andlat2:originLat];
+            cell.distanceFromShop.text = [NSString stringWithFormat:@"%.2fkm",distanceFromAToB/1000.0];
+            
+            
+        }else{
+        
+            cell.distanceFromShop.text = @"暂无数据";
+        }
+        
+        
+        
+        
+    }
+    
+    
     return cell;
     
     
@@ -359,6 +468,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
   
 
+    
 }
 
 
@@ -366,23 +476,73 @@
 #pragma mark 下拉刷新回调方法
 
 - (void)pullDownToReferesh{
+
+    NSDictionary *parameters = @{api_typeId:self.shopType_sports,api_start:@0,api_limit:@10};
+    AFHTTPRequestOperationManager *getShopList_manager =[self createNetworkRequestObjc:application_json_sports];
     
-#warning 模拟网络请求完毕-fake func
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    if([_reachAbility_sports isReachable]){//网络正常
         
+        //开始进行网络请求
+        //[ProgressHUD show:nil];
+        [getShopList_manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSDictionary *resultDict = (NSDictionary *)responseObject;
+            shopObjcList_sports = [[resultDict objectForKey:@"data"] mutableCopy];
+            
+            _start = 10;
+            [self.tableView reloadData];
+            
+            [self.tmcache_sports setObject:resultDict forKey:@"key_sportShop_cache"];
+            [self.tableView headerEndRefreshing];
+            //[ProgressHUD dismiss];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@".....error:%@\n",[error localizedDescription]);
+            [ProgressHUD showError:@"网络错误" Interaction:NO];
+            [self.tableView headerEndRefreshing];
+        }];
+    }else{//网络异常
+        
+        [ProgressHUD showError:@"网络异常" Interaction:NO];
         [self.tableView headerEndRefreshing];
-    });
-    
+        
+    }
     
 }
 
 #pragma mark - 上拉加载更多的回调方法
 - (void)pullUpCallBack{
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    AFHTTPRequestOperationManager *manager =[self createNetworkRequestObjc:application_json_sports];
+    NSDictionary *parameters = @{api_typeId:self.shopType_sports,api_start:[NSNumber numberWithInteger:_start],api_limit:@10};
+    if([_reachAbility_sports isReachable]){//如果网络正常
         
+        [manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSArray *tempArray = responseObject[@"data"];
+            [shopObjcList_sports addObjectsFromArray:tempArray];
+            [self.tableView reloadData];
+            _start = _start+10;
+            
+            [self.tableView footerEndRefreshing];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            [ProgressHUD showError:@"网络错误"];
+            _start = _start;
+            
+            [self.tableView footerEndRefreshing];
+        }];
+        
+        
+    }else{//网络异常
+        
+        [ProgressHUD showError:@"网络异常"];
         [self.tableView footerEndRefreshing];
-    });
+    }
+    
+
     
 }
 
@@ -394,6 +554,7 @@
     
     if(sender.tag==401){
         
+        _start = 10;
         [self.navigationController popViewControllerAnimated:YES];
     }else{
         
@@ -420,6 +581,18 @@
     self.downMenu = nil;
     
 }
+
+
+#pragma mark - 创建网络请求实体对象
+- (AFHTTPRequestOperationManager *)createNetworkRequestObjc:(const NSString *)content_type{
+
+    AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:content_type];
+    
+    return manager;
+
+}
+
 
 
 - (void)dealloc{

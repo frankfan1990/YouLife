@@ -562,6 +562,13 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
 
      NSArray *shopTypeArray = [[NSUserDefaults standardUserDefaults] objectForKey:kShopTypeArray];
+    
+    if(![shopTypeArray count]){
+        
+        [ProgressHUD showError:@"数据异常"];
+        return;
+    }
+    
     if(indexPath.row==0){
         
         FoodDetailViewController *foodDetailViewCV =[[FoodDetailViewController alloc]init];
@@ -601,7 +608,19 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     
         EducationViewController *educationController =[[EducationViewController alloc]init];
         educationController.index =indexPath.row;
-        [self.navigationController pushViewController:educationController animated:YES];
+        
+        NSDictionary *tempDict = shopTypeArray[indexPath.row];
+        educationController.shopType_education = tempDict[@"typeId"];
+        
+        if([shopTypeArray count]){
+        
+            [self.navigationController pushViewController:educationController animated:YES];
+        }else{
+        
+            [ProgressHUD showError:@"网络错误"];
+        }
+        
+        
     }else if (indexPath.row==5){
     
         MedicalViewController *medicalViewController =[[MedicalViewController alloc]init];
@@ -612,12 +631,23 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         CConvenienceViewController *cconvenceView =[[CConvenienceViewController alloc]init];
         [self.navigationController pushViewController:cconvenceView animated:YES];
         
-    }else if (indexPath.row==4){
+    }else if (indexPath.row==4){//运动健身
         
         SportsFitnessViewController *sportsViewCOntroller =[SportsFitnessViewController new];
         sportsViewCOntroller.index = indexPath.row;
-        [self.navigationController pushViewController:sportsViewCOntroller animated:YES];
-    }else if (indexPath.row==6){
+        
+        NSDictionary *tempDict = shopTypeArray[indexPath.row];
+        sportsViewCOntroller.shopType_sports = tempDict[@"typeId"];
+        if([shopTypeArray count]){
+        
+            [self.navigationController pushViewController:sportsViewCOntroller animated:YES];
+ 
+        }else{
+        
+            [ProgressHUD showError:@"网络错误"];
+        }
+        
+           }else if (indexPath.row==6){
         
         BeautyViewController *beautyViewController =[BeautyViewController new];
         beautyViewController.index = indexPath.row;

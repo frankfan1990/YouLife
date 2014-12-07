@@ -52,7 +52,6 @@
 @property (nonatomic,strong)NSArray *comments;//评价
 @property (nonatomic,copy)NSArray *businesses;
 @property (nonatomic,copy)NSString *shopTitle;//满100送50
-
 @property (nonatomic,copy)NSString *attentionId;
 @property (nonatomic,assign)BOOL attention;
 @end

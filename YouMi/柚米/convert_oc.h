@@ -11,6 +11,7 @@
 
 @interface convert_oc : NSObject
 
+//地球转火星
 + (CLLocationCoordinate2D)CLLocationCoordinate2D_transform:(CLLocationCoordinate2D)wgsCoordinate;
 
 

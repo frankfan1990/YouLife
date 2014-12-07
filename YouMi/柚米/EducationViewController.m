@@ -13,8 +13,18 @@
 #import "PdownMenuViewController.h"
 
 #import "CourseDetailsViewController.h"
+#import "ProgressHUD/ProgressHUD.h"
+#import "Reachability.h"
+#import <AFNetworking.h>
+#import "UIImageView+WebCache.h"
+#import "MJRefresh.h"
+#import <TMCache.h>
+#import "ShopObjectModel.h"
 
+const NSString *text_html_educaiotn = @"text/html";
+const NSString *application_json_education = @"application/json";
 
+static NSInteger _start = 10;
 @interface EducationViewController ()
 {
 
@@ -25,6 +35,9 @@
     
     NSMutableArray *storeTheTag;//存储点击的tag
     
+    //
+    Reachability *rechability_education;
+        
 }
 
 @property (nonatomic,strong)UIButton *button_meter;
@@ -36,6 +49,9 @@
 @property (nonatomic,strong)UIImageView *arrow3;
 
 @property (nonatomic,strong)PdownMenuViewController *downMenu;
+//
+@property (nonatomic,strong)TMCache *tmcache_education;
+@property (nonatomic,strong)NSMutableArray *shopObjects_education;//商铺对象列表
 @end
 
 @implementation EducationViewController
@@ -167,6 +183,60 @@
     
 #pragma mark - 上拉加载更多
     [self.tableView addFooterWithTarget:self action:@selector(pullUpCallBack)];
+
+    
+#pragma mark - 开始进来进行网络请求
+    /**
+     *  @Author frankfan, 14-11-20 11:11:28
+     *
+     *  从这里开始网络请求,这里的逻辑是：先从本地缓存读取数据，如果有就呈现，然后进行网络请求
+     *  如果没有缓存，就直接进行网络请求
+     *  这里缓存逻辑的目的并非节省用户流量，而是“尽快”给用户显示内容
+     *  @return
+     */
+    
+    self.tmcache_education =[[TMCache alloc]initWithName:@"educationShop_cache"];//初始化一个缓存对象
+    rechability_education =[Reachability reachabilityWithHostName:@"www.baidu.com"];
+    
+    if([self.tmcache_education objectForKey:@"key_educationShop_cache"]){
+        
+        NSDictionary *resultDict = [self.tmcache_education objectForKey:@"key_educationShop_cache"];
+        self.shopObjects_education = [[resultDict objectForKey:@"data"] mutableCopy];
+    }
+
+    NSDictionary *parameters = @{api_typeId:self.shopType_education,api_start:@0,api_limit:@10};
+    AFHTTPRequestOperationManager *getShopList_manager =[self createNetworkRequstObjc:application_json_education];
+  
+    if([rechability_education isReachable]){//网络正常
+        
+        //开始进行网络请求
+        //[ProgressHUD show:nil];
+        [getShopList_manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSDictionary *resultDict = (NSDictionary *)responseObject;
+            self.shopObjects_education = [[resultDict objectForKey:@"data"] mutableCopy];
+            
+            
+            [self.tableView reloadData];
+            
+            [self.tmcache_education setObject:resultDict forKey:@"key_educationShop_cache"];
+            
+            //[ProgressHUD dismiss];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@".....error:%@\n",[error localizedDescription]);
+            [ProgressHUD showError:@"网络错误" Interaction:NO];
+        }];
+    }else{//网络异常
+        
+        [ProgressHUD showError:@"网络异常" Interaction:NO];
+    }
+
+    
+    
+    
+    
     
     
     
@@ -345,22 +415,11 @@
 
 
 
-#pragma mark 搜索以及回退按钮回调
-- (void)navi_buttonClicked:(UIButton *)sender{
-
-    if (sender.tag==401) {
-        
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-
-}
-
-
 #pragma mark cell的生成个数
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
 
-    return 10+2;/*fake data 这是应该是数据源中得数据个数*/
+    return [self.shopObjects_education count];
 }
 
 
@@ -379,12 +438,17 @@
         [cell.locationView removeFromSuperview];
         ///////////////
         
-        /*fake data 从数据源数组中获取*/
-        cell.TheShopName.text = @"工商管理";
-        cell.TheShopAddress.text = @"家里蹲大学";
+        if([self.shopObjects_education count]){
         
-        
-    }
+            NSDictionary *tempDict = self.shopObjects_education[indexPath.row];
+            ShopObjectModel *shopObjcModel =[ShopObjectModel modelWithDictionary:tempDict error:nil];
+            
+            cell.TheShopName.text = shopObjcModel.shopName;//商铺名
+            cell.TheShopAddress.text = shopObjcModel.circleName;//所属商圈
+            [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopObjcModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];//头像
+            cell.aboutUpay.text = shopObjcModel.shopTitle;
+        }
+     }
     
 
     return cell;
@@ -416,28 +480,77 @@
 
 
 
-#pragma mark 下拉刷新回调 fake Func
+#pragma mark 下拉刷新
 
 - (void)pullDownReferesh{
 
-#warning 模拟刷新结束
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    NSDictionary *parameters = @{api_typeId:self.shopType_education,api_start:@0,api_limit:@10};
+    AFHTTPRequestOperationManager *getShopList_manager =[self createNetworkRequstObjc:application_json_education];
+    
+    if([rechability_education isReachable]){//网络正常
         
+        //开始进行网络请求
+        //[ProgressHUD show:nil];
+        [getShopList_manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSDictionary *resultDict = (NSDictionary *)responseObject;
+            self.shopObjects_education = [[resultDict objectForKey:@"data"] mutableCopy];
+            
+            _start = 10;
+            [self.tableView reloadData];
+            
+            [self.tmcache_education setObject:resultDict forKey:@"key_educationShop_cache"];
+            [self.tableView headerEndRefreshing];
+            //[ProgressHUD dismiss];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@".....error:%@\n",[error localizedDescription]);
+            [ProgressHUD showError:@"网络错误" Interaction:NO];
+            [self.tableView headerEndRefreshing];
+        }];
+    }else{//网络异常
+        
+        [ProgressHUD showError:@"网络异常" Interaction:NO];
         [self.tableView headerEndRefreshing];
-    });
-
-
+        
+    }
+    
 }
+
 
 
 #pragma mark - 上拉加载更多的回调方法
 - (void)pullUpCallBack{
+  
+    AFHTTPRequestOperationManager *manager =[self createNetworkRequstObjc:application_json_education];
+    NSDictionary *parameters = @{api_typeId:self.shopType_education,api_start:[NSNumber numberWithInteger:_start],api_limit:@10};
+    if([rechability_education isReachable]){//如果网络正常
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSArray *tempArray = responseObject[@"data"];
+            [self.shopObjects_education addObjectsFromArray:tempArray];
+            [self.tableView reloadData];
+            _start = _start+10;
+            
+            [self.tableView footerEndRefreshing];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            [ProgressHUD showError:@"网络错误"];
+            _start = _start;
+            
+            [self.tableView footerEndRefreshing];
+        }];
         
-        [self.tableView footerEndRefreshing];
-    });
     
+    }else{//网络异常
+    
+        [ProgressHUD showError:@"网络异常"];
+        [self.tableView footerEndRefreshing];
+    }
+ 
 }
 
 
@@ -460,6 +573,32 @@
     [statuRecode_array removeAllObjects];
     [storeTheTag removeAllObjects];
     self.downMenu = nil;
+    
+}
+
+
+
+
+
+
+
+#pragma mark - 创建网络请求实体对象
+- (AFHTTPRequestOperationManager *)createNetworkRequstObjc:(const NSString *)content_type{
+
+    AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:content_type];
+    
+    return manager;
+}
+
+#pragma mark 搜索以及回退按钮回调
+- (void)navi_buttonClicked:(UIButton *)sender{
+    
+    if (sender.tag==401) {
+        
+        _start = 10;
+        [self.navigationController popViewControllerAnimated:YES];
+    }
     
 }
 
