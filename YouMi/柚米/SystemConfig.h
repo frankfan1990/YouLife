@@ -103,11 +103,6 @@
 
 
 
-
-
-
-
-
 /*接口字段*/
 #define phoneNum @"telphone" //用户手机号码
 #define api_passWord @"passWord" //用户密码
@@ -229,6 +224,7 @@
  *  从后台拉取商品列表信息
  */
 //接口
+//#define API_ShopList @"http://192.168.1.116:8080/youmi/shop/list"
 #define API_ShopList @"http://120.24.71.104:8080/youmi/shop/list"
 #define api_typeId @"typeId"
 #define api_start @"start"//分页起始位置

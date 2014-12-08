@@ -873,7 +873,7 @@
 		[scanner scanUpToString:@">" intoString:&text];
 		
 		NSString *delimiter = [NSString stringWithFormat:@"%@>", text];
-		int position = [data rangeOfString:delimiter].location;
+		NSInteger position = [data rangeOfString:delimiter].location;
 		if (position!=NSNotFound)
 		{
 			if ([delimiter rangeOfString:@"<p"].location==0)
@@ -882,7 +882,12 @@
 			}
 			else
 			{
-				data = [data stringByReplacingOccurrencesOfString:delimiter withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(last_position, position+delimiter.length-last_position)];
+                if([data length]>=position+delimiter.length-last_position+last_position){
+                
+                    data = [data stringByReplacingOccurrencesOfString:delimiter withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(last_position, position+delimiter.length-last_position)];
+                
+                }
+				
 			}
 			
 			data = [data stringByReplacingOccurrencesOfString:@"&lt;" withString:@"<"];

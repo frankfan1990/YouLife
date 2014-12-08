@@ -101,17 +101,7 @@
     self.phoneNumber.userInteractionEnabled = YES;
     [self.phoneNumber addTarget:self action:@selector(jumpToLandUI) forControlEvents:UIControlEventTouchUpInside];
     [headerImageView addSubview:self.phoneNumber];
-    
-    
-//    self.phoneNumber =[[UILabel alloc]initWithFrame:CGRectMake(self.view.bounds.size.width/2.0-70, 115, 140, 30)];
-//    self.phoneNumber.textColor =[UIColor whiteColor];
-//    self.phoneNumber.textAlignment = NSTextAlignmentCenter;
-//    self.phoneNumber.font = [UIFont systemFontOfSize:12.5];
-//    [headerImageView addSubview:self.phoneNumber];
-    
 
-    
-    
     
     /*创建tableView*/
     self.tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 218, self.view.bounds.size.width, self.view.bounds.size.height-49-115) style:UITableViewStylePlain];
@@ -128,9 +118,6 @@
     itemNames = @[@"我的购物车",@"我的订单",@"我的U币",@"我的关注",@"我的点评",@"我的预约"];
     
     
-
-    
-    
     
     // Do any additional setup after loading the view.
 }
@@ -141,16 +128,30 @@
 - (void)viewWillAppear:(BOOL)animated{
 
     [super viewWillAppear:animated];
-    Userinfo *userinfo =[Userinfo modelWithDictionary:[[TMCache sharedCache]objectForKey:kUserInfo] error:nil];
+
+    NSDictionary *tempDict =[[TMCache sharedCache]objectForKey:kUserInfo];
+    Userinfo *userinfo = [Userinfo modelWithDictionary:tempDict error:nil];
     
-    if([userinfo.avatar length]){
+    NSString *headerImageString = [[TMCache sharedCache]objectForKey:@"headerImage"];
+    
+    if([headerImageString length]){
         
-        NSURL *userHeaderImageURL = [NSURL URLWithString:userinfo.avatar];
-        [self.headerImage sd_setBackgroundImageWithURL:userHeaderImageURL forState:UIControlStateNormal];
+        NSURL *userHeaderImageURL = [NSURL URLWithString:headerImageString];
+        
+        [self.headerImage sd_setImageWithURL:userHeaderImageURL forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"头像啊"]];
         
     }else{
         
-        [self.headerImage setBackgroundImage:nil forState:UIControlStateNormal];
+        if([userinfo.avatar length]){
+            
+            [self.headerImage sd_setImageWithURL:[NSURL URLWithString:userinfo.avatar] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"头像啊"]];
+        }else{
+        
+            [self.headerImage setImage:[UIImage imageNamed:@"头像啊"] forState:UIControlStateNormal];
+
+        }
+        
+//        [self.headerImage setImage:[UIImage imageNamed:@"头像啊"] forState:UIControlStateNormal];
     }
     
     if([userinfo.telphone length]){
@@ -205,8 +206,6 @@
 }
 
 
-
-
 #pragma mark 登陆回调
 /*alertView 回调*/
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -226,9 +225,6 @@
 
 
 }
-
-
-
 
 
 #pragma mark tableView 代理-cell个数
@@ -276,7 +272,6 @@
     return cell;
 
 }
-
 
 
 

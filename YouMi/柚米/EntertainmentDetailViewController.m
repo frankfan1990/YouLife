@@ -21,6 +21,7 @@
 #import "convert2_new.h"
 #import "ShopObjectModel.h"
 #import "UIImageView+WebCache.h"
+#import "ShopDetailViewController.h"
 
 static NSInteger _start = 10;
 @interface EntertainmentDetailViewController ()
@@ -588,6 +589,30 @@ static NSInteger _start = 10;
 }
 
 
+#pragma mark - cell被点击触发
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    if([_shopObjects_entertainment count]){
+    
+        NSDictionary *tempDict = _shopObjects_entertainment[indexPath.row];
+        ShopObjectModel *shopObjcModel = [ShopObjectModel modelWithDictionary:tempDict error:nil];
+        
+        ShopDetailViewController *shopDetailController =[ShopDetailViewController new];
+        shopDetailController.shopModel = shopObjcModel;
+        
+        NSDictionary *locationdict =[[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation];
+        shopDetailController.originPosition = CLLocationCoordinate2DMake([locationdict[@"lat"]doubleValue], [locationdict[@"lng"]doubleValue]);
+        
+        [self.navigationController pushViewController:shopDetailController animated:YES];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+    }else{
+    
+        [ProgressHUD showError:@"暂无数据"];
+    }
+    
+
+}
 
 
 

@@ -192,7 +192,7 @@
         self.headerImage.layer.cornerRadius = 5;
         self.headerImage.layer.masksToBounds = YES;
 
-        if(!self.headerImage.imageView.image){
+        if(!self.headerImage.currentImage){
         
             self.headerImage.backgroundColor = customGrayColor;
         }
@@ -485,18 +485,18 @@
 
 
 
-
 #pragma mark 退出登录触发
 - (void)logOutButtonClicked:(UIButton *)sender{
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         [[TMCache sharedCache]removeObjectForKey:kUserInfo];
+        [[TMCache sharedCache]removeObjectForKey:@"headerImage"];
         [self.navigationController popViewControllerAnimated:YES];
 
     });
-    
-    }
+ 
+}
 
 
 
@@ -589,7 +589,7 @@
                 if([result[@"success"]integerValue]==1){//如果头像修改成功，则：
 
                     [self.headerImage setBackgroundImage:[UIImage imageWithData:imageData] forState:UIControlStateNormal];
-                    [[TMCache sharedCache]setObject:result[@"data"] forKey:kUserInfo];
+                    [[TMCache sharedCache]setObject:result[@"data"] forKey:@"headerImage"];
                     
                     [ProgressHUD showSuccess:@"修改成功" Interaction:NO];
                 }
@@ -885,11 +885,15 @@
     NSLog(@"..error:%@",[error localizedDescription]);
     
    
+    NSString *headerImageString = [[TMCache sharedCache]objectForKey:@"headerImage"];
     
     //用户头像显示
-    if([userinfo.avatar length]){
+    if([headerImageString length]){
         
-        [self.headerImage sd_setBackgroundImageWithURL:[NSURL URLWithString:userinfo.avatar] forState:UIControlStateNormal];
+        [self.headerImage sd_setImageWithURL:[NSURL URLWithString:headerImageString] forState:UIControlStateNormal placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            
+            [self.tableView reloadData];
+        }];
         
     }
     
@@ -919,8 +923,6 @@
 
         }
     }
-
-
 
 }
 

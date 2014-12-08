@@ -40,6 +40,7 @@
 		6317A56819F63FCE009E332F /* ModBindPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6317A56719F63FCE009E332F /* ModBindPhoneViewController.m */; };
 		6317A57219F6A1F7009E332F /* 确定.png in Resources */ = {isa = PBXBuildFile; fileRef = 6317A57119F6A1F7009E332F /* 确定.png */; };
 		6323AD961A2EDC0300454737 /* CycleDisplayImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323AD951A2EDC0300454737 /* CycleDisplayImage.m */; };
+		6323ADE41A3564EC00454737 /* BeautyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6323ADE31A3564EC00454737 /* BeautyTableViewCell.m */; };
 		6325D8D71A020F73001DA5BD /* MyUBiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8D61A020F73001DA5BD /* MyUBiViewController.m */; };
 		6325D8DA1A021514001DA5BD /* MyCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8D91A021514001DA5BD /* MyCommentViewController.m */; };
 		6325D8DE1A022481001DA5BD /* CourseDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325D8DD1A022481001DA5BD /* CourseDetailsViewController.m */; };
@@ -388,6 +389,8 @@
 		6317A57119F6A1F7009E332F /* 确定.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "确定.png"; sourceTree = "<group>"; };
 		6323AD941A2EDC0300454737 /* CycleDisplayImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CycleDisplayImage.h; sourceTree = "<group>"; };
 		6323AD951A2EDC0300454737 /* CycleDisplayImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CycleDisplayImage.m; sourceTree = "<group>"; };
+		6323ADE21A3564EC00454737 /* BeautyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeautyTableViewCell.h; sourceTree = "<group>"; };
+		6323ADE31A3564EC00454737 /* BeautyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeautyTableViewCell.m; sourceTree = "<group>"; };
 		6325D8D51A020F73001DA5BD /* MyUBiViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyUBiViewController.h; sourceTree = "<group>"; };
 		6325D8D61A020F73001DA5BD /* MyUBiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyUBiViewController.m; sourceTree = "<group>"; };
 		6325D8D81A021514001DA5BD /* MyCommentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCommentViewController.h; sourceTree = "<group>"; };
@@ -1741,6 +1744,8 @@
 			children = (
 				63B7AA3519AEFF9F00AAE30A /* MainPageCustomTableViewCell.h */,
 				63B7AA3619AEFF9F00AAE30A /* MainPageCustomTableViewCell.m */,
+				6323ADE21A3564EC00454737 /* BeautyTableViewCell.h */,
+				6323ADE31A3564EC00454737 /* BeautyTableViewCell.m */,
 				6397103D19B5574500793A3D /* LuggageBagsTableViewCell.h */,
 				6397103E19B5574500793A3D /* LuggageBagsTableViewCell.m */,
 				6397104019B56F9400793A3D /* ClassificationTableViewCell.h */,
@@ -2259,6 +2264,7 @@
 				63B915B519B99D55006F09EC /* SDWebImageManager.m in Sources */,
 				6325D8D71A020F73001DA5BD /* MyUBiViewController.m in Sources */,
 				637B40FC19F0B32500A63BC6 /* PersonalSettingsViewController.m in Sources */,
+				6323ADE41A3564EC00454737 /* BeautyTableViewCell.m in Sources */,
 				63541B4419FFF17B001EC683 /* PMSelectionView.m in Sources */,
 				633E457119AD7A7C001D8F75 /* main.m in Sources */,
 				63B9158919B992CE006F09EC /* CycleScrollView.m in Sources */,

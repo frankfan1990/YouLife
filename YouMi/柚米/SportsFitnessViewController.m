@@ -20,6 +20,8 @@
 #import "ShopObjectModel.h"
 #import "convert2_new.h"
 #import "convert_oc.h"
+#import "ShopObjectModel.h"
+#import "ShopDetailViewController.h"
 
 const NSString *text_html_sports = @"text/html";
 const NSString *application_json_sports = @"application/json";
@@ -369,7 +371,6 @@ static NSInteger _start = 10;
             
         });
         
-        
     }
     
     //if(self.downMenu && sender.tag==1001)
@@ -381,7 +382,6 @@ static NSInteger _start = 10;
     }
     
 }
-
 
 
 #pragma mark tableView生成cell的个数
@@ -452,14 +452,10 @@ static NSInteger _start = 10;
             cell.distanceFromShop.text = @"暂无数据";
         }
         
-        
-        
-        
     }
     
     
     return cell;
-    
     
 }
 
@@ -467,10 +463,27 @@ static NSInteger _start = 10;
 #pragma mark cell被选择触发动作
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
   
+    if([shopObjcList_sports count]){
+    
+        NSDictionary *tempDict = shopObjcList_sports[indexPath.row];
+        ShopObjectModel *shopobjcModel = [ShopObjectModel modelWithDictionary:tempDict error:nil];
+        
+        ShopDetailViewController *shopdetailController =[ShopDetailViewController new];
+        shopdetailController.shopModel = shopobjcModel;
+        
+        NSDictionary *locationdict = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation];
+        shopdetailController.originPosition = CLLocationCoordinate2DMake([locationdict[@"lat"]doubleValue], [locationdict[@"lng"]doubleValue]);
+        
+        [self.navigationController pushViewController:shopdetailController animated:YES];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    }else{
+    
+        [ProgressHUD showError:@"数据异常"];
+    }
 
     
 }
-
 
 
 #pragma mark 下拉刷新回调方法
@@ -541,8 +554,6 @@ static NSInteger _start = 10;
         [ProgressHUD showError:@"网络异常"];
         [self.tableView footerEndRefreshing];
     }
-    
-
     
 }
 

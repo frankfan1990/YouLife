@@ -8,6 +8,7 @@
 
 
 #import <UIKit/UIKit.h>
+#import "ShopObjectModel.h"
 
 @interface EntertainmentDetailViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
 

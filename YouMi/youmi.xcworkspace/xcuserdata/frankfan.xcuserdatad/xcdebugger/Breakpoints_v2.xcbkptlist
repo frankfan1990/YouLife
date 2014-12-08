@@ -9,14 +9,23 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "&#x67da;&#x7c73;/TuristhotelletViewController.m"
-            timestampString = "436174576.821248"
+            filePath = "&#x67da;&#x7c73;/PersonalSettingsViewController.m"
+            timestampString = "439720154.262087"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
-            landmarkName = "-buttonClicked:"
+            startingLineNumber = "776"
+            endingLineNumber = "776"
+            landmarkName = "-navi_buttonClicked:"
             landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.AddressBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            symbolName = "*0x3288e4f4">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -25,13 +34,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "&#x67da;&#x7c73;/PersonalSettingsViewController.m"
-            timestampString = "436949621.424427"
+            filePath = "&#x67da;&#x7c73;/ActivityDetailViewController.m"
+            timestampString = "439725753.01196"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "776"
-            endingLineNumber = "776"
-            landmarkName = "-navi_buttonClicked:"
+            startingLineNumber = "1304"
+            endingLineNumber = "1304"
+            landmarkName = "-handleStringForRTLabel:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

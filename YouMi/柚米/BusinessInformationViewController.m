@@ -20,6 +20,9 @@
     NSString *busInformation;//公交信息
     
     CGFloat webViewHeight;
+    //
+    RTLabel *rtlabel;
+    CGFloat rtlabelHeight;
     
 }
 @property (nonatomic,strong)UITableView *tableView;
@@ -72,6 +75,12 @@
     footerView.backgroundColor = customGrayColor;
     self.tableView.tableFooterView = footerView;
 
+    
+    //
+    rtlabel =[[RTLabel alloc]initWithFrame:CGRectMake(10, 10, self.view.bounds.size.width-10-10-10, 0)];
+    
+    
+    
     // Do any additional setup after loading the view.
 }
 
@@ -189,9 +198,19 @@
         
         if(indexPath.row==4 || indexPath.row==6){
             
+            if(indexPath.row==6){
             
-            [detailInfoLabel loadHTMLString:shopInfo[indexPath.row] baseURL:nil];//webView加载富文本
-            [cell2.contentView addSubview:detailInfoLabel];
+                [detailInfoLabel loadHTMLString:shopInfo[indexPath.row] baseURL:nil];//webView加载富文本
+                [cell2.contentView addSubview:detailInfoLabel];
+
+            }else{
+            
+                rtlabel.text = shopInfo[indexPath.row];
+                CGFloat height = rtlabel.optimumSize.height;
+                rtlabel.frame = CGRectMake(10, 10, self.view.bounds.size.width-10-10-10, height+80);
+                [cell2.contentView addSubview:rtlabel];
+            }
+            
         }
     
         
@@ -218,11 +237,27 @@
         
         if(indexPath.row==4 || indexPath.row==6){
         
-            
             NSString *text = [shopInfo objectAtIndex:[indexPath row]];
-            CGFloat height = MAX([self caculateTheTextHeight:text andFontSize:14], 44.0f);
+
+            if(indexPath.row==6){
+                
+                CGFloat height = MAX([self caculateTheTextHeight:text andFontSize:14], 44.0f);
+                
+                return height+20;
             
-            return height + 20;
+            }else{
+            
+                
+                rtlabel.text = text;
+                CGSize size = rtlabel.optimumSize;
+                rtlabelHeight = size.height;
+                
+                CGFloat height = MAX(size.height, 44.0f);
+                
+                return height + 20;
+            }
+            
+           
            
         }
         

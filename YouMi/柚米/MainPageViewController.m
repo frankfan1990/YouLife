@@ -625,7 +625,19 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     
         MedicalViewController *medicalViewController =[[MedicalViewController alloc]init];
         medicalViewController.index = indexPath.row;
-        [self.navigationController pushViewController:medicalViewController animated:YES];
+        
+        NSDictionary *tempDict = shopTypeArray[indexPath.row];
+        medicalViewController.shopType_medica = tempDict[@"typeId"];
+        if([shopTypeArray count]){
+        
+           [self.navigationController pushViewController:medicalViewController animated:YES];
+            
+        }else{
+        
+            [ProgressHUD showError:@"网络错误"];
+        }
+        
+        
     }else if (indexPath.row==3){
     
         CConvenienceViewController *cconvenceView =[[CConvenienceViewController alloc]init];
@@ -651,12 +663,18 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         
         BeautyViewController *beautyViewController =[BeautyViewController new];
         beautyViewController.index = indexPath.row;
-        [self.navigationController pushViewController:beautyViewController animated:YES];
         
+               NSDictionary *tempDict = shopTypeArray[indexPath.row];
+               beautyViewController.shopType_beauty = tempDict[@"typeId"];
+               [self.navigationController pushViewController:beautyViewController animated:YES];
+
     }else{
         
         TuristhotelletViewController *turisthotel = [TuristhotelletViewController new];
         turisthotel.index = indexPath.row;
+        
+        NSDictionary *tempDict = shopTypeArray[indexPath.row];
+        turisthotel.shopType_turist = tempDict[@"typeId"];
         [self.navigationController pushViewController:turisthotel animated:YES];
     }
     

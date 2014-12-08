@@ -12,6 +12,19 @@
 #import "PdownMenuViewController.h"
 #import "POP/POP.h"
 
+#import <TMCache.h>
+#import <AFNetworking.h>
+#import "UIImageView+WebCache.h"
+#import "Reachability.h"
+#import "ProgressHUD.h"
+#import "ShopObjectModel.h"
+#import "ShopDetailViewController.h"
+
+const NSString *text_html_medical = @"text/html";
+const NSString *application_json_medical = @"application/json";
+
+static NSInteger _start = 10;
+
 @interface MedicalViewController ()
 {
 
@@ -20,7 +33,10 @@
     NSMutableArray *statuRecode_array;
     /*modul_end*////
     NSMutableArray *storeTheTag;//存储点击的tag
-
+    
+    //
+    Reachability *_reachability_medical;
+    NSMutableArray *shopList_medical;
 }
 
 @property (nonatomic,strong)UIButton *button_meter;
@@ -32,6 +48,8 @@
 @property (nonatomic,strong)UIImageView *arrow3;
 
 @property (nonatomic,strong)PdownMenuViewController *downMenu;
+
+@property (nonatomic,strong)TMCache *tmcache_medical;
 @end
 
 @implementation MedicalViewController
@@ -161,12 +179,67 @@
     
     
     
+#pragma mark - 网络请求开始
+    /**
+     *  @author frankfan, 14-12-06 21:12:26
+     *
+     *  开始进行网络请求
+     *
+     *  @return
+     */
     
+    self.tmcache_medical =[[TMCache alloc]initWithName:@"medicalShop_cache"];//初始化一个缓存对象
+    _reachability_medical =[Reachability reachabilityWithHostName:@"www.baidu.com"];
     
+    if([self.tmcache_medical objectForKey:@"key_medicalShop_cache"]){
+        
+        NSDictionary *resultDict = [self.tmcache_medical objectForKey:@"key_medicalShop_cache"];
+        shopList_medical = [[resultDict objectForKey:@"data"] mutableCopy];
+    }
+    
+    AFHTTPRequestOperationManager *manager =[self createNetworkRequestObjc:application_json_medical];
+    NSDictionary *parameters = @{api_typeId:self.shopType_medica,api_start:@0,api_limit:@10};
+    if([_reachability_medical isReachable]){//网络正常
+        
+        [manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSDictionary *tempDict = (NSDictionary *)responseObject;
+            shopList_medical = [tempDict[@"data"]mutableCopy];
+            
+            [self.tableView reloadData];
+            [self.tmcache_medical setObject:tempDict forKey:@"key_medicalShop_cache"];
+            
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@"error:%@",[error localizedDescription]);
+            [ProgressHUD showError:@"网络异常"];
+        }];
+        
+        
+    }else{//网络异常
+        
+        [ProgressHUD showError:@"网络异常"];
+    }
+    
+ 
     
     
     // Do any additional setup after loading the view.
 }
+
+
+#pragma mark - 创建网络请求实体
+- (AFHTTPRequestOperationManager *)createNetworkRequestObjc:(const NSString *)content_type{
+    
+    AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:content_type];
+    
+    return manager;
+}
+
+
+
 
 
 #pragma mark 导航栏按钮回调
@@ -175,6 +248,7 @@
 
     if(sender.tag==401){
     
+        _start = 10;
         [self.navigationController popViewControllerAnimated:YES];
     }
     
@@ -348,7 +422,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
 
-    return 10+2;/*fake data 需要返回数据数组中个数*/
+    return [shopList_medical count];
 }
 
 
@@ -369,9 +443,31 @@
         [cell.locationView removeFromSuperview];
         [cell.TheShopAddress removeFromSuperview];
         
-        /*fake data*/
-        cell.TheShopName.text = @"阿司匹林";
+       //
+        if([shopList_medical count]){
+            
+            NSDictionary *tempDict = shopList_medical[indexPath.row];
+            ShopObjectModel *shopObjcModel =[ShopObjectModel modelWithDictionary:tempDict error:nil];
+           
+            if([shopObjcModel.header length]){
+            
+                [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopObjcModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//头像
+            }
+            
+            cell.TheShopName.text = shopObjcModel.shopName;
+            
+            if([shopObjcModel.shopTitle length]){
+                
+                cell.aboutUpay.text = shopObjcModel.shopTitle;
+                
+            }else{
+                
+                cell.aboutUpay.text = @"暂无数据";
+            }
+            
         
+        }
+      
     }
 
 
@@ -379,32 +475,91 @@
 }
 
 
+#pragma mark - cell被点击
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+    
+}
+
+
+
+
+
 #pragma mark - 下拉刷新
 
 - (void)pullDownRefresh{
 
-#warning 模拟刷新结束
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        [self.tableView headerEndRefreshing];
-    });
+    NSDictionary *parameters = @{api_typeId:self.shopType_medica,api_start:@0,api_limit:@10};
+    AFHTTPRequestOperationManager *getShopList_manager =[self createNetworkRequestObjc:application_json_medical];
     
+    if([_reachability_medical isReachable]){//网络正常
+        
+        //开始进行网络请求
+        //[ProgressHUD show:nil];
+        [getShopList_manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSDictionary *resultDict = (NSDictionary *)responseObject;
+            shopList_medical = [[resultDict objectForKey:@"data"] mutableCopy];
+            
+            _start = 10;
+            [self.tableView reloadData];
+            
+            [self.tmcache_medical setObject:resultDict forKey:@"key_medicalShop_cache"];
+            [self.tableView headerEndRefreshing];
+            //[ProgressHUD dismiss];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@".....error:%@\n",[error localizedDescription]);
+            [ProgressHUD showError:@"网络错误" Interaction:NO];
+            [self.tableView headerEndRefreshing];
+        }];
+    }else{//网络异常
+        
+        [ProgressHUD showError:@"网络异常" Interaction:NO];
+        [self.tableView headerEndRefreshing];
+        
+    }
 
-
+    
+    
 }
+
 
 
 #pragma mark - 上拉加载更多的回调方法
 - (void)pullUpCallBack{
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+ 
+    AFHTTPRequestOperationManager *manager =[self createNetworkRequestObjc:application_json_medical];
+    NSDictionary *parameters = @{api_typeId:self.shopType_medica,api_start:[NSNumber numberWithInteger:_start],api_limit:@10};
+    if([_reachability_medical isReachable]){//如果网络正常
         
+        [manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSArray *tempArray = responseObject[@"data"];
+            [shopList_medical addObjectsFromArray:tempArray];
+            [self.tableView reloadData];
+            _start = _start+10;
+            
+            [self.tableView footerEndRefreshing];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            [ProgressHUD showError:@"网络错误"];
+            _start = _start;
+            
+            [self.tableView footerEndRefreshing];
+        }];
+        
+        
+    }else{//网络异常
+        
+        [ProgressHUD showError:@"网络异常"];
         [self.tableView footerEndRefreshing];
-    });
-    
+    }
+
 }
-
-
 
 
 
@@ -423,9 +578,8 @@
     [storeTheTag removeAllObjects];
     self.downMenu = nil;
     
-  
-    
 }
+
 
 - (void)dealloc{
 
