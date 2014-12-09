@@ -192,7 +192,8 @@ static NSInteger _start = 10;
     AFHTTPRequestOperationManager *manager =[self createNetworkRequestObjc:application_json_sports];
     NSDictionary *parameters = @{api_typeId:self.shopType_sports,api_start:@0,api_limit:@10};
     if([_reachAbility_sports isReachable]){//网络正常
-    
+        
+        [ProgressHUD show:nil];
         [manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             NSDictionary *tempDict = (NSDictionary *)responseObject;
@@ -200,7 +201,7 @@ static NSInteger _start = 10;
             
             [self.tableView reloadData];
             [self.tmcache_sports setObject:tempDict forKey:@"key_sportShop_cache"];
-            
+            [ProgressHUD dismiss];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
@@ -604,6 +605,12 @@ static NSInteger _start = 10;
 
 }
 
+-(void)viewWillDisappear:(BOOL)animated{
+
+    [super viewWillDisappear:animated];
+    [ProgressHUD dismiss];
+
+}
 
 
 - (void)dealloc{

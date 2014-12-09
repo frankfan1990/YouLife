@@ -16,6 +16,14 @@
 #import "NSDate+Additions.h"
 #import "ProgressHUD/ProgressHUD.h"
 
+#import "Reachability.h"
+#import <AFNetworking.h>
+#import <TMCache.h>
+#import "Email_Phone.h"
+
+const NSString *text_html_appointment = @"text/html";
+const NSString *application_json_appointment = @"application/json";
+
 @interface AppointmentDetailViewController ()<PMCalendarControllerDelegate,KPTimePickerDelegate,ZSYPopoverListDelegate,ZSYPopoverListDatasource>
 {
     NSArray *genderArray;
@@ -34,6 +42,11 @@
     
     NSMutableArray *dateArray;//用以存放选择的日期
     NSMutableArray *dateArray2;//用以存放特殊的日期
+    
+    NSInteger sex;//性别
+    NSInteger peopleNumbers;
+    
+    Reachability *_reachability_shopDetail;
     
     
 }
@@ -214,7 +227,7 @@
 
     self.nameInput = [[UITextField alloc]initWithFrame:CGRectMake(125, 210, 100, 40)];
     self.nameInput.tag = 1001;
-    self.nameInput.textColor = [UIColor whiteColor];
+    self.nameInput.textColor = [UIColor colorWithWhite:0.35 alpha:1];
     self.nameInput.textAlignment = NSTextAlignmentCenter;
     self.nameInput.backgroundColor = customGrayColor;
     self.nameInput.layer.cornerRadius = 2;
@@ -244,7 +257,7 @@
 
     self.phoneInput = [[UITextField alloc]initWithFrame:CGRectMake(125, 275, 130, 40)];
     self.phoneInput.tag = 1002;
-    self.phoneInput.textColor = [UIColor whiteColor];
+    self.phoneInput.textColor = [UIColor colorWithWhite:0.35 alpha:1];
     self.phoneInput.textAlignment = NSTextAlignmentCenter;
     self.phoneInput.backgroundColor = customGrayColor;
     self.phoneInput.layer.cornerRadius = 2;
@@ -269,6 +282,8 @@
     [commitButton addTarget:self action:@selector(commitButtonCLicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.theLoadView addSubview:commitButton];
     
+    
+    _reachability_shopDetail =[Reachability reachabilityWithHostName:@"www.baidu.com"];
  
     // Do any additional setup after loading the view.
 }
@@ -282,10 +297,57 @@
  */
 
 
+#pragma mark - 提交订单按钮触发
 - (void)commitButtonCLicked:(UIButton *)sender{
-
-    NSLog(@"提交订单");
-
+    
+    if(![_reachability_shopDetail isReachable]){
+    
+        [ProgressHUD showError:@"网络异常"];
+        return;
+    }
+    
+    if(!isValidatePhone(self.phoneInput.text)){
+    
+        [ProgressHUD showError:@"手机号码格式错误"];
+        return;
+    }
+    
+    
+    
+    if([label1.text length]>5 && peopleNumbers && [label3.text length]>2 && [self.nameInput.text length] && [self.phoneInput.text length] && sex
+       ){//信息完整
+        
+        NSDictionary *parameters = nil;
+        NSDictionary *userinfo = [[TMCache sharedCache]objectForKey:kUserInfo];
+        NSString *memid = userinfo[memberID];
+        if([self.shopName length] && [self.shopId length]){
+        
+            parameters = @{@"shopId":self.shopId,@"shopName":self.shopName,
+                           @"memberId":memid,@"reserveDate":label1.text,
+                           @"reserveTime":label3.text,@"reserveNumber":[NSNumber numberWithInteger:peopleNumbers],
+                           @"box":[NSNumber numberWithBool:isButtonSelected],@"reserveName":self.nameInput.text,
+                           @"reservePhone":self.phoneInput.text,@"sex":[NSNumber numberWithInteger:sex]};
+        
+            AFHTTPRequestOperationManager *manager = [self createNetworkRequestObject:application_json_appointment];
+            [ProgressHUD show:nil];
+            [manager POST:API_Appointment parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                
+                NSLog(@"%@",responseObject);
+                [ProgressHUD dismiss];
+                [self.navigationController popViewControllerAnimated:YES];
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                
+                [ProgressHUD showError:@"提交失败"];
+            }];
+            
+        }
+        
+        
+    }else{//信息不完整
+        
+        [ProgressHUD showError:@"请将信息填写完整"];
+    }
 }
 
 
@@ -302,6 +364,7 @@
 
     NSInteger index =  segment.selectedSegmentIndex;
     NSLog(@"选择的是：%@",genderArray[index]);
+    sex = index+1;
 }
 
 
@@ -518,12 +581,10 @@
     UITableViewCell *cell = [tableView popoverCellForRowAtIndexPath:indexPath];
     cell.imageView.image = [UIImage imageNamed:@"fs_main_login_selected.png"];
     NSLog(@"%@", peopleCountArray[indexPath.row]);
+    peopleNumbers = [peopleCountArray[indexPath.row]integerValue];
     label2.text = [NSString stringWithFormat:@"%@人",peopleCountArray[indexPath.row]];
     
 }
-
-
-
 
 
 - (void)calendarControllerDidDismissCalendar:(PMCalendarController *)calendarController{
@@ -536,6 +597,17 @@
     [button removeFromSuperview];
 
 }
+
+
+#pragma mark - 创建网络请求实体对象
+- (AFHTTPRequestOperationManager *)createNetworkRequestObject:(const NSString *)content_type{
+
+    AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:content_type];
+    
+    return manager;
+}
+
 
 
 #pragma mark - 回退

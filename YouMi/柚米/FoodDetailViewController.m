@@ -251,7 +251,7 @@ static NSInteger _start = 10;
         if([rechability isReachable]){//网络正常
             
             //开始进行网络请求
-//            [ProgressHUD show:nil];
+            [ProgressHUD show:nil];
             [getShopList_manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
                 NSDictionary *resultDict = (NSDictionary *)responseObject;
@@ -265,7 +265,7 @@ static NSInteger _start = 10;
         
                 [self.tmCache setObject:resultDict forKey:@"key_foodShopCache"];
                 
-//                [ProgressHUD dismiss];
+                [ProgressHUD dismiss];
                 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 

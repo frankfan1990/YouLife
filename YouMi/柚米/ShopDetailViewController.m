@@ -28,6 +28,7 @@
 #import "SignInViewController.h"
 #import "ShopCollectedObjcModel.h"
 #import <TMCache.h>
+#import "SignInViewController.h"
 
 const NSString *application_josn = @"application/json";
 const NSString *text_html = @"text/html";
@@ -1247,7 +1248,7 @@ const NSString *text_html = @"text/html";
             shopperInfo.text = goodObjcModel.goodsName;
             
             //价格
-            double price = goodObjcModel.price;
+            double price = goodObjcModel.promotePrice;
             UILabel *priceLabel =(UILabel *)[cell3 viewWithTag:3003];
             priceLabel.text = [NSString stringWithFormat:@"￥%.2f",price];
             
@@ -1339,9 +1340,29 @@ const NSString *text_html = @"text/html";
 #pragma mark - 预约按钮触发 跳转
 - (void)appointmentButtonClicked{
     
-    AppointmentDetailViewController *appointmentDetail =[AppointmentDetailViewController new];
-    appointmentDetail.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:appointmentDetail animated:YES];
+    NSDictionary *userinfo = [[TMCache sharedCache]objectForKey:kUserInfo];
+    NSString *memberId = userinfo[memberID];
+
+    if([memberId length]){
+       
+        AppointmentDetailViewController *appointmentDetail =[AppointmentDetailViewController new];
+        appointmentDetail.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:appointmentDetail animated:YES];
+        
+        appointmentDetail.shopId = self.shopModel.shopId;
+        appointmentDetail.shopName = self.shopModel.shopName;
+        
+    }else{
+    
+        [ProgressHUD show:@"请先登陆"];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.45 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            SignInViewController *signInViewController =[SignInViewController new];
+            [self.navigationController pushViewController:signInViewController animated:YES];
+        });
+        
+    }
+    
 
 }
 

@@ -10,4 +10,6 @@
 
 @interface AppointmentDetailViewController : UIViewController
 
+@property (nonatomic,copy)NSString *shopId;
+@property (nonatomic,copy)NSString *shopName;
 @end

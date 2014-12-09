@@ -210,7 +210,7 @@ static NSInteger _start = 10;
     if([rechability_education isReachable]){//网络正常
         
         //开始进行网络请求
-        //[ProgressHUD show:nil];
+        [ProgressHUD show:nil];
         [getShopList_manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             NSDictionary *resultDict = (NSDictionary *)responseObject;
@@ -221,7 +221,7 @@ static NSInteger _start = 10;
             
             [self.tmcache_education setObject:resultDict forKey:@"key_educationShop_cache"];
             
-            //[ProgressHUD dismiss];
+            [ProgressHUD dismiss];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
@@ -601,6 +601,15 @@ static NSInteger _start = 10;
     }
     
 }
+
+
+- (void)viewWillDisappear:(BOOL)animated{
+
+    [super viewWillDisappear:animated];
+    [ProgressHUD dismiss];
+
+}
+
 
 
 - (void)dealloc{

@@ -483,7 +483,7 @@
         
     }
     
-    
+    [self.tableView reloadData];
     
 }
 

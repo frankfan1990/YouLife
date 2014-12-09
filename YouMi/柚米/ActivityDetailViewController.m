@@ -23,6 +23,7 @@
 #import <TMCache.h>
 #import "SignInViewController.h"
 #import "UserCommentsObjcModel.h"
+#import "SignInViewController.h"
 
 const NSString *text_html_goods = @"text/html";
 const NSString *application_json_goods = @"application/json";
@@ -153,8 +154,6 @@ const NSString *application_json_goods = @"application/json";
     rtLabel2 =[[RTLabel alloc]initWithFrame:CGRectMake(10, 10, self.view.bounds.size.width-30, 0)];
     
     
-    
-    
     /**
      活动规则
      */
@@ -177,7 +176,7 @@ const NSString *application_json_goods = @"application/json";
     appointmentNow.backgroundColor = baseRedColor;
     appointmentNow.tag = 5002;
     appointmentNow.titleLabel.font =[UIFont systemFontOfSize:14];
-    [appointmentNow setTitle:@"预约商品" forState:UIControlStateNormal];
+    [appointmentNow setTitle:@"加入购物车" forState:UIControlStateNormal];
     [appointmentNow addTarget:self action:@selector(bottomButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:appointmentNow];
     
@@ -386,16 +385,44 @@ const NSString *application_json_goods = @"application/json";
 
 
 
-#pragma mark - 底部按钮点击触发【立即购买预约课程】
+#pragma mark - 底部按钮点击触发【立即购买商品】
 - (void)bottomButtonClicked:(UIButton *)sender{
 
     if(sender.tag==5001){//立即购买
     
+        NSDictionary *userinfo = [[TMCache sharedCache]objectForKey:kUserInfo];
+        NSString *memId = userinfo[memberID];
+        if(![memId length]){
+            
+            [ProgressHUD showError:@"请先登录"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                SignInViewController *signViewController =[SignInViewController new];
+                [self.navigationController pushViewController:signViewController animated:YES];
+            });
+            return;
+        }
+        
         BuyNowViewController *buyNow =[BuyNowViewController new];
         buyNow.hidesBottomBarWhenPushed = YES;
+        
+        if([[globalDict allKeys]count]){
+        
+            GoodsObjcModel *goodObjcModel = [GoodsObjcModel modelWithDictionary:globalDict error:nil];
+            buyNow.goodsName = goodObjcModel.goodsName;
+            buyNow.price = goodObjcModel.promotePrice;
+            buyNow.goodsId = goodObjcModel.goodsId;
+            buyNow.memberId = memId;
+        
+        }else{
+            
+            [ProgressHUD showError:@"数据缺失"];
+        }
+
+        
         [self.navigationController pushViewController:buyNow animated:YES];
 
-    }else{//预约课程
+    }else{//预约商品
     
         
         courseAppointLoadView =[[UIView alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 200)];
@@ -868,11 +895,11 @@ const NSString *application_json_goods = @"application/json";
                 info1_0.text = goodsObjcModel.goodsName;
                 
                 //cell1_0_1上得信息
-                NSString *price = [NSString stringWithFormat:@"￥%.2f",goodsObjcModel.price];
+                NSString *price = [NSString stringWithFormat:@"￥%.2ld",(long)goodsObjcModel.promotePrice];
                 info1_0_1.text = price;
                 
                 //cell1_0_2上得信息
-                NSString *promotorPrice =[NSString stringWithFormat:@"原价:￥%.2d",goodsObjcModel.promotePrice];
+                NSString *promotorPrice =[NSString stringWithFormat:@"原价:￥%.2f",goodsObjcModel.price];
                 info1_0_2.text = promotorPrice;
              
                 

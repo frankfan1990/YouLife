@@ -286,5 +286,25 @@
 #define API_GoodsDetail @"http://120.24.71.104:8080/youmi/goods/getGoods"
 
 
+#pragma mark - 预约
+/**
+ *  @author frankfan, 14-12-09 10:12:26
+ *
+ *  预约-post
+ */
+#define API_Appointment @"http://120.24.71.104:8080/youmi/reserve"
+
+
+/**
+ *  @author frankfan, 14-12-09 16:12:49
+ *
+ *  提交订单
+ */
+
+
+#define API_Order @"http://120.24.71.104:8080/youmi/order"
+//#define API_Order @"http://192.168.1.116:8080/youmi/order"
+
+
 
 #endif

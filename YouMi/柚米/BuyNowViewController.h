@@ -10,4 +10,9 @@
 
 @interface BuyNowViewController : UIViewController
 
+@property (nonatomic,copy)NSString *goodsName;
+@property (nonatomic,assign)double price;
+@property (nonatomic,assign)BOOL expiredRetreat;
+@property (nonatomic,copy)NSString *goodsId;
+@property (nonatomic,copy)NSString *memberId;
 @end

@@ -8,13 +8,23 @@
 
 #import "BuyNowViewController.h"
 
+#import "Reachability.h"
+#import "ProgressHUD.h"
+#import <AFNetworking.h>
+#import <TMCache.h>
+
+static NSInteger gloabalAcount;
 @interface BuyNowViewController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
 {
 
  
     UITextField *memberField;//显示购物的数量
-    NSInteger gloabalAcount;
+  
     UILabel *allPrice;//总价
+    
+    Reachability *_reachability_commitOrder;
+    
+    double totalMoney;
 }
 
 @property (nonatomic,strong)UITableView *tableView;
@@ -74,6 +84,44 @@
     
     
     
+    UILabel *priceLabel =[[UILabel alloc]initWithFrame:CGRectMake(10, 170+30, 50, 40)];
+    priceLabel.font =[UIFont boldSystemFontOfSize:16];
+    priceLabel.textColor = baseTextColor;
+    [self.view addSubview:priceLabel];
+    priceLabel.text = @"总价";
+    
+    UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, 170+30+50, self.view.bounds.size.width, 1)];
+    line.backgroundColor =customGrayColor;
+    [self.view addSubview:line];
+    
+    
+    /*总价*/
+    allPrice =[[UILabel alloc]initWithFrame:CGRectMake(140, 170+30, 123, 40)];
+    allPrice.font =[UIFont boldSystemFontOfSize:14];
+    allPrice.textColor = baseTextColor;
+    [self.view addSubview:allPrice];
+    allPrice.text =[NSString stringWithFormat:@"￥%.2f",_price*gloabalAcount];
+    totalMoney = _price*gloabalAcount;
+    /**
+     *  @Author frankfan, 14-11-03 19:11:46
+     *
+     *  创建提交订单按钮
+     */
+    UIButton *orderButton =[UIButton buttonWithType:UIButtonTypeCustom];
+    orderButton.frame = CGRectMake(20, 170+30+50+50, self.view.bounds.size.width-40, 40);
+    orderButton.backgroundColor = baseRedColor;
+    [orderButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [orderButton setTitle:@"提交订单" forState:UIControlStateNormal];
+    [orderButton setTitleColor:[UIColor colorWithWhite:0.75 alpha:1] forState:UIControlStateHighlighted];
+    orderButton.layer.cornerRadius = 3;
+    [orderButton addTarget:self action:@selector(orderCommit:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:orderButton];
+
+    
+    //
+    _reachability_commitOrder =[Reachability reachabilityWithHostName:@"www.baidu.com"];
+    
+    
     // Do any additional setup after loading the view.
 }
 
@@ -114,7 +162,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
 
-    return 3;
+    return 2;
 }
 
 
@@ -125,19 +173,20 @@
     cell1.selectionStyle = NO;
     UITableViewCell *cell2 =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     cell2.selectionStyle = NO;
-    UITableViewCell *cell3 =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-    cell3.selectionStyle = NO;
+//    UITableViewCell *cell3 =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+//    cell3.selectionStyle = NO;
     
     /*商品单价*/
     if(indexPath.row==0){
     
         /*商品名*/
-#warning fake data
+
         UILabel *nameOfCommodity =[[UILabel alloc]initWithFrame:CGRectMake(10, 5, 123, 40)];
         nameOfCommodity.font =[UIFont boldSystemFontOfSize:15];
         nameOfCommodity.textColor = baseTextColor;
+        nameOfCommodity.adjustsFontSizeToFitWidth = YES;
         [cell1.contentView addSubview:nameOfCommodity];
-        nameOfCommodity.text = @"商品名";
+        nameOfCommodity.text = self.goodsName;
         
         
         UILabel *unitPrice =[[UILabel alloc]initWithFrame:CGRectMake(10, 46, 123, 40)];
@@ -147,10 +196,11 @@
         unitPrice.text = @"单价";
         
         /*单价*/
-        UILabel *showMoney =[[UILabel alloc]initWithFrame:CGRectMake(270, 46, 40, 30)];
+        UILabel *showMoney =[[UILabel alloc]initWithFrame:CGRectMake(140, 46, 100, 40)];
         showMoney.font =[UIFont boldSystemFontOfSize:14];
         showMoney.textColor = baseTextColor;
         [cell1.contentView addSubview:showMoney];
+        showMoney.text = [NSString stringWithFormat:@"￥%.2f",_price];
         
         UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, 80, self.view.bounds.size.width, 1)];
         line.backgroundColor = customGrayColor;
@@ -210,7 +260,8 @@
         memberField.textColor = baseTextColor;
         [cell2.contentView addSubview:memberField];
         memberField.text = [NSString stringWithFormat:@"%ld",(long)gloabalAcount];
-
+        
+        
         /**
          创建完成
          */
@@ -223,57 +274,6 @@
         return cell2;
         
     }
-    
-    if(indexPath.row==2){
-    
-        UILabel *priceLabel =[[UILabel alloc]initWithFrame:CGRectMake(10, 20, 123, 40)];
-        priceLabel.font =[UIFont boldSystemFontOfSize:16];
-        priceLabel.textColor = baseTextColor;
-        [cell3.contentView addSubview:priceLabel];
-        priceLabel.text = @"总价";
-        
-        /*总价*/
-        allPrice =[[UILabel alloc]initWithFrame:CGRectMake(270, 20, 123, 40)];
-        allPrice.font =[UIFont boldSystemFontOfSize:14];
-        allPrice.textColor = baseTextColor;
-        [cell3.contentView addSubview:allPrice];
-        
-        
-        UIView *line =[[UIView alloc]initWithFrame:CGRectMake(0, 61, cell3.bounds.size.width, 1)];
-        line.backgroundColor = customGrayColor;
-        [cell3.contentView addSubview:line];
-        
-        UILabel *stict =[[UILabel alloc]initWithFrame:CGRectMake(5, 62, 180, 40)];
-        stict.font =[UIFont systemFontOfSize:14];
-        stict.textColor = customGrayColor;
-        [cell3.contentView addSubview:stict];
-        stict.text = @"支持过期退款";
-        
-        
-        
-        /**
-         *  @Author frankfan, 14-11-03 19:11:46
-         *
-         *  创建提交订单按钮
-         */
-        UIButton *orderButton =[UIButton buttonWithType:UIButtonTypeCustom];
-        orderButton.frame = CGRectMake(20, 130, self.view.bounds.size.width-40, 40);
-        orderButton.backgroundColor = baseRedColor;
-        [orderButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [orderButton setTitle:@"提交订单" forState:UIControlStateNormal];
-        [orderButton setTitleColor:[UIColor colorWithWhite:0.75 alpha:1] forState:UIControlStateHighlighted];
-        orderButton.layer.cornerRadius = 3;
-        [orderButton addTarget:self action:@selector(orderCommit:) forControlEvents:UIControlEventTouchUpInside];
-        [cell3.contentView addSubview:orderButton];
-        
-        return cell3;
-        
-    
-    }
-    
-    
-    
-
     return nil;
 }
 
@@ -289,7 +289,8 @@
         textField.text = @"1";
     }
     
-    
+     allPrice.text =[NSString stringWithFormat:@"￥%.2f",_price*([memberField.text integerValue])];
+     totalMoney = _price*([memberField.text integerValue]);
 }
 
 
@@ -304,8 +305,42 @@
 
 #pragma mark - 订单按钮触发
 - (void)orderCommit:(UIButton *)sender{
+    
+    if(![_reachability_commitOrder isReachable]){
+    
+        [ProgressHUD showError:@"网络异常"];
+        return;
+    }
+    
+    AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
+    
+    NSDictionary *userinfo = [[TMCache sharedCache]objectForKey:kUserInfo];
+    NSString *telPhoneNumber = userinfo[phoneNum];
+    
+    NSDictionary *parameters = @{@"goodsId":self.goodsId,
+                                 @"memberId":self.memberId,
+                                 @"number":[NSNumber numberWithInteger:[memberField.text integerValue]],
+                                 @"totalAmount":[NSNumber numberWithDouble:totalMoney],
+                                 @"telphone":telPhoneNumber};
+    
+    [ProgressHUD show:nil];
+    [manager POST:API_Order parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSLog(@"%@",responseObject);
+        [ProgressHUD showSuccess:@"提交成功"];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            [self.navigationController popViewControllerAnimated:YES];
+        });
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        NSLog(@"error:%@",[error localizedDescription]);
+        [ProgressHUD showError:@"提交失败"];
+    }];
 
-    NSLog(@"提交订单");
 }
 
 
@@ -328,8 +363,8 @@
     
     }
     
-
-
+    allPrice.text =[NSString stringWithFormat:@"￥%.2f",_price*([memberField.text integerValue])];
+    totalMoney = _price*([memberField.text integerValue]);
 }
 
 

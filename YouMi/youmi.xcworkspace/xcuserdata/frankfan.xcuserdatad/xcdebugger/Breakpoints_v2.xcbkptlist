@@ -31,16 +31,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "&#x67da;&#x7c73;/ActivityDetailViewController.m"
-            timestampString = "439725753.01196"
+            filePath = "&#x67da;&#x7c73;/BuyNowViewController.m"
+            timestampString = "439808129.56236"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1304"
-            endingLineNumber = "1304"
-            landmarkName = "-handleStringForRTLabel:"
+            startingLineNumber = "366"
+            endingLineNumber = "366"
+            landmarkName = "-stepperValueChanged:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

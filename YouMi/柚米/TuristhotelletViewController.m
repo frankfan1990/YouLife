@@ -21,6 +21,7 @@
 #import "convert2_new.h"
 #import "convert_oc.h"
 #import "ShopObjectModel.h"
+#import "ShopDetailViewController.h"
 
 const NSString *text_html_turist = @"text/html";
 const NSString *application_json_turist = @"application/json";
@@ -190,6 +191,7 @@ static NSInteger _start = 10;
     NSDictionary *parameters = @{api_typeId:self.shopType_turist,api_start:@0,api_limit:@10};
     if([_reachability_turist isReachable]){//网络正常
         
+        [ProgressHUD show:nil];
         [manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             NSDictionary *tempDict = (NSDictionary *)responseObject;
@@ -197,7 +199,7 @@ static NSInteger _start = 10;
             
             [self.tableView reloadData];
             [self.tmcache_turist setObject:tempDict forKey:@"key_beautyShop_cache"];
-            
+            [ProgressHUD dismiss];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
@@ -378,14 +380,7 @@ static NSInteger _start = 10;
         NSArray *flag = @[[NSNumber numberWithInteger:self.index],[NSNumber numberWithInteger:sender.tag]];//将两个标志[首页按钮,三个按钮]传过去，区别的加载数据
         [[NSNotificationCenter defaultCenter]postNotificationName:kPassLeftData_0 object:flag];
     }
-    
-    
-    
-    
-    
-    
-    
-    
+   
 }
 
 
@@ -479,6 +474,17 @@ static NSInteger _start = 10;
 #pragma mark cell被选择触发动作
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+    NSDictionary *tempDict =shopList_turist[indexPath.row];
+    ShopObjectModel *shopObjcModel =[ShopObjectModel modelWithDictionary:tempDict error:nil];
+    
+    ShopDetailViewController *shopDetailViewController =[ShopDetailViewController new];
+    shopDetailViewController.shopModel = shopObjcModel;
+    
+    NSDictionary *locationdict = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation];
+    shopDetailViewController.originPosition = CLLocationCoordinate2DMake([locationdict[@"lat"]doubleValue], [locationdict[@"lng"]doubleValue]);
+    
+    [self.navigationController pushViewController:shopDetailViewController animated:YES];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     
 }
 
@@ -603,6 +609,12 @@ static NSInteger _start = 10;
 }
 
 
+-(void)viewWillDisappear:(BOOL)animated{
+
+    [super viewWillDisappear:animated];
+    [ProgressHUD dismiss];
+
+}
 
 
 - (void)dealloc{
