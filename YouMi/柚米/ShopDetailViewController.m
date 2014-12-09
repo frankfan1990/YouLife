@@ -830,7 +830,7 @@ const NSString *text_html = @"text/html";
                 
             }
 
-            
+            activityDetail.goodsPic = good.goodsPicture;
             activityDetail.phoneNumber = contactNumber;
             [self.navigationController pushViewController:activityDetail animated:YES];
             [tableView deselectRowAtIndexPath:indexPath animated:YES];

@@ -13,4 +13,5 @@
 @property (nonatomic,copy)NSString *goodsId;
 @property (nonatomic,copy)NSString *shopAddress;
 @property (nonatomic,copy)NSString *phoneNumber;
+@property (nonatomic,copy)NSString *goodsPic;
 @end

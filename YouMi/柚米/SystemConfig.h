@@ -306,5 +306,15 @@
 //#define API_Order @"http://192.168.1.116:8080/youmi/order"
 
 
+#pragma mark - 放入购物车
+/**
+ *  @author frankfan, 14-12-09 20:12:20
+ *
+ *  放入购物车
+ */
+
+#define API_Cart @"http://120.24.71.104:8080/youmi/cart"
+
+
 
 #endif

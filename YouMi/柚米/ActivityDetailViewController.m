@@ -24,6 +24,8 @@
 #import "SignInViewController.h"
 #import "UserCommentsObjcModel.h"
 #import "SignInViewController.h"
+#import "Reachability.h"
+#import "SignInViewController.h"
 
 const NSString *text_html_goods = @"text/html";
 const NSString *application_json_goods = @"application/json";
@@ -422,7 +424,7 @@ const NSString *application_json_goods = @"application/json";
         
         [self.navigationController pushViewController:buyNow animated:YES];
 
-    }else{//预约商品
+    }else{//加入购物车
     
         
         courseAppointLoadView =[[UIView alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 200)];
@@ -437,8 +439,16 @@ const NSString *application_json_goods = @"application/json";
         theGoodsImage.layer.cornerRadius = 3;
         theGoodsImage.layer.masksToBounds = YES;
         [courseAppointLoadView addSubview:theGoodsImage];
+        theGoodsImage.backgroundColor = customGrayColor;
+
+    
+        GoodsObjcModel *goodObjcModel = nil;
+        if([[globalDict allKeys]count]){
         
-        theGoodsImage.backgroundColor =[UIColor blackColor];
+            goodObjcModel =[GoodsObjcModel modelWithDictionary:globalDict error:nil];
+            [theGoodsImage sd_setImageWithURL:[NSURL URLWithString:self.goodsPic] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];
+        }
+        
         
         
         /*商品名*/
@@ -448,7 +458,12 @@ const NSString *application_json_goods = @"application/json";
         goodsname.adjustsFontSizeToFitWidth = YES;
         goodsname.textColor = baseTextColor;
 
-        goodsname.text = @"商品名";
+        if(goodObjcModel){
+        
+            goodsname.text = goodObjcModel.goodsName;;
+        }
+        
+        
         [courseAppointLoadView addSubview:goodsname];
         
         /*价格*/
@@ -458,7 +473,12 @@ const NSString *application_json_goods = @"application/json";
         price.textAlignment = NSTextAlignmentLeft;
         price.adjustsFontSizeToFitWidth = YES;
 
-        price.text = @"价格";
+        if(goodObjcModel){
+            
+            price.text = [NSString stringWithFormat:@"￥%ld",(long)goodObjcModel.promotePrice];
+        }
+
+        
         [courseAppointLoadView addSubview:price];
         
         
@@ -609,13 +629,13 @@ const NSString *application_json_goods = @"application/json";
         NSInteger tempacount = [memberField.text integerValue];
         if(tempacount>1){
             
-            memberField.text =[NSString stringWithFormat:@"%d",tempacount-1];
+            memberField.text =[NSString stringWithFormat:@"%ld",tempacount-1];
             
         }
     }else{
         
         NSInteger tempacount = [memberField.text integerValue];
-        memberField.text =[NSString stringWithFormat:@"%d",tempacount+1];
+        memberField.text =[NSString stringWithFormat:@"%ld",tempacount+1];
         
     }
     
@@ -638,10 +658,59 @@ const NSString *application_json_goods = @"application/json";
 }
 
 
-#pragma mark - 确定预定按钮触发
+#pragma mark - 加入购物车
 - (void)payForButtonClicked:(UIButton *)sender{
     
-    NSLog(@"预定");
+    NSDictionary *userinfo = [[TMCache sharedCache]objectForKey:kUserInfo];
+    NSString *membId = userinfo[memberID];
+    if(![membId length]){
+    
+        [ProgressHUD showError:@"请登录"];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            SignInViewController *sigViewController =[SignInViewController new];
+            [self.navigationController pushViewController:sigViewController animated:YES];
+            
+        });
+        
+        return;
+    }
+    
+    Reachability *_reachability =[Reachability reachabilityWithHostName:@"www.baidu.com"];
+    if(![_reachability isReachable]){
+        
+        [ProgressHUD showError:@"网络异常"];
+        return;
+    }
+    
+    AFHTTPRequestOperationManager *manager =[self createNetworkingRequestObjc:application_json_goods];
+    
+    GoodsObjcModel *goodObjcModel =[GoodsObjcModel modelWithDictionary:globalDict error:nil];
+    if(!goodObjcModel.price){
+        
+        [ProgressHUD showError:@"数据异常"];
+        return;
+    }
+    
+    double totalPrice = goodObjcModel.promotePrice * [memberField.text integerValue];
+    NSDictionary *parameters = @{@"memberId":membId,
+                                 @"goodsId":self.goodsId,
+                                 @"markerPrice":[NSNumber numberWithInteger:goodObjcModel.promotePrice],
+                                 @"goodsPrice":[NSNumber numberWithDouble:goodObjcModel.price],
+                                 @"goodsNumber":[NSNumber numberWithInteger:[memberField.text integerValue]],
+                                 @"totalAmount":[NSNumber numberWithDouble:totalPrice]};
+    [ProgressHUD show:nil];
+    [manager POST:API_Cart parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSLog(@"response:%@",responseObject);
+        [ProgressHUD showSuccess:@"加入成功"];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        [ProgressHUD showError:@"加入失败"];
+        NSLog(@"error:%@",[error localizedDescription]);
+    }];
+    
     
 }
 
