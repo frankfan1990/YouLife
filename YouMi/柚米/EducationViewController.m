@@ -37,6 +37,8 @@ static NSInteger _start = 10;
     
     //
     Reachability *rechability_education;
+    
+    NSDictionary *globalDict;
         
 }
 
@@ -445,7 +447,7 @@ static NSInteger _start = 10;
             
             cell.TheShopName.text = shopObjcModel.shopName;//商铺名
             cell.TheShopAddress.text = shopObjcModel.circleName;//所属商圈
-            [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopObjcModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];//头像
+            [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopObjcModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//头像
             cell.aboutUpay.text = shopObjcModel.shopTitle;
         }
      }
@@ -468,6 +470,12 @@ static NSInteger _start = 10;
 
     CourseDetailsViewController *courseDetail =[CourseDetailsViewController new];
     courseDetail.hidesBottomBarWhenPushed = YES;
+    
+    NSDictionary *tempDict =self.shopObjects_education[indexPath.row];
+    ShopObjectModel *shopObjcModel =[ShopObjectModel modelWithDictionary:tempDict error:nil];
+    
+    courseDetail.shopModel = shopObjcModel;
+    
     [self.navigationController pushViewController:courseDetail animated:YES];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 

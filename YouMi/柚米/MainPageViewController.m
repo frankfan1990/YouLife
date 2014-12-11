@@ -24,6 +24,7 @@
 #import <AFNetworking.h>
 #import "Reachability.h"
 #import "LocationManager.h"
+#import "FMDB.h"
 
 
 
@@ -40,6 +41,9 @@
     CCSegmentedControl *ccsegementCV;
     CLLocationManager * locationManager;
     LocationManager *lcmanager;
+    LocationManager *lcmanager2;
+    
+    CLLocation *cllocation;
     
   
 }
@@ -206,6 +210,19 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     
     [self.tableView addFooterWithTarget:self action:@selector(pullUpCallBack)];
     
+#pragma mark - 开始操作数据库
+    
+    
+    NSString *dataBasePath = [[NSBundle mainBundle]pathForResource:@"citys" ofType:@"sqlite"];
+    
+    FMDatabase *dataBase =[FMDatabase databaseWithPath:dataBasePath];
+    
+    if(![dataBase open]){
+    
+        [dataBase open];
+    }
+    
+    
 #pragma mark - 开始获取数据
     
     /**
@@ -240,7 +257,6 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     
     Reachability *reachability =[Reachability reachabilityWithHostName:@"www.baidu.com"];
     
-    
     if([reachability isReachable]){
     
         [[MMLocationManager shareLocation]getCity:^(NSString *addressString) {
@@ -249,6 +265,19 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
             
             [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:kUserLocationCity];
             [[NSUserDefaults standardUserDefaults]setObject:addressString forKey:@"gpsLocation"];
+            
+            NSLog(@"addressString:%@",addressString);
+            
+            FMResultSet *result =[dataBase executeQuery:@"select * from tb_city where cityName = ?",addressString];
+            while ([result next]) {
+                
+                NSString *cityId = [result stringForColumn:@"cityId"];
+                [[TMCache sharedCache]setObject:cityId forKey:kCityId];
+                
+                [self aboutCityId];
+                NSLog(@"cityId:%@",cityId);
+            }
+            
             
         } error:^(NSError *error) {
             
@@ -259,27 +288,57 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
      
         /*****定位当前坐标****/
         lcmanager =[[LocationManager alloc]init];
+     
+        
         [lcmanager getUserNowLocationInfoWithAlert:YES getUserLocationFinish:^(BOOL success, CLLocation *userLocation) {
             
             NSLog(@"userLocation...:%@",userLocation);
-        }];
+            cllocation = userLocation;
+            
+            if([[[UIDevice currentDevice]systemVersion]floatValue]>=8.0){
+            
+//                NSArray *circleInfoArray = [[TMCache sharedCache]objectForKey:kCircleInfo];
+                if(1){//如果没缓存
+                    
+                    AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+                    manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
+                    
+                    NSString *cityId = @"177";
+                    NSDictionary *parametres = @{@"cityId":cityId};
+                    
+                    [manager GET:API_GetCircleInfoByCityId parameters:parametres success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                        
+                        NSMutableArray *tempArray = [responseObject[@"data"]mutableCopy];
+                        NSDictionary *metersDict = @{@"附近":@[@"1000",@"3000",@"5000"]};
+                        [tempArray insertObject:metersDict atIndex:0];
+                        
+                        [[TMCache sharedCache]setObject:tempArray forKey:kCircleInfo];
+                        
+                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                        
+                        NSLog(@"error:%@",[error localizedDescription]);
+                    }];
+                    
+                }
 
+            }
+            
+            
+            
+            if(![[[TMCache sharedCache]objectForKey:kCityId] length]){
+            
+                [[TMCache sharedCache]setObject:@"177" forKey:kCityId];
+                
+            }
+            
+        }];
+        
+        
     }else{
     
         [ProgressHUD showError:@"网络异常"];
        
     }
-    
-    
-    
-    
-#pragma mark 模拟数据-从后台拉去“三大类”数据
-    /*模拟数据*/
-    NSArray *businessCircleList = @[@{@"附近":@[@"100m",@"500m",@"1000m",@"1500m"]},@{@"芙蓉区":@[@"五一路",@"火宫殿",@"下河街",@"步行街"]},@{@"雨花区":@[@"东塘",@"西塘",@"南塘",@"北塘",@"中塘"]},@{@"岳麓区":@[@"麓山东路",@"麓山南路",@"麓山西路",@"麓山北路",@"麓山中路"]},@{@"开福区":@[@"天马小区",@"大学城",@"麓山北路",@"麓谷",@"大学北路"]}];
-    
-    /*设置缓存*/
-    [[TMCache sharedCache]setObject:businessCircleList forKey:kThreePartData_0];
-
     
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -289,11 +348,42 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
             [self createBarButton];
 //            [ProgressHUD showError:@"无法完成定位" Interaction:NO];
             [self setBarButtonTitle:@"长沙"];
+            [[TMCache sharedCache]setObject:@"177" forKey:kCityId];
+        
         }
         
     });
  
-     // Do any additional setup after loading the view.
+   
+    // Do any additional setup after loading the view.
+}
+
+- (void)aboutCityId{
+
+//    NSArray *circleInfoArray = [[TMCache sharedCache]objectForKey:kCircleInfo];
+    if(1){//如果没缓存
+        
+        AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+        manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
+        
+        NSString *cityId = [[TMCache sharedCache]objectForKey:kCityId];
+        NSDictionary *parametres = @{@"cityId":cityId};
+        
+        [manager GET:API_GetCircleInfoByCityId parameters:parametres success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSMutableArray *tempArray = [responseObject[@"data"]mutableCopy];
+            NSDictionary *metersDict = @{@"附近":@[@"1000",@"3000",@"5000"]};
+            [tempArray insertObject:metersDict atIndex:0];
+            
+            [[TMCache sharedCache]setObject:tempArray forKey:kCircleInfo];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@"error:%@",[error localizedDescription]);
+        }];
+        
+    }
+
 }
 
 

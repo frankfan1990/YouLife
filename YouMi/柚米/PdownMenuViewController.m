@@ -82,6 +82,11 @@
         self.tableView_right.delegate = self;
         self.tableView_right.dataSource = self;
         [self.theLoadView addSubview:self.tableView_right];
+        
+        CGRect rect = CGRectZero;
+        UIView *footView =[[UIView alloc]initWithFrame:rect];
+        self.tableView_right.tableFooterView = footView;
+    
     
 
     }
@@ -95,21 +100,22 @@
         [self.theLoadView addSubview:self.tableView_single];
     
     }
+   
     
-
-  
-    
-
-
     //接受传来的数据
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(readTheMessage:) name:kPassLeftData_0 object:nil];
     
     
     
-    
-    
     // Do any additional setup after loading the view.
 }
+
+- (void)reloadTheData{
+
+    [self.tableView_left reloadData];
+    [self.tableView_right reloadData];
+}
+
 
 #pragma mark消息内容读取-----处理
 - (void)readTheMessage:(NSNotification *)notification{
@@ -126,9 +132,9 @@
     /**
      *  @Author frankfan, 14-10-28 11:10:01
      *
-     *  这里需要添加whichModel
+     *  这里需要添加whichModel-whichModel==0 || whichModel==1 || whichModel==5 || whichModel==2 || whichModel==4 ||whichModel ==6 ||whichModel==7
      */
-    if(whichModel==0 || whichModel==1 || whichModel==5 || whichModel==2 || whichModel==4 ||whichModel ==6 ||whichModel==7){
+    if(whichModel != 3){
         
         if(whichButton==1001){
       #pragma mark 从缓存中读取“三大模块”的数据
@@ -137,19 +143,20 @@
             businessCircleDetail =[NSMutableArray array];
             
             /*index为0模块的数据【即第一个模块,附近商圈等】*/
-            cacheDataRead_0 = [[TMCache sharedCache]objectForKey:kThreePartData_0];
+            NSMutableArray *circleInfoArray = [[[TMCache sharedCache]objectForKey:kCircleInfo]mutableCopy];
+          
             
-            for (NSDictionary *tempDict in cacheDataRead_0) {
-                
-                [businessCircleName addObject:[[tempDict allKeys]firstObject]];
-                [businessCircleDetail addObject:[[tempDict allValues]firstObject ]];
-                
-            }
-            
-            self._0_left_dataSource = businessCircleName;
+            self._0_left_dataSource = circleInfoArray;
             self._left_outPutSource = self._0_left_dataSource;
         
-            self._0_right_dataSource = businessCircleDetail;
+            if([circleInfoArray count]){
+
+                self._0_right_dataSource = [@[@"1000",@"3000",@"5000"]mutableCopy];
+            }else{
+                
+                self._0_right_dataSource = nil;
+            }
+            
             self._right_outPutSource = self._0_right_dataSource;
             
             [self.tableView_right reloadData];
@@ -172,7 +179,7 @@
 #pragma mark tableView的cell个数
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
-#warning fake data 此处数据为模拟
+    
     if(tableView.tag==10010){
     
         return [self._left_outPutSource count];
@@ -180,7 +187,7 @@
     }else if(tableView.tag==10011){
     
     
-        return [self._right_outPutSource[whickRow] count];
+        return [self._right_outPutSource count];
     }else{
     
         return 0;
@@ -227,11 +234,20 @@
         
         }
     
-            UILabel *textLabel =(UILabel *)[cell1 viewWithTag:101];
-            textLabel.text = self._left_outPutSource[indexPath.row];
+        UILabel *textLabel =(UILabel *)[cell1 viewWithTag:101];
+        if(indexPath.row==0){
+        
+            NSDictionary *tempDict = self._left_outPutSource[indexPath.row];
+            textLabel.text = [[tempDict allKeys]firstObject];
+            
+        }else{
+        
+            NSDictionary *tempDict = self._left_outPutSource[indexPath.row];
+            textLabel.text = tempDict[@"regionName"];
+        }
         
         
-            return cell1;
+        return cell1;
     
     }
     if((whichModel==0 && whichButton==1001 && tableView.tag==10011) ||(whichModel==1 && whichButton==1001 && tableView.tag==10011) ||(whichModel==5 && whichButton==1001 && tableView.tag==10011) || (whichModel==2 && whichButton==1001 && tableView.tag==10011) ||(whichModel==4 && whichButton==1001 && tableView.tag==10011)||(whichModel==6 && whichButton==1001 && tableView.tag==10011)||(whichModel==7 && whichButton==1001 && tableView.tag==10011)){
@@ -249,7 +265,19 @@
         }
         
         UILabel *textLabel = (UILabel *)[cell2 viewWithTag:102];
-        textLabel.text = [self._right_outPutSource objectAtIndex:whickRow][indexPath.row];
+      
+        if(![[self._right_outPutSource firstObject]isKindOfClass:[NSDictionary class]]){
+        
+            textLabel.text = self._right_outPutSource[indexPath.row];
+            
+        }else{
+        
+            NSDictionary *dict = self._right_outPutSource[indexPath.row];
+            textLabel.text = dict[@"circleName"];
+        }
+        
+        
+     
         return cell2;
     }
     if((whichModel==0 &&whichButton==1002 && tableView.tag==10010) || (whichModel==1 && whichButton==1002 && tableView.tag==10010) || (whichModel==5 && whichButton==1002 && tableView.tag==10010) || (whichModel==2 && whichButton==1002 && tableView.tag==10010) || (whichModel==4 && whichButton==1002 && tableView.tag==10010)||(whichModel==6 && whichButton==1002 && tableView.tag==10010)||(whichModel==7 && whichButton==1002 && tableView.tag==10010)){
@@ -292,10 +320,11 @@
 #pragma mark cell被选择触发事件
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if(tableView.tag == 10011){
+    if(tableView.tag == 10011){//右侧tableView点击
         
         [self dismissTheMenu];
-    }else if (tableView.tag == 10010){
+        
+    }else if (tableView.tag == 10010){//左侧tableView点击
     
         whickRow = indexPath.row;
         
@@ -304,7 +333,18 @@
         
             UITableViewCell *cell =[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
             cell.selected = NO;
+            
+            //
+            NSArray *circleinfoArray = [[TMCache sharedCache]objectForKey:kCircleInfo];
+            NSDictionary *tempDict = circleinfoArray[indexPath.row];
+            self._right_outPutSource = [tempDict[@"circles"]mutableCopy];
+            
+            
+        }else{//第一行被选中
+        
+            self._right_outPutSource = [@[@"1000",@"3000",@"5000"]mutableCopy];
         }
+        
         [self.tableView_right reloadData];
     
     }
@@ -314,10 +354,6 @@
 }
 
 
-
-
-
-
 #pragma mark 默认选中第一行
 - (void)viewDidAppear:(BOOL)animated{
     
@@ -325,25 +361,6 @@
     UITableViewCell *cell =[self.tableView_left cellForRowAtIndexPath:firstIndex];
     cell.selected = YES;
 }
-//- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-//
-//    if(tableView.tag==10010 && indexPath.row==0){
-//    
-//        cell.selected = YES;
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.001 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            
-//            cell.selected = YES;
-//        });
-//        
-//    }
-//
-//
-//}
-
-
-
-
-
 
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{

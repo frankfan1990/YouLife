@@ -11,6 +11,18 @@
 #import "UIImageView+WebCache.h"
 #import "BuyNowViewController.h"
 
+#import "ProgressHUD.h"
+#import <AFNetworking.h>
+#import "Reachability.h"
+#import "SignInViewController.h"
+#import "CycleScrollView.h"
+#import "ShopPicsObjcModel.h"
+#import "ShopDetailObjcModel.h"
+#import "ShopNewsObjcModel.h"
+
+static const NSString *text_html_education = @"text/html";
+static const NSString *application_json_education = @"application/json";
+
 #define defaultCellHeight 44
 
 @interface CourseDetailsViewController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
@@ -39,6 +51,10 @@
     UIView *courseAppointLoadView;//创建底部loadView
     UITextField *memberField;//显示购物的数量
     NSInteger gloabalAcount;
+    
+    Reachability *_reachability_education;
+    NSDictionary *globalDict;
+    ShopDetailObjcModel *shopDetailObjcModel;//营业信息;
 
 }
 @property (nonatomic,strong)UITableView *tableView;
@@ -122,76 +138,6 @@
     self.tableView.tableFooterView = footerView;
  
     
-    /**
-     *  @Author frankfan, 14-11-03 09:11:51
-     *
-     *  创建轮播
-     *
-     *  @param NSInteger nil
-     *
-     *  @return nil
-     */
-    
-#warning fake data
-    self.cycleImageArrayURLs = [@[@"http://vip.biznav.cn/20090615162541/pic/20090701134141962.jpg",@"http://a3.att.hudong.com/10/45/01300001024098130129454552574.jpg",@"http://qic.tw/upload/school/MID_20110503003627550.jpg",@"http://img5.imgtn.bdimg.com/it/u=2127817408,3685587629&fm=23&gp=0.jpg",@"http://image.3607.com/2012/03/31/20120320180128640.jpg"]mutableCopy];
-    
-    /*保证图片数组里元素不大于5个*/
-    NSArray *imageArrays = nil;
-    if([self.cycleImageArrayURLs count]){
-        
-        if([self.cycleImageArrayURLs count]>5){
-            
-            imageArrays =[self.cycleImageArrayURLs subarrayWithRange:NSMakeRange(0, 5)];
-        
-        }
-    
-    }
-
-    if(!imageArrays){
-    
-        for (NSString *urlString in self.cycleImageArrayURLs) {
-            
-            NSURL *imageURL =[NSURL URLWithString:urlString];
-            
-            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)];
-            [imageView sd_setImageWithURL:imageURL placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];
-            [self.iamgeViewArrays addObject:imageView];
-            
-        }
-        
-    }else{
-    
-        
-        for (NSString *urlString in imageArrays) {
-            
-            NSURL *imageURL =[NSURL URLWithString:urlString];
-            
-            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)];
-            [imageView sd_setImageWithURL:imageURL placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];
-            [self.iamgeViewArrays addObject:imageView];
-
-        }
-        
-    
-    }
-    
-    
-    
-    
-    cyclePlayImage =[[CycleScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)
-                                                         animationDuration:2.8];
-    __weak CourseDetailsViewController *_self = self;
-    cyclePlayImage.totalPagesCount = ^NSInteger{
-    
-        return [_self.iamgeViewArrays count];
-    };
-    
-    cyclePlayImage.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
-    
-        return _self.iamgeViewArrays[pageIndex];
-    };
-    
-    
     
     /**
      *  @Author frankfan, 14-11-03 15:11:17
@@ -228,6 +174,71 @@
     [courseAppoint setBackgroundColor:baseRedColor];
     [courseAppoint setTitleColor:[UIColor colorWithRed:239/255.0 green:118/255.0 blue:109/255.0 alpha:1] forState:UIControlStateHighlighted];
     [bottomView addSubview:courseAppoint];
+
+    
+    
+    /**
+     创建轮播控件
+     */
+    
+    cyclePlayImage =[[CycleScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)
+                                        animationDuration:2.8];
+    cyclePlayImage.userInteractionEnabled = YES;
+    
+    
+    _reachability_education =[Reachability reachabilityWithHostName:@"www.baidu.com"];
+#pragma mark - 网络请求
+    /**
+     *  @author frankfan, 14-12-10 10:12:39
+     *
+     *  开始网络请求
+     *
+     *  @return
+     */
+    
+    AFHTTPRequestOperationManager *manager =[self createNetworkRequestObjc:application_json_education];
+    NSDictionary *parameters = @{api_shopId:self.shopModel.shopId};
+    if(![_reachability_education isReachable]){
+        
+        [ProgressHUD showError:@"网络异常"];
+    
+    }else{
+    
+        [manager GET:API_ShopDetails parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSArray *tempArray = responseObject[@"data"];
+            globalDict = [tempArray firstObject];
+            shopDetailObjcModel =[ShopDetailObjcModel modelWithDictionary:globalDict error:nil];
+            NSLog(@"globalDict:%@",globalDict);
+            
+            /******/
+            [self handleTheCyclePlayingImages:shopDetailObjcModel.pictures];
+            [self.tableView reloadData];
+            /********************/
+            
+            __weak CourseDetailsViewController *_self = self;
+            cyclePlayImage.totalPagesCount = ^NSInteger{
+                
+                return [_self.iamgeViewArrays count];
+            };
+            
+            cyclePlayImage.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
+                
+                return _self.iamgeViewArrays[pageIndex];
+            };
+
+            
+            
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@"error:%@",[error localizedDescription]);
+            [ProgressHUD showError:@"网络错误"];
+        }];
+    
+    
+    }
+    
 
     
     
@@ -339,6 +350,81 @@
 
 
 }
+
+#pragma mark - 处理轮播图片的URL以及标题
+- (void)handleTheCyclePlayingImages:(NSArray *)pics{
+    
+    NSArray *imageArrays = nil;
+    if([pics count]){
+        
+        if([pics count]>5){
+            
+            imageArrays =[pics subarrayWithRange:NSMakeRange(0, 5)];
+            
+        }else{
+            
+            imageArrays = pics;
+        }
+        
+    }
+    
+    
+    if(!imageArrays){
+        
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)];
+        
+        
+        UILabel *titleLabel =[[UILabel alloc]initWithFrame:CGRectMake(0, 160, self.view.bounds.size.width-10, 20)];
+        titleLabel.backgroundColor = [UIColor colorWithWhite:0.35 alpha:0.22];
+        titleLabel.text = @"暂无数据";
+        titleLabel.font = [UIFont systemFontOfSize:14];
+        titleLabel.textColor = [UIColor whiteColor];
+        titleLabel.textAlignment = NSTextAlignmentCenter;
+        [imageView addSubview:titleLabel];
+        
+        [imageView sd_setImageWithURL:nil placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];
+        [self.iamgeViewArrays addObject:imageView];
+        
+        
+    }else{
+        
+        
+        for (NSDictionary *picsDict in imageArrays) {
+            
+            ShopPicsObjcModel *shopPicsModel =[ShopPicsObjcModel modelWithDictionary:picsDict error:nil];
+            
+            
+            NSURL *imageURL =[NSURL URLWithString:shopPicsModel.fileCopy];
+            
+            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)];
+            
+            UILabel *backLabel =[[UILabel alloc]initWithFrame:CGRectMake(self.view.bounds.size.width-150, 160, 150, 20)];
+            backLabel.backgroundColor =[UIColor colorWithWhite:0.2 alpha:0.4];
+            [imageView addSubview:backLabel];
+            
+            UILabel *titleLabel =[[UILabel alloc]initWithFrame:CGRectMake(0, 160, self.view.bounds.size.width-150, 20)];
+            titleLabel.tag = 10087;
+            titleLabel.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.4];
+            titleLabel.textColor =[UIColor whiteColor];
+            titleLabel.textAlignment = NSTextAlignmentLeft;
+            titleLabel.font =[UIFont systemFontOfSize:14];
+            titleLabel.adjustsFontSizeToFitWidth = YES;
+            [imageView addSubview:titleLabel];
+            
+            
+            titleLabel.text =[NSString stringWithFormat:@" %@",shopPicsModel.pictureName];
+            
+            
+            [imageView sd_setImageWithURL:imageURL placeholderImage:[UIImage imageNamed:@"defaultBackgroundImage"]];
+            [self.iamgeViewArrays addObject:imageView];
+        }
+        
+    }
+    
+}
+
+
+
 
 
 
@@ -518,6 +604,18 @@
 #pragma mark - 创建cell
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
+    shopDetailObjcModel = [ShopDetailObjcModel modelWithDictionary:globalDict error:nil];
+    
+    ShopNewsObjcModel *shopNewsObjcModel = nil;
+    if([shopDetailObjcModel.shopNewses count]){
+        
+        NSDictionary *tempDict = [shopDetailObjcModel.shopNewses firstObject];
+        shopNewsObjcModel =[ShopNewsObjcModel modelWithDictionary:tempDict error:nil];
+    
+    }
+    
+    
+    
     UITableViewCell *headerImageCell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];//轮播图片的cell
     UITableViewCell *infoItemCell =[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];//项目Item的名字
     UITableViewCell *shcoolInfoCell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];//学校信息
@@ -589,20 +687,27 @@
     if(indexPath.row==2){
     
         /*学校*/
-        UILabel *schoolabel =[[UILabel alloc]initWithFrame:CGRectMake(10, 0, 215, 40)];
+        UILabel *schoolabel =[[UILabel alloc]initWithFrame:CGRectMake(10, 0, 200, 40)];
         schoolabel.adjustsFontSizeToFitWidth = YES;
-        schoolabel.textAlignment = NSTextAlignmentCenter;
-        schoolabel.font =[UIFont systemFontOfSize:16];
+        schoolabel.textAlignment = NSTextAlignmentLeft;
+        schoolabel.font =[UIFont systemFontOfSize:18];
         schoolabel.textColor = baseTextColor;
         [shcoolInfoCell.contentView addSubview:schoolabel];
+        schoolabel.adjustsFontSizeToFitWidth = YES;
+        schoolabel.text = shopDetailObjcModel.shopName;
         
         /*专业*/
-        UILabel *specialtyLabel =[[UILabel alloc]initWithFrame:CGRectMake(10, 40, 215, 40)];
+        UILabel *specialtyLabel =[[UILabel alloc]initWithFrame:CGRectMake(10, 40, 200, 40)];
         specialtyLabel.adjustsFontSizeToFitWidth = YES;
-        specialtyLabel.font =[UIFont systemFontOfSize:16];
-        specialtyLabel.textAlignment = NSTextAlignmentCenter;
+        specialtyLabel.font =[UIFont systemFontOfSize:18];
+        specialtyLabel.textAlignment = NSTextAlignmentLeft;
         specialtyLabel.textColor = baseTextColor;
+        specialtyLabel.adjustsFontSizeToFitWidth = YES;
         [shcoolInfoCell.contentView addSubview:specialtyLabel];
+        if(shopNewsObjcModel){
+        
+            specialtyLabel.text = shopNewsObjcModel.title;
+        }
         
         
         UIView *line =[[UIView alloc]initWithFrame:CGRectMake(215, 0, 1, 80)];
@@ -826,6 +931,18 @@
     
     
 }
+
+
+#pragma mark - 创建网络请求实体
+- (AFHTTPRequestOperationManager *)createNetworkRequestObjc:(const NSString *)content_type{
+
+    AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:content_type];
+    
+    return manager;
+}
+
+
 
 
 - (void)didReceiveMemoryWarning {

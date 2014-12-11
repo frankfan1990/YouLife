@@ -280,6 +280,12 @@
 		63B9163119BE9771006F09EC /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B9163019BE9771006F09EC /* bg.png */; };
 		63B9163519BE9DCA006F09EC /* 头像啊.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B9163419BE9DCA006F09EC /* 头像啊.png */; };
 		63BB99C91A09BD4E00E22E84 /* 我的系列白色图标.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BB99C81A09BD4E00E22E84 /* 我的系列白色图标.png */; };
+		63BC6AAC1A3824E200087DFB /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BC6AA21A3824E200087DFB /* FMDatabase.m */; };
+		63BC6AAD1A3824E200087DFB /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BC6AA41A3824E200087DFB /* FMDatabaseAdditions.m */; };
+		63BC6AAE1A3824E200087DFB /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BC6AA61A3824E200087DFB /* FMDatabasePool.m */; };
+		63BC6AAF1A3824E200087DFB /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BC6AA81A3824E200087DFB /* FMDatabaseQueue.m */; };
+		63BC6AB01A3824E200087DFB /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BC6AAB1A3824E200087DFB /* FMResultSet.m */; };
+		63BC6AB21A3824F700087DFB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63BC6AB11A3824F700087DFB /* libsqlite3.dylib */; };
 		63BCD30419FA8BA200092C05 /* Userinfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD30319FA8BA200092C05 /* Userinfo.m */; };
 		63BCD38119FDDB1500092C05 /* CityListSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD38019FDDB1500092C05 /* CityListSelectViewController.m */; };
 		63BCD38419FDE1F200092C05 /* citys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 63BCD38219FDE1F200092C05 /* citys.plist */; };
@@ -815,6 +821,18 @@
 		63B9163019BE9771006F09EC /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg.png; sourceTree = "<group>"; };
 		63B9163419BE9DCA006F09EC /* 头像啊.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "头像啊.png"; sourceTree = "<group>"; };
 		63BB99C81A09BD4E00E22E84 /* 我的系列白色图标.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "我的系列白色图标.png"; sourceTree = "<group>"; };
+		63BC6AA11A3824E200087DFB /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		63BC6AA21A3824E200087DFB /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
+		63BC6AA31A3824E200087DFB /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		63BC6AA41A3824E200087DFB /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		63BC6AA51A3824E200087DFB /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		63BC6AA61A3824E200087DFB /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
+		63BC6AA71A3824E200087DFB /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		63BC6AA81A3824E200087DFB /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
+		63BC6AA91A3824E200087DFB /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
+		63BC6AAA1A3824E200087DFB /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		63BC6AAB1A3824E200087DFB /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
+		63BC6AB11A3824F700087DFB /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		63BCD30219FA8BA200092C05 /* Userinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Userinfo.h; sourceTree = "<group>"; };
 		63BCD30319FA8BA200092C05 /* Userinfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Userinfo.m; sourceTree = "<group>"; };
 		63BCD37F19FDDB1500092C05 /* CityListSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityListSelectViewController.h; sourceTree = "<group>"; };
@@ -893,6 +911,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63BC6AB21A3824F700087DFB /* libsqlite3.dylib in Frameworks */,
 				630467F51A19EA8800D9B9E3 /* AMapSearchKit.framework in Frameworks */,
 				630467EF1A19D41E00D9B9E3 /* Security.framework in Frameworks */,
 				630467ED1A19D40E00D9B9E3 /* CoreGraphics.framework in Frameworks */,
@@ -1038,6 +1057,7 @@
 		633E456319AD7A7C001D8F75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				63BC6AB11A3824F700087DFB /* libsqlite3.dylib */,
 				630467F41A19EA8800D9B9E3 /* AMapSearchKit.framework */,
 				630467F21A19EA5800D9B9E3 /* libPods-AMapSearch.a */,
 				630467EE1A19D41E00D9B9E3 /* Security.framework */,
@@ -1201,6 +1221,7 @@
 		633E46EE19AE292A001D8F75 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				63BC6AA01A3824E200087DFB /* fmdb */,
 				631224D51A26D0A100B3E9EF /* RTLabel */,
 				630468031A1B857100D9B9E3 /* GaodeUnits */,
 				630467FF1A1B855500D9B9E3 /* ChineseToPinyin */,
@@ -1836,6 +1857,24 @@
 			path = SDWebImage;
 			sourceTree = "<group>";
 		};
+		63BC6AA01A3824E200087DFB /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				63BC6AA11A3824E200087DFB /* FMDatabase.h */,
+				63BC6AA21A3824E200087DFB /* FMDatabase.m */,
+				63BC6AA31A3824E200087DFB /* FMDatabaseAdditions.h */,
+				63BC6AA41A3824E200087DFB /* FMDatabaseAdditions.m */,
+				63BC6AA51A3824E200087DFB /* FMDatabasePool.h */,
+				63BC6AA61A3824E200087DFB /* FMDatabasePool.m */,
+				63BC6AA71A3824E200087DFB /* FMDatabaseQueue.h */,
+				63BC6AA81A3824E200087DFB /* FMDatabaseQueue.m */,
+				63BC6AA91A3824E200087DFB /* FMDB.h */,
+				63BC6AAA1A3824E200087DFB /* FMResultSet.h */,
+				63BC6AAB1A3824E200087DFB /* FMResultSet.m */,
+			);
+			path = fmdb;
+			sourceTree = "<group>";
+		};
 		63D1C25E19F4FDAD00697F08 /* PersonalSetting */ = {
 			isa = PBXGroup;
 			children = (
@@ -2236,6 +2275,7 @@
 				6360A98519AF1A9D0013809B /* DataAboutTitle.m in Sources */,
 				636A99031A104B4C0014F9ED /* MyCommentListViewController.m in Sources */,
 				630467FE1A1B6E9400D9B9E3 /* MapDetailViewController.m in Sources */,
+				63BC6AAE1A3824E200087DFB /* FMDatabasePool.m in Sources */,
 				633E46E019AE28C8001D8F75 /* ADNavigationControllerDelegate.m in Sources */,
 				6394C16A1A28D98D00BB4714 /* convert2_new.c in Sources */,
 				6397103719B45A6800793A3D /* MJRefreshConst.m in Sources */,
@@ -2253,6 +2293,7 @@
 				63C501981A1350AA00B5BCF5 /* UserCommentListViewController.m in Sources */,
 				6397103F19B5574500793A3D /* LuggageBagsTableViewCell.m in Sources */,
 				633E46D519AE28C8001D8F75 /* ADBackFadeTransition.m in Sources */,
+				63BC6AAF1A3824E200087DFB /* FMDatabaseQueue.m in Sources */,
 				63541B6A1A00CA38001EC683 /* KPTimePicker.m in Sources */,
 				63B915BA19B99D55006F09EC /* UIImage+WebP.m in Sources */,
 				633E46DE19AE28C8001D8F75 /* ADGlueTransition.m in Sources */,
@@ -2312,6 +2353,7 @@
 				630467FB1A1B3C9B00D9B9E3 /* ChineseToPinyin.m in Sources */,
 				6356263319C837990011B926 /* ShopDetai_Row1TableViewCell.m in Sources */,
 				633E46DA19AE28C8001D8F75 /* ADFadeTransition.m in Sources */,
+				63BC6AAD1A3824E200087DFB /* FMDatabaseAdditions.m in Sources */,
 				63E78C5D19D10FBC002755E9 /* ShopDetail_CommunityViewController.m in Sources */,
 				6397102119B451CB00793A3D /* POPSpringAnimation.mm in Sources */,
 				6397101819B451CB00793A3D /* POPAnimator.mm in Sources */,
@@ -2343,9 +2385,11 @@
 				63970F7119B0609600793A3D /* CCSegmentedControl.m in Sources */,
 				63EEA93B19F8A80B00F5A8A5 /* ForgetPasswordViewController.m in Sources */,
 				6356263819C83CAB0011B926 /* BusinessInfoTableViewCell.m in Sources */,
+				63BC6AAC1A3824E200087DFB /* FMDatabase.m in Sources */,
 				63541B0B19FE2103001EC683 /* HanyuPinyinOutputFormat.m in Sources */,
 				633E46EB19AE28C8001D8F75 /* ADTransitioningViewController.m in Sources */,
 				63EEFC8A1A258912005E63EC /* ShopDetailObjcModel.m in Sources */,
+				63BC6AB01A3824E200087DFB /* FMResultSet.m in Sources */,
 				636A99141A10BAE30014F9ED /* AboutYouMiViewController.m in Sources */,
 				63A09C8119C7E2DB00655A92 /* ItemDetailController.m in Sources */,
 				63541B0C19FE2103001EC683 /* NSString+PinYin4Cocoa.m in Sources */,

@@ -693,6 +693,14 @@ const NSString *application_json_goods = @"application/json";
     }
     
     double totalPrice = goodObjcModel.promotePrice * [memberField.text integerValue];
+    
+    if([memberField.text integerValue]<1){
+    
+        [ProgressHUD showError:@"请输入正确的购买数"];
+        memberField.text = @"1";
+        return;
+    }
+    
     NSDictionary *parameters = @{@"memberId":membId,
                                  @"goodsId":self.goodsId,
                                  @"markerPrice":[NSNumber numberWithInteger:goodObjcModel.promotePrice],
@@ -704,6 +712,7 @@ const NSString *application_json_goods = @"application/json";
         
         NSLog(@"response:%@",responseObject);
         [ProgressHUD showSuccess:@"加入成功"];
+        [self cancelBottomView];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         

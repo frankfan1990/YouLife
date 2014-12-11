@@ -346,7 +346,7 @@ static NSInteger _start = 10;
     /*动画模块_begin*/
     NSInteger whichTag;
     if(sender.tag==1001){
-        
+       
         whichTag = 2001;
     }else if (sender.tag==1002){
         

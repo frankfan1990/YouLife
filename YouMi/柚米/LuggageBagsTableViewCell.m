@@ -21,10 +21,10 @@
         
         //
         self.headerImageView =[[UIImageView alloc]initWithFrame:CGRectMake(25, 28, 60, 60)];
-        self.headerImageView.layer.borderWidth = 3;
-        self.headerImageView.layer.borderColor =[UIColor colorWithWhite:0.9 alpha:0.8].CGColor;
+//        self.headerImageView.layer.borderWidth = 3;
+//        self.headerImageView.layer.borderColor =[UIColor colorWithWhite:0.9 alpha:0.8].CGColor;
         self.headerImageView.layer.masksToBounds = YES;
-        self.headerImageView.layer.cornerRadius = 30;
+        self.headerImageView.layer.cornerRadius = 3;
         [self.contentView addSubview:self.headerImageView];
         
         //

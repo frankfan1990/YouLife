@@ -30,6 +30,9 @@
 #define kUserCity @"city"//用户当前城市
 #define kUserLocationCity @"currentCity"//定位到当前城市
 #define kUserLocation @"userCurrentLocation"//用户当前位置【经纬度坐标】
+#define kCityId @"cityId" //城市id
+
+#define kCircleInfo @"circleinfo"//商圈信息数组
 
 #define kGaoDeAppKey @"461e3b5c277c297c4fd64ed54c9fa634"//高德appKey
 
@@ -314,6 +317,17 @@
  */
 
 #define API_Cart @"http://120.24.71.104:8080/youmi/cart"
+
+
+#pragma mark - 根据城市id获取商圈信息
+/**
+ *  @author frankfan, 14-12-10 14:12:59
+ *
+ *  根据城市ID获取商圈 http://120.24.71.104:8080/youmi/base/circle/all?cityId=177
+ */
+
+#define API_GetCircleInfoByCityId @"http://120.24.71.104:8080/youmi/base/circle/all"
+
 
 
 
