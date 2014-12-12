@@ -33,6 +33,8 @@ static inline CGRect ScaleRect(CGRect rect, float n) {
 		self.iconImage.image = iconImage;
         self.labelItem.textColor =[UIColor colorWithWhite:0.3 alpha:1];
         self.labelItem.textAlignment = NSTextAlignmentCenter;
+        self.labelItem.font =[UIFont systemFontOfSize:14];
+       
 	}
 	return self;
 }

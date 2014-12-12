@@ -9,12 +9,18 @@
 #import "BusinessCircleViewController.h"
 #import "BusinessCircleTableViewCell.h"
 #import "THLabel/THLabel.h"
+#import "ProgressHUD.h"
+#import <AFNetworking.h>
+#import <TMCache.h>
+#import "PinYinForObjc.h"
 
 @interface BusinessCircleViewController ()
 
-#warning 假数据源
+
 @property (nonatomic,strong)NSDictionary *dict1;
 @property (nonatomic,strong)NSMutableArray *oupPutData;
+
+@property (nonatomic,strong)NSMutableArray *allkeys;
 @end
 
 @implementation BusinessCircleViewController
@@ -33,6 +39,9 @@
     [super viewDidLoad];
     self.view.backgroundColor =[UIColor whiteColor];
     /**/
+    self.allkeys =[NSMutableArray array];
+    
+    
     /*title*/
     UILabel *title =[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 30, 40)];
     title.text = @"全部商圈";
@@ -79,13 +88,14 @@
     
 #pragma mark 创建static_tableView
     
-    self.static_tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 55+64, 123, self.view.bounds.size.height-49*2-50) style:UITableViewStylePlain];
+    self.static_tableView =[[UITableView alloc]initWithFrame:CGRectMake(0, 55+64, 123, self.view.bounds.size.height-49*2-50-20) style:UITableViewStylePlain];
     self.static_tableView.backgroundColor =[UIColor colorWithWhite:0.95 alpha:1];
     self.static_tableView.tag = 3001;
     self.static_tableView.rowHeight = 50;
     self.static_tableView.separatorStyle = NO;
     self.static_tableView.delegate = self;
     self.static_tableView.dataSource = self;
+    self.static_tableView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.static_tableView];
     
     
@@ -106,7 +116,7 @@
     
 #warning 模拟从后台获取的数据
     /*开始构造假数据，模拟从后台获取的数据*/
-    self.dict1 =@{@"A":@[@"阿波罗广场",@"奥特莱斯广场"],@"W":@[@"王婆臭豆腐",@"万家惠",@"吴家林"],@"B":@[@"百盛商圈",@"博富国际",@"百乐门"],@"C":@[@"超级卖场",@"策划商业街"],@"D":@[@"大碗厨",@"大上海",@"大海门"],@"F":@[@"飞鸟店铺",@"粉饼店"]};
+//    self.dict1 =@{@"A":@[@"阿波罗广场",@"奥特莱斯广场"],@"W":@[@"王婆臭豆腐",@"万家惠",@"吴家林"],@"B":@[@"百盛商圈",@"博富国际",@"百乐门"],@"C":@[@"超级卖场",@"策划商业街"],@"D":@[@"大碗厨",@"大上海",@"大海门"],@"F":@[@"飞鸟店铺",@"粉饼店"]};
     ///**///
     
     /*创建最终输出的商圈数据*/
@@ -124,6 +134,36 @@
     }
     
     
+       AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
+    
+    NSDictionary *parameters = @{@"cityId":@"177"};
+    
+    [manager GET:API_GetCircleInfoByCityId parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSArray *tempArray = responseObject[@"data"];
+        [[TMCache sharedCache]setObject:tempArray forKey:kCircleInfo];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        NSLog(@"error:%@",[error localizedDescription]);
+        [ProgressHUD showError:@"网络异常"];
+        
+    }];
+    
+    
+    NSMutableArray *array =[[[TMCache sharedCache]objectForKey:kCircleInfo]mutableCopy];
+    if([array count]){
+        
+        [array removeObjectAtIndex:0];
+        NSArray *resultArray = array;
+        
+        self.BusinessCirArray = [resultArray mutableCopy];
+    }
+    
+    
+
+    
     
     
     
@@ -137,7 +177,7 @@
     
     if(tableView.tag==3002){
     
-        return [[self.dict1 allKeys]count];
+        return [self.allkeys count];
     }else{
     
     
@@ -158,9 +198,9 @@
 
     }else{
     
-        /*fake data*/
+     
         NSArray *temp_array = self.oupPutData[section];
-        return [temp_array count];/*fake data*/
+        return [temp_array count];
     }
 
 }
@@ -190,7 +230,10 @@
         cell.selectedBackgroundView = selectView;
         
         /*bind data*/
-        cell.textLabel.text = self.BusinessCirArray[indexPath.row];
+        
+        NSDictionary *tempDict = self.BusinessCirArray[indexPath.row];
+        NSString *circleName = tempDict[@"regionName"];
+        cell.textLabel.text = circleName;
         cell.textLabel.textAlignment = NSTextAlignmentCenter;
         cell.textLabel.font =[UIFont systemFontOfSize:14];
         cell.textLabel.textColor = baseTextColor;
@@ -233,19 +276,153 @@
     thLabel.font =[UIFont systemFontOfSize:14];
     
     
-    /*fake data 此处self.dict1为某个商圈下得详情数据，从接口处获取*/
-    NSArray *tempAlpha = [self.dict1 allKeys];
-    NSMutableArray *temp_array = [tempAlpha mutableCopy];
-    /*字母排序*/
-    [temp_array sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        
-        return [obj1 compare:obj2 options:NSCaseInsensitiveSearch]==NSOrderedDescending;
-    }];
+//    /*fake data 此处self.dict1为某个商圈下得详情数据，从接口处获取*/
+//    NSArray *tempAlpha = [self.dict1 allKeys];
+//    NSMutableArray *temp_array = [tempAlpha mutableCopy];
+//    /*字母排序*/
+//    [temp_array sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+//        
+//        return [obj1 compare:obj2 options:NSCaseInsensitiveSearch]==NSOrderedDescending;
+//    }];
     
-    thLabel.text = temp_array[section];
+    thLabel.text = self.allkeys[section];
     [backgroundView addSubview:thLabel];
     
     return backgroundView;
+}
+
+
+#pragma mark - cell被点击
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if(tableView.tag==3001){//左侧
+    
+    [ProgressHUD show:nil];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       
+     
+        NSDictionary *tempDict = self.BusinessCirArray[indexPath.row];
+        NSArray *circles = tempDict[@"circles"];
+        
+        //创建一个可变数组，放入circleName
+        NSMutableArray *circleNames =[NSMutableArray array];
+        for (NSDictionary *tempDict in circles) {
+            
+            [circleNames addObject:tempDict[@"circleName"]];
+        }
+        
+        NSMutableArray *pinyins = [NSMutableArray array];
+        for (NSString *circleNameChinese in circleNames) {
+            
+            NSString *pinyin = [self converChinessToPinYinHeader:circleNameChinese];
+            [pinyins addObject:pinyin];
+        }
+        
+        //保障首字母的不重复
+        NSSet *pinyinHeaderSet =[NSSet setWithArray:pinyins];
+        
+        
+        //创建字典容器
+        NSMutableArray *dataSource_left = [NSMutableArray array];
+        
+        //开始放入字典对象
+        for (NSString *string in pinyinHeaderSet) {
+            
+            NSString *dictKey = string;
+            NSMutableArray *dictObject = [NSMutableArray array];
+            
+            for (NSString *circleName in circleNames) {
+                
+                if([string isEqualToString:[self converChinessToPinYinHeader:circleName]]){
+                    
+                    [dictObject addObject:circleName];
+                }
+                
+            }
+            
+            NSDictionary *dict = @{dictKey:dictObject};
+            [dataSource_left addObject:dict];
+            
+            
+        }
+        
+        
+        /*创建最终输出的商圈数据*/
+        self.oupPutData =[NSMutableArray array];
+        
+        NSMutableArray *allkeys = [NSMutableArray array];
+        for (NSDictionary *tempDict in dataSource_left) {
+            
+            NSString *key =[[tempDict allKeys]firstObject];
+            [allkeys addObject:key];
+        }
+        
+        
+        NSArray *OrderAllkeys =[allkeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            
+            return [obj1 compare:obj2 options:NSCaseInsensitiveSearch]==NSOrderedDescending;
+        }];
+        
+        
+        self.allkeys = [OrderAllkeys mutableCopy];
+        
+        
+        for (NSString *keys in OrderAllkeys) {
+            
+            for (NSDictionary *tempDict in dataSource_left) {
+                
+                NSString *tempKey = [[tempDict allKeys]firstObject];
+                if([tempKey isEqualToString:keys]){
+                    
+                    NSArray *tempData = [tempDict objectForKey:tempKey];
+                    [self.oupPutData addObject:tempData];
+                }
+                
+            }
+            
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self.flex_tableView reloadData];
+            [ProgressHUD dismiss];
+        });
+        
+      
+        
+    });
+        
+    
+    }
+
+
+}
+
+
+
+#pragma mark - 根据汉字返回首字母
+- (NSString *)converChinessToPinYinHeader:(NSString *)chinese{
+
+    CFStringRef cfstring = (__bridge CFStringRef)chinese;
+    CFMutableStringRef string = CFStringCreateMutableCopy(NULL, 0, cfstring);
+    CFStringTransform(string, NULL, kCFStringTransformMandarinLatin, NO);
+    CFStringTransform(string, NULL, kCFStringTransformStripDiacritics, NO);
+    
+    NSString *resultString = (__bridge NSString *)(string);
+    NSArray *pinyinHeader = [resultString componentsSeparatedByString:@""];
+    resultString =[[pinyinHeader firstObject]uppercaseString];
+    NSString *finalDone = [resultString substringToIndex:1];
+    if([finalDone isEqualToString:@" "]){
+    
+        resultString = [resultString substringWithRange:NSMakeRange(1, 1)];
+        return resultString;
+        
+    }else{
+    
+        return finalDone;
+
+    }
+    
 }
 
 

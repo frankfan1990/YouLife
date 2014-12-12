@@ -30,7 +30,7 @@
 #import "ACPScrollMenu.h"
 
 
-@interface MainPageViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CLLocationManagerDelegate>
+@interface MainPageViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CLLocationManagerDelegate,ACPScrollDelegate>
 {
 
     UIButton *four_Button1;
@@ -222,6 +222,8 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         }
         
         acpMenu =[[ACPScrollMenu alloc]initACPScrollMenuWithFrame:CGRectMake(125, 0, 180, 30) withBackgroundColor:[UIColor whiteColor] menuItems:items];
+        acpMenu.delegate = self;
+        [acpMenu setThisItemHighlighted:0];
         
         [acpMenu setAnimationType:ACPZoomOut];
         [self.tableView reloadData];
@@ -395,6 +397,14 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
    
     // Do any additional setup after loading the view.
 }
+
+#pragma mark - 获取被点击的Item
+- (void)scrollMenu:(ACPScrollMenu *)menu didSelectIndex:(NSInteger)selectedIndex{
+
+
+
+}
+
 
 - (void)aboutCityId{
 
@@ -846,7 +856,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
 
         [four_Button3.layer pop_addAnimation:springAnimtion forKey:@"springAnimation3"];
 
-    }else if (sender.tag==104){
+    }else if (sender.tag==104){//全部商圈
         
         BusinessCircleViewController *business =[[BusinessCircleViewController alloc]init];
         [self.navigationController pushViewController:business animated:YES];
