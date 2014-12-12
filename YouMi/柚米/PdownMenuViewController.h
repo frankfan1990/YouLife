@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol PullDownMenuCallBack <NSObject>
+
+@optional
+- (void)pullDownMenuCallBack:(NSInteger)whichModel andDetailInfo:(NSString *)detailInfo andTheDataSource:(NSArray *)dataSource;
+
+@end
+
 @interface PdownMenuViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic,strong)UIView *theLoadView;/*承载tableView的superView*/
@@ -19,7 +26,7 @@
 
 @property (nonatomic,strong)NSMutableArray *metes_dataSource;/*1000米*/
 
-
+@property (nonatomic,assign)id<PullDownMenuCallBack>delegate;
 
 
 @end

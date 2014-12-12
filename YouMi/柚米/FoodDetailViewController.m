@@ -30,9 +30,10 @@
 
 #import <MAMapKit/MAMapKit.h>
 #import "LocationManager.h"
+#import "convert_oc.h"
 
 static NSInteger _start = 10;
-@interface FoodDetailViewController ()<MKMapViewDelegate,MAMapViewDelegate>
+@interface FoodDetailViewController ()<MKMapViewDelegate,MAMapViewDelegate,PullDownMenuCallBack>
 {
 
     NSString *_metereString;
@@ -50,6 +51,8 @@ static NSInteger _start = 10;
  
     MAMapView *mamapView;
     LocationManager *userCurrentLocation;//用户当前坐标
+    
+    BOOL isSepcialModel;
 }
 
 
@@ -145,17 +148,19 @@ static NSInteger _start = 10;
     [self.tableView addFooterWithTarget:self action:@selector(pullUpCallBack)];
     
     
-    /*创建3按钮*/
-#warning fake date 这个数字根据用户选择的米数做相应显示
+#pragma mark - 创建三个按钮
     _metereString =[NSString stringWithFormat:@"%@m",@"1000"];
     self.button_meter =[UIButton buttonWithType:UIButtonTypeCustom];
     self.button_meter.tag = 1001;
-    self.button_meter.frame = CGRectMake(5, 74, 75, 30);
+    self.button_meter.frame = CGRectMake(5, 74, 60, 30);
+    self.button_meter.titleLabel.adjustsFontSizeToFitWidth = YES;
     [self.button_meter setTitle:_metereString forState:UIControlStateNormal];
     [self.button_meter setTitleColor:baseTextColor forState:UIControlStateNormal];
     self.button_meter.titleLabel.font =[UIFont systemFontOfSize:15];
     [self.button_meter addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.button_meter];
+    
+    
     /*创建指示器*/
     self.arrow1 =[[UIImageView alloc]initWithFrame:CGRectMake(65, 76, 20, 23)];
     self.arrow1.image =[UIImage imageNamed:@"向下箭头icon"];
@@ -454,6 +459,7 @@ static NSInteger _start = 10;
             self.downMenu.view = nil;
             self.downMenu = nil;
             self.downMenu =[[PdownMenuViewController alloc]init];
+            self.downMenu.delegate = self;
             self.downMenu.selectedTag = sender.tag;
             
 //            [self.view insertSubview:self.downMenu.view belowSubview:self.tableView];
@@ -475,6 +481,7 @@ static NSInteger _start = 10;
         self.downMenu.view = nil;
         self.downMenu = nil;
         self.downMenu =[[PdownMenuViewController alloc]init];
+        self.downMenu.delegate = self;
         self.downMenu.selectedTag = sender.tag;
         
 //        [self.view insertSubview:self.downMenu.view belowSubview:self.tableView];
@@ -518,7 +525,10 @@ static NSInteger _start = 10;
 
     MainPageCustomTableViewCell *cell =[MainPageCustomTableViewCell cellWithTableView:tableView];
     
-    if([self.tmCache objectForKey:@"key_foodShopCache"] && !isPullUpMode){
+    NSDictionary *tempDict = self.shopObjects[indexPath.row];
+    ShopObjectModel *shopObjcModel = [ShopObjectModel modelWithDictionary:tempDict error:nil];
+    
+    if([self.tmCache objectForKey:@"key_foodShopCache"] && !isPullUpMode && !isSepcialModel){
     
         //从缓存中获取字典
         NSDictionary *tempDictCache = [self.tmCache objectForKey:@"key_foodShopCache"];
@@ -584,23 +594,22 @@ static NSInteger _start = 10;
         }
         
 
-        
-        if([self.distanceFromAtoB count]){
+        if([[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation][@"lat"] && shopObjcModel.lat){//已有定位数据
             
-            if([self.distanceFromAtoB[indexPath.row]doubleValue]==0){
-                cell.distanceFromShop.text = @"无数据";
-            }else{
-                
-                NSNumber *num = self.distanceFromAtoB[indexPath.row];
-                if(num.doubleValue>1000){
-                    
-                    cell.distanceFromShop.text = [NSString stringWithFormat:@"%.2fkm",num.doubleValue/1000];
-                }else{
-                    
-                    cell.distanceFromShop.text = [NSString stringWithFormat:@"%fm",num.doubleValue];
-                }
-                
-            }
+            //将对象坐标转成火星坐标
+            double mar_lat,mar_lng;//目的坐标
+            NSDictionary *destinationDict = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation];
+            double originLat = [destinationDict[@"lat"]doubleValue];//当前坐标
+            double originLng = [destinationDict[@"lng"]doubleValue];
+            
+            bd_decrypt(shopObjcModel.lat, shopObjcModel.lng, &mar_lat, &mar_lng);
+            double distanceFromAToB = [convert_oc LantitudeLongitudeDist:mar_lng andlat:mar_lat andlon2:originLng andlat2:originLat];
+            cell.distanceFromShop.text = [NSString stringWithFormat:@"%.2fkm",distanceFromAToB/1000.0];
+            
+            
+        }else{
+            
+            cell.distanceFromShop.text = @"暂无数据";
         }
         
         
@@ -637,7 +646,8 @@ static NSInteger _start = 10;
 #pragma mark - 下拉刷新回调方法
 
 - (void)pullDownToReferesh{
-
+    
+    isSepcialModel = NO;
     NSDictionary *parameters = @{api_typeId:self.shopTypeID,api_start:@0,api_limit:@10};
     AFHTTPRequestOperationManager *getShopList_manager =[AFHTTPRequestOperationManager manager];
     getShopList_manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
@@ -676,7 +686,13 @@ static NSInteger _start = 10;
 #pragma mark - 上拉加载更多的回调方法
 - (void)pullUpCallBack{
     
+    if(isSepcialModel){
     
+        _start = 0;
+        [self.shopObjects removeAllObjects];
+    }
+    
+    isSepcialModel = NO;
     NSDictionary *parameters = @{api_typeId:self.shopTypeID,api_start:[NSNumber numberWithInteger:_start],api_limit:@10};
     AFHTTPRequestOperationManager *getShopList_manager =[AFHTTPRequestOperationManager manager];
     getShopList_manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
@@ -688,6 +704,7 @@ static NSInteger _start = 10;
     }else{
         
         [getShopList_manager GET:API_ShopList parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
             
             NSDictionary *resultDict = (NSDictionary *)responseObject;
             NSArray *pageArray = [resultDict objectForKey:@"data"];
@@ -757,6 +774,19 @@ static NSInteger _start = 10;
     
 }
 
+
+#pragma mark - 下拉菜单回调方法
+- (void)pullDownMenuCallBack:(NSInteger)whichModel andDetailInfo:(NSString *)detailInfo andTheDataSource:(NSArray *)dataSource{
+
+    isSepcialModel = YES;
+    self.shopObjects = [dataSource mutableCopy];
+    [self.button_meter setTitle:detailInfo forState:UIControlStateNormal];
+    [self.tableView reloadData];
+
+}
+
+
+
 #pragma mark 导航栏上的两个按钮触发回调
 
 - (void)navi_buttonClicked:(UIButton *)sender{
@@ -786,7 +816,6 @@ static NSInteger _start = 10;
     self.downMenu = nil;
     
 }
-
 
 
 

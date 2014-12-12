@@ -22,9 +22,11 @@
 #import "ShopObjectModel.h"
 #import "UIImageView+WebCache.h"
 #import "ShopDetailViewController.h"
+#import "MainPageCustomTableViewCell.h"
+
 
 static NSInteger _start = 10;
-@interface EntertainmentDetailViewController ()
+@interface EntertainmentDetailViewController ()<PullDownMenuCallBack>
 {
 
     NSString *_metereString;
@@ -41,6 +43,7 @@ static NSInteger _start = 10;
     CLLocationManager *locationManager_entertainment;//定位当前
     CLLocationCoordinate2D currentMarsLocation_entertainment;//当前位置的火星坐标
 
+    BOOL isSepcialModel;
 }
 
 @property (nonatomic,strong)UIButton *button_meter;
@@ -133,7 +136,7 @@ static NSInteger _start = 10;
     _metereString =[NSString stringWithFormat:@"%@m",@"1000"];
     self.button_meter =[UIButton buttonWithType:UIButtonTypeCustom];
     self.button_meter.tag = 1001;
-    self.button_meter.frame = CGRectMake(5, 74, 75, 30);
+    self.button_meter.frame = CGRectMake(5, 74, 60, 30);
     [self.button_meter setTitle:_metereString forState:UIControlStateNormal];
     [self.button_meter setTitleColor:baseTextColor forState:UIControlStateNormal];
     self.button_meter.titleLabel.font =[UIFont systemFontOfSize:15];
@@ -387,6 +390,7 @@ static NSInteger _start = 10;
             self.downMenu.view = nil;
             self.downMenu = nil;
             self.downMenu =[[PdownMenuViewController alloc]init];
+            self.downMenu.delegate = self;
             self.downMenu.selectedTag = sender.tag;
             
             //            [self.view insertSubview:self.downMenu.view belowSubview:self.tableView];
@@ -408,6 +412,7 @@ static NSInteger _start = 10;
         self.downMenu.view = nil;
         self.downMenu = nil;
         self.downMenu =[[PdownMenuViewController alloc]init];
+        self.downMenu.delegate = self;
         self.downMenu.selectedTag = sender.tag;
         
         //        [self.view insertSubview:self.downMenu.view belowSubview:self.tableView];
@@ -466,9 +471,18 @@ static NSInteger _start = 10;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
-    EntertainmentTableViewCell *cell =[EntertainmentTableViewCell cellWithTableView:tableView];
+    ShopObjectModel *shopObjcModel = nil;
+    if([_shopObjects_entertainment count]){
+        
+        NSDictionary *tempDicy = _shopObjects_entertainment[indexPath.row];
+        
+        shopObjcModel =[ShopObjectModel modelWithDictionary:tempDicy error:nil];
+
+    }
     
-    if([self.tmCache_entertainment objectForKey:@"key_entertainmentShopCache"] && !isPullUpMode_entertainment){
+    MainPageCustomTableViewCell *cell =[MainPageCustomTableViewCell cellWithTableView:tableView];
+    
+    if([self.tmCache_entertainment objectForKey:@"key_entertainmentShopCache"] && !isPullUpMode_entertainment && !isSepcialModel){
         
         //从缓存中获取字典
         NSDictionary *tempDictCache = [self.tmCache_entertainment objectForKey:@"key_entertainmentShopCache"];
@@ -485,9 +499,52 @@ static NSInteger _start = 10;
             [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//店铺头像
             
             cell.aboutUpay.text = shopModel.shopTitle;//U币政策
-            cell.TheShopAddress.text = shopModel.circleName;//商圈名字
             
-        }
+            if([shopModel.tagWords length] && [shopModel.circleName length]){
+            
+                cell.TheShopAddress.text =[NSString stringWithFormat:@"%@ | %@",shopModel.tagWords,shopModel.circleName];
+                
+            }else{
+                
+                if([shopModel.tagWords length]){
+                
+                    cell.TheShopAddress.text = shopModel.tagWords;
+                    
+                }else{
+                
+                    cell.TheShopAddress.text = shopModel.circleName;
+                }
+            
+            }
+            
+            if(shopModel.perCpitaConsumption){
+            
+                
+                cell.averageMoney.text =[NSString stringWithFormat:@"%f",shopModel.perCpitaConsumption];
+            }else{
+            
+                cell.averageMoney.text = @"暂无数据";
+            }
+            
+            if([[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation][@"lat"] && shopObjcModel.lat){//已有定位数据
+                
+                //将对象坐标转成火星坐标
+                double mar_lat,mar_lng;//目的坐标
+                NSDictionary *destinationDict = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation];
+                double originLat = [destinationDict[@"lat"]doubleValue];//当前坐标
+                double originLng = [destinationDict[@"lng"]doubleValue];
+                
+                bd_decrypt_new(shopObjcModel.lat, shopObjcModel.lng, &mar_lat, &mar_lng);
+                double distanceFromAToB = [convert_oc LantitudeLongitudeDist:mar_lng andlat:mar_lat andlon2:originLng andlat2:originLat];
+                cell.distanceFromShop.text = [NSString stringWithFormat:@"%.2fkm",distanceFromAToB/1000.0];
+                
+                
+            }else{
+                
+                cell.distanceFromShop.text = @"暂无数据";
+            }
+            
+         }
     }else{
         
         
@@ -499,7 +556,36 @@ static NSInteger _start = 10;
         cell.TheShopAddress.text = shopModel.circleName;//商圈名字
         [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//店铺头像
         cell.aboutUpay.text = shopModel.shopTitle;//U币政策
-       
+        
+        if(shopModel.perCpitaConsumption){
+            
+            
+            cell.averageMoney.text =[NSString stringWithFormat:@"%f",shopModel.perCpitaConsumption];
+        }else{
+            
+            cell.averageMoney.text = @"暂无数据";
+        }
+        
+        if([[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation][@"lat"] && shopObjcModel.lat){//已有定位数据
+            
+            //将对象坐标转成火星坐标
+            double mar_lat,mar_lng;//目的坐标
+            NSDictionary *destinationDict = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation];
+            double originLat = [destinationDict[@"lat"]doubleValue];//当前坐标
+            double originLng = [destinationDict[@"lng"]doubleValue];
+            
+            bd_decrypt_new(shopObjcModel.lat, shopObjcModel.lng, &mar_lat, &mar_lng);
+            double distanceFromAToB = [convert_oc LantitudeLongitudeDist:mar_lng andlat:mar_lat andlon2:originLng andlat2:originLat];
+            cell.distanceFromShop.text = [NSString stringWithFormat:@"%.2fkm",distanceFromAToB/1000.0];
+            
+            
+        }else{
+            
+            cell.distanceFromShop.text = @"暂无数据";
+        }
+
+        
+        
         NSLog(@"else");
         NSLog(@"error:%@",[error localizedDescription]);
     }
@@ -512,6 +598,7 @@ static NSInteger _start = 10;
 
 - (void)pullDownRefresh{
 
+    isSepcialModel = NO;
     NSDictionary *parameters = @{api_typeId:self.shopTypeID_entertainment,api_start:@0,api_limit:@10};
     AFHTTPRequestOperationManager *getShopList_manager =[AFHTTPRequestOperationManager manager];
     getShopList_manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
@@ -550,6 +637,15 @@ static NSInteger _start = 10;
 #pragma mark - 上拉加载更多的回调方法
 - (void)pullUpCallBack{
    
+    if(isSepcialModel){
+        
+        _start = 0;
+        [self.shopObjects_entertainment removeAllObjects];
+    }
+    
+    isSepcialModel = NO;
+    
+    
     NSDictionary *parameters = @{api_typeId:self.shopTypeID_entertainment,api_start:[NSNumber numberWithInteger:_start],api_limit:@10};
     AFHTTPRequestOperationManager *getShopList_manager =[AFHTTPRequestOperationManager manager];
     getShopList_manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
@@ -572,6 +668,7 @@ static NSInteger _start = 10;
             [self.tableView footerEndRefreshing];
             
             _start = _start+10;//假如数据拉取成功，则标志头向右滑动11个单位
+            isSepcialModel = NO;
             
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -579,8 +676,17 @@ static NSInteger _start = 10;
             NSLog(@"error:%@",[error localizedDescription]);
             [self.tableView footerEndRefreshing];
             [ProgressHUD showError:@"网络错误"];
+            isSepcialModel = YES;
             
-            _start = _start;//假如数据拉取失败，则标志头维持不变【逻辑清晰代码-提示作用】
+            if(isSepcialModel){
+                
+                _start = 0;
+            }else{
+            
+                 _start = _start;//假如数据拉取失败，则标志头维持不变【逻辑清晰代码-提示作用】
+            }
+            
+           
         }];
         
     }
@@ -630,6 +736,16 @@ static NSInteger _start = 10;
     [storeTheTag removeAllObjects];
     self.downMenu = nil;
     
+}
+
+
+#pragma mark - 下拉菜单回调方法
+- (void)pullDownMenuCallBack:(NSInteger)whichModel andDetailInfo:(NSString *)detailInfo andTheDataSource:(NSArray *)dataSource{
+
+    isSepcialModel = YES;
+    [self.button_meter setTitle:detailInfo forState:UIControlStateNormal];
+    self.shopObjects_entertainment = [dataSource mutableCopy];
+    [self.tableView reloadData];
 }
 
 

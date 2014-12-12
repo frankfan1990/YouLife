@@ -556,7 +556,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         cell.selectionStyle = NO;
         
         UILabel *label =[[UILabel alloc]initWithFrame:CGRectMake(10, 2, 89, 30)];
-        label.text = @"我的收藏";
+        label.text = @"优米推荐";
         label.textColor =baseTextColor;
         label.font =[UIFont systemFontOfSize:15];
         [cell.contentView addSubview:label];

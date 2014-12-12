@@ -19,6 +19,8 @@
 #import "ProgressHUD.h"
 #import "ShopObjectModel.h"
 #import "ShopDetailViewController.h"
+#import "convert_oc.h"
+#import "convert2_new.h"
 
 const NSString *text_html_medical = @"text/html";
 const NSString *application_json_medical = @"application/json";
@@ -431,18 +433,12 @@ static NSInteger _start = 10;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
-
+    
     MainPageCustomTableViewCell *cell = nil;
     if(tableView.tag==3003){
     
     
         cell =[MainPageCustomTableViewCell cellWithTableView:tableView];
-        /*次级定义*/
-        [cell.averageMoney removeFromSuperview];
-        [cell.distanceFromShop removeFromSuperview];
-        [cell.label removeFromSuperview];
-        [cell.locationView removeFromSuperview];
-        [cell.TheShopAddress removeFromSuperview];
         
        //
         if([shopList_medical count]){
@@ -466,7 +462,51 @@ static NSInteger _start = 10;
                 cell.aboutUpay.text = @"暂无数据";
             }
             
-        
+            
+            if([shopObjcModel.tagWords length] && [shopObjcModel.circleName length]){//标签&所属商圈
+                
+                cell.TheShopAddress.text = [NSString stringWithFormat:@"%@ | %@",shopObjcModel.tagWords,shopObjcModel.circleName];
+                
+            }else{
+                
+                if([shopObjcModel.tagWords length]){
+                    
+                    cell.TheShopAddress.text = shopObjcModel.tagWords;
+                    
+                }else{
+                    
+                    cell.TheShopAddress.text = shopObjcModel.circleName;
+                }
+                
+            }
+
+            
+            if(shopObjcModel.perCpitaConsumption){//人均消费
+                
+                cell.averageMoney.text = [NSString stringWithFormat:@"%f",shopObjcModel.perCpitaConsumption];
+            }else{
+                
+                cell.averageMoney.text = @"暂无数据";
+            }
+
+            if([[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation][@"lat"] && shopObjcModel.lat){//已有定位数据
+                
+                //将对象坐标转成火星坐标
+                double mar_lat,mar_lng;//目的坐标
+                NSDictionary *destinationDict = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation];
+                double originLat = [destinationDict[@"lat"]doubleValue];//当前坐标
+                double originLng = [destinationDict[@"lng"]doubleValue];
+                
+                bd_decrypt_new(shopObjcModel.lat, shopObjcModel.lng, &mar_lat, &mar_lng);
+                double distanceFromAToB = [convert_oc LantitudeLongitudeDist:mar_lng andlat:mar_lat andlon2:originLng andlat2:originLat];
+                cell.distanceFromShop.text = [NSString stringWithFormat:@"%.2fkm",distanceFromAToB/1000.0];
+                
+                
+            }else{
+                
+                cell.distanceFromShop.text = @"暂无数据";
+            }
+
         }
       
     }

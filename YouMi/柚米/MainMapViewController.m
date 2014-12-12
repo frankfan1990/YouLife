@@ -134,7 +134,7 @@
         [ProgressHUD showError:@"数据缺失" Interaction:NO];
     }else{
     
-        _annotation0.coordinate = CLLocationCoordinate2DMake(self.lat, self.lng);
+        _annotation0.coordinate = CLLocationCoordinate2DMake(self.destinationCoordinate.latitude, self.destinationCoordinate.longitude);
     }
     
     

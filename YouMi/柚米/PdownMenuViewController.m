@@ -8,6 +8,13 @@
 
 #import "PdownMenuViewController.h"
 #import <TMCache.h>
+#import <AFNetworking.h>
+#import "ProgressHUD.h"
+#import "Reachability.h"
+#import "convert2_new.h"
+
+static const NSString *text_html_pulldownMenu = @"text/html";
+static const NSString *application_json_pulldownMenu = @"application/json";
 
 @interface PdownMenuViewController ()
 {
@@ -23,6 +30,9 @@
     
     NSInteger whickRow;//三大模块的第一个模块，选择的右侧菜单的哪一行，默认是第一行，值为0
 
+    BOOL nearModelClicked;
+    
+    Reachability *_reachability;
 }
 
 @property (nonatomic,strong)UIView *touchView;
@@ -52,6 +62,7 @@
     self.view.backgroundColor =[UIColor clearColor];
     
     whickRow = 0;
+    nearModelClicked = YES;
     
     self.touchView =[[UIView alloc]initWithFrame:CGRectMake(0, 114, self.view.bounds.size.width, self.view.bounds.size.height-50)];
     self.touchView.backgroundColor =[UIColor colorWithWhite:0.1 alpha:0.5];
@@ -106,6 +117,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(readTheMessage:) name:kPassLeftData_0 object:nil];
     
     
+    _reachability =[Reachability reachabilityWithHostName:@"www.baicu.com"];
     
     // Do any additional setup after loading the view.
 }
@@ -202,12 +214,10 @@
 
     static NSString *cellName1 = @"cell1";
     static NSString *cellName2 =@"cell2";
-    
     static NSString *cellName3 = @"cell3";
     
     UITableViewCell *cell1 = nil;
     UITableViewCell *cell2 = nil;
-    
     UITableViewCell *cell3 = nil;
     
     if((whichModel==0 && whichButton ==1001 && tableView.tag ==10010) ||(whichModel==1 && whichButton==1001 && tableView.tag==10010) ||(whichModel==5 && whichButton==1001 && tableView.tag==10010) || (whichModel==2 && whichButton==1001 && tableView.tag==10010) ||(whichModel==4 && whichButton==1001 && tableView.tag==10010)||(whichModel==6 && whichButton==1001 && tableView.tag==10010)||(whichModel==7 && whichButton==1001 && tableView.tag==10010)){
@@ -277,7 +287,6 @@
         }
         
         
-     
         return cell2;
     }
     if((whichModel==0 &&whichButton==1002 && tableView.tag==10010) || (whichModel==1 && whichButton==1002 && tableView.tag==10010) || (whichModel==5 && whichButton==1002 && tableView.tag==10010) || (whichModel==2 && whichButton==1002 && tableView.tag==10010) || (whichModel==4 && whichButton==1002 && tableView.tag==10010)||(whichModel==6 && whichButton==1002 && tableView.tag==10010)||(whichModel==7 && whichButton==1002 && tableView.tag==10010)){
@@ -320,11 +329,111 @@
 #pragma mark cell被选择触发事件
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if(tableView.tag == 10011){//右侧tableView点击
+    if(tableView.tag == 10011){//右侧tableView
         
-        [self dismissTheMenu];
+        /**
+         *  @author frankfan, 14-12-11 09:12:01
+         *
+         *  根据不同的模块请求不同的接口
+         */
+        if(nearModelClicked){//如果是附近模块
         
-    }else if (tableView.tag == 10010){//左侧tableView点击
+            AFHTTPRequestOperationManager *manager =[self createNetworkRequestObjc:application_json_pulldownMenu];
+           
+            NSString *baiduKeyWords = [self handleBaiduKeyWordsByModelType:whichModel];//百度关键字
+            NSDictionary *mar_userLocation = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation];
+            double bd_lat = 0.0,bd_lng = 0.0;
+            if(mar_userLocation){
+                
+                double mar_lat = [mar_userLocation[@"lat"]doubleValue];
+                double mar_lng = [mar_userLocation[@"lng"]doubleValue];
+            
+                bd_encrypt_new(mar_lat, mar_lng, &bd_lng, &bd_lat);//火星转百度-当前经纬度
+                
+                NSString *bd_latString = [NSString stringWithFormat:@"%.6f",bd_lat];
+                NSString *bd_lngString = [NSString stringWithFormat:@"%.6f",bd_lng];
+                
+                bd_lat = [bd_latString doubleValue];
+                bd_lng = [bd_lngString doubleValue];
+            }
+            NSString *radius = self._right_outPutSource[indexPath.row];//当前半径
+
+            NSDictionary *parameters = nil;
+            if([baiduKeyWords length]&& bd_lat && bd_lng && [radius length]){
+            
+                parameters = @{@"lat":[NSNumber numberWithDouble:bd_lat],
+                               @"lng":[NSNumber numberWithDouble:bd_lng],
+                               @"radius":radius,
+                               @"query":baiduKeyWords};
+            }
+            
+            if(![_reachability isReachable]){
+            
+                [ProgressHUD showError:@"网络错误"];
+                return;
+            
+            }else{
+            
+                [ProgressHUD show:nil];
+                [manager GET:API_GetShopByRadius parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                    
+                    [ProgressHUD dismiss];
+                    NSLog(@"response:%@",responseObject);
+                    NSArray *dataSource = responseObject[@"data"];
+                    [self.delegate pullDownMenuCallBack:whichModel andDetailInfo:self._right_outPutSource[indexPath.row] andTheDataSource:dataSource];
+                    
+                    [self dismissTheMenu];
+                    
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    
+                    NSLog(@"error:%@",[error localizedDescription]);
+                    [ProgressHUD showError:@"网络异常"];
+                }];
+
+            
+            }
+        
+        }else{//如果不是附近模块
+        
+            AFHTTPRequestOperationManager *manager =[self createNetworkRequestObjc:text_html_pulldownMenu];
+
+            NSString *typeID_para = [self gettypeIdByModel:whichModel];//店铺类型
+            
+            NSDictionary *tempDict = self._right_outPutSource[indexPath.row];
+            NSString *circleId_para = tempDict[@"circleId"];//商圈id
+            
+            NSDictionary *parameters = @{@"circleId":circleId_para,
+                                         @"typeId":typeID_para,
+                                         @"start":@0,
+                                         @"limit":@10};
+
+            NSString *detaiInfo = tempDict[@"circleName"];
+            
+            if(![_reachability isReachable]){
+                
+                [ProgressHUD showError:@"网络错误"];
+                return;
+            }
+            
+            [ProgressHUD show:nil];
+            [manager GET:API_GetShopByCircleId parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                
+                NSArray *dataSource = responseObject[@"data"];
+                [self.delegate pullDownMenuCallBack:whichModel andDetailInfo:detaiInfo andTheDataSource:dataSource];
+                [self dismissTheMenu];
+                [ProgressHUD dismiss];
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                
+                NSLog(@"error:%@",[error localizedDescription]);
+                [ProgressHUD showError:@"请求失败"];
+                [ProgressHUD dismiss];
+            }];
+            
+        }
+     
+        
+    }else if (tableView.tag == 10010){//左侧tableView
     
         whickRow = indexPath.row;
         
@@ -338,20 +447,73 @@
             NSArray *circleinfoArray = [[TMCache sharedCache]objectForKey:kCircleInfo];
             NSDictionary *tempDict = circleinfoArray[indexPath.row];
             self._right_outPutSource = [tempDict[@"circles"]mutableCopy];
-            
+            nearModelClicked = NO;
             
         }else{//第一行被选中
         
             self._right_outPutSource = [@[@"1000",@"3000",@"5000"]mutableCopy];
+            nearModelClicked = YES;
         }
         
         [self.tableView_right reloadData];
     
     }
 
+}
 
+
+
+#pragma mark - 百度关键字处理
+
+- (NSString *)handleBaiduKeyWordsByModelType:(NSInteger)modelType{
+    
+    NSString *keyWords = nil;
+    switch (modelType) {
+        case 0:
+            keyWords = @"美食";
+            break;
+    }
+
+    
+    return keyWords;
 
 }
+
+
+#pragma mark - 根据不同的模块返回不同的typeId
+- (NSString *)gettypeIdByModel:(NSInteger)whichModo{
+    
+    switch (whichModo) {
+        case 0:
+            return @"10000";
+            break;
+            
+        case 1:
+            return @"10001";
+            break;
+        case 2:
+            return @"10002";
+            break;
+        case 4:
+            return @"10004";
+            break;
+        case 5:
+            return @"10005";
+            break;
+        case 6:
+            return @"10006";
+            break;
+        case 7:
+            return @"10007";
+            break;
+    }
+
+    return 0;
+
+}
+
+
+
 
 
 #pragma mark 默认选中第一行
@@ -391,6 +553,18 @@
     }];
     
 }
+
+
+
+#pragma mark - 创建网络请求实体对象
+- (AFHTTPRequestOperationManager *)createNetworkRequestObjc:(const NSString *)content_type{
+
+    AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:content_type];
+    
+    return manager;
+}
+
 
 
 - (void)dealloc{

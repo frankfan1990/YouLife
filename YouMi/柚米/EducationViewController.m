@@ -20,6 +20,8 @@
 #import "MJRefresh.h"
 #import <TMCache.h>
 #import "ShopObjectModel.h"
+#import "convert2_new.h"
+#import "convert_oc.h"
 
 const NSString *text_html_educaiotn = @"text/html";
 const NSString *application_json_education = @"application/json";
@@ -114,7 +116,6 @@ static NSInteger _start = 10;
     [self.view addSubview:self.tableView];
     
 
-    
     
     /*创建按钮*/
     /*创建3按钮*/
@@ -235,13 +236,7 @@ static NSInteger _start = 10;
         [ProgressHUD showError:@"网络异常" Interaction:NO];
     }
 
-    
-    
-    
-    
-    
-    
-    
+   
     
     // Do any additional setup after loading the view.
 }
@@ -434,10 +429,6 @@ static NSInteger _start = 10;
     
         /*次级定制cell*/
         cell =[MainPageCustomTableViewCell cellWithTableView:tableView];
-        [cell.averageMoney removeFromSuperview];
-        [cell.distanceFromShop removeFromSuperview];
-        [cell.label removeFromSuperview];
-        [cell.locationView removeFromSuperview];
         ///////////////
         
         if([self.shopObjects_education count]){
@@ -449,6 +440,37 @@ static NSInteger _start = 10;
             cell.TheShopAddress.text = shopObjcModel.circleName;//所属商圈
             [cell.headerImageView sd_setImageWithURL:[NSURL URLWithString:shopObjcModel.header] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];//头像
             cell.aboutUpay.text = shopObjcModel.shopTitle;
+            
+            if(shopObjcModel.perCpitaConsumption){//人均消费
+                
+                cell.averageMoney.text = [NSString stringWithFormat:@"%f",shopObjcModel.perCpitaConsumption];
+            }else{
+                
+                cell.averageMoney.text = @"暂无数据";
+            }
+
+            
+            if([[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation][@"lat"] && shopObjcModel.lat){//已有定位数据
+                
+                //将对象坐标转成火星坐标
+                double mar_lat,mar_lng;//目的坐标
+                NSDictionary *destinationDict = [[NSUserDefaults standardUserDefaults]objectForKey:kUserLocation];
+                double originLat = [destinationDict[@"lat"]doubleValue];//当前坐标
+                double originLng = [destinationDict[@"lng"]doubleValue];
+                
+                bd_decrypt_new(shopObjcModel.lat, shopObjcModel.lng, &mar_lat, &mar_lng);
+                double distanceFromAToB = [convert_oc LantitudeLongitudeDist:mar_lng andlat:mar_lat andlon2:originLng andlat2:originLat];
+                cell.distanceFromShop.text = [NSString stringWithFormat:@"%.2fkm",distanceFromAToB/1000.0];
+                
+                
+            }else{
+                
+                cell.distanceFromShop.text = @"暂无数据";
+            }
+
+            
+            
+            
         }
      }
     

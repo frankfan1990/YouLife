@@ -331,4 +331,19 @@
 
 
 
+#pragma mark - 根据半径查找商铺
+/**
+ *  @author frankfan, 14-12-11 10:12:41
+ *
+ *  根据半径查找附近商铺
+ */
+
+#define  API_GetShopByRadius @"http://120.24.71.104:8080/youmi/shop/bounds"
+//#define  API_GetShopByRadius @"http://192.168.1.116:8080/youmi/shop/bounds"
+
+
+
+#pragma mark - 根据商圈id获取商铺
+#define API_GetShopByCircleId @"http://120.24.71.104:8080/youmi/shop//getByCircleId"
+
 #endif

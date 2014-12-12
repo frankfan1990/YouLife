@@ -10,16 +10,16 @@
 #include <math.h>
 
 
-const double pi = 3.14159265358979324;
-const double PI = 3.14159265358979324;
+static const double pi = 3.14159265358979324;
+static const double PI = 3.14159265358979324;
 //
 // Krasovsky 1940
 //
 // a = 6378245.0, 1/f = 298.3
 // b = a * (1 - f)
 // ee = (a^2 - b^2) / a^2;
-const double a = 6378245.0;
-const double ee = 0.00669342162296594323;
+static const double a = 6378245.0;
+static const double ee = 0.00669342162296594323;
 
 bool outOfChina_new(double lat, double lon);
 static double transformLat(double x, double y);

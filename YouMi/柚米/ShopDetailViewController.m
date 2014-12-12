@@ -29,6 +29,7 @@
 #import "ShopCollectedObjcModel.h"
 #import <TMCache.h>
 #import "SignInViewController.h"
+#import "convert2_new.h"
 
 const NSString *application_josn = @"application/json";
 const NSString *text_html = @"text/html";
@@ -295,7 +296,6 @@ const NSString *text_html = @"text/html";
     star1.editable = NO;
     [star1 setNeedsDisplay];
    
-
     
     // Do any additional setup after loading the view.
 }
@@ -317,7 +317,6 @@ const NSString *text_html = @"text/html";
         }
         
     }
-    
     
     if(!imageArrays){
         
@@ -509,7 +508,7 @@ const NSString *text_html = @"text/html";
         [button setTitleColor:[UIColor colorWithWhite:0.55 alpha:1] forState:UIControlStateNormal];
         button.titleLabel.font =[UIFont systemFontOfSize:14];
         //在这里显示一共有多少条评论
-        NSString *commentsCount =[NSString stringWithFormat:@"%d",[shopDetailObjcModel.comments count]];
+        NSString *commentsCount =[NSString stringWithFormat:@"%lu",(unsigned long)[shopDetailObjcModel.comments count]];
         [button setTitle:[NSString stringWithFormat:@"%@条",commentsCount] forState:UIControlStateNormal];
         [backView addSubview:button];
         [button addTarget:self action:@selector(commentButtonClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -748,7 +747,13 @@ const NSString *text_html = @"text/html";
             
             mainMap.shopperName = self.shopModel.shopName;//店铺名
             mainMap.startCoordinate = self.originPosition;//当前定位坐标
-            mainMap.destinationCoordinate = CLLocationCoordinate2DMake(self.shopModel.lat, self.shopModel.lng);
+            
+            //要将百度地图转为火星坐标
+            double mar_lat = 0.0,mar_lng = 0.0;
+            
+            bd_decrypt_new(self.shopModel.lat, self.shopModel.lng, &mar_lat, &mar_lng);
+            
+            mainMap.destinationCoordinate = CLLocationCoordinate2DMake(mar_lat, mar_lng);
            
             
             mainMap.hidesBottomBarWhenPushed = YES;
@@ -1359,6 +1364,7 @@ const NSString *text_html = @"text/html";
             
             SignInViewController *signInViewController =[SignInViewController new];
             [self.navigationController pushViewController:signInViewController animated:YES];
+            [ProgressHUD dismiss];
         });
         
     }
