@@ -26,6 +26,8 @@
 #import "LocationManager.h"
 #import "FMDB.h"
 
+#import "ACPItem.h"
+#import "ACPScrollMenu.h"
 
 
 @interface MainPageViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CLLocationManagerDelegate>
@@ -45,6 +47,7 @@
     
     CLLocation *cllocation;
     
+    ACPScrollMenu *acpMenu;
   
 }
 @property (nonatomic,strong)UICollectionView *collectionView;
@@ -189,6 +192,8 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     label4.textColor = baseTextColor;
     [four_Button4 addSubview:label4];
 
+    
+    ///以下控件将要废弃
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ccsegementCV =[[CCSegmentedControl alloc]initWithItems:@[@"KTV",@"小吃",@"西餐",@"箱包"]];
     ccsegementCV.frame = CGRectMake(145, -8, 180, 50);
@@ -198,6 +203,39 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     ccsegementCV.backgroundColor =[UIColor clearColor];
     ccsegementCV.selectedSegmentTextColor = [UIColor whiteColor];
     [ccsegementCV addTarget:self action:@selector(ccsegementSelect:) forControlEvents:UIControlEventValueChanged];
+    
+#pragma mark - 优米推荐网络请求
+    
+    AFHTTPRequestOperationManager *manager_recommend =[AFHTTPRequestOperationManager manager];
+    manager_recommend.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
+    [manager_recommend GET:API_Recomment parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSDictionary *resultDict = (NSDictionary *)responseObject;
+        NSArray *tempArray = resultDict[@"results"];
+        
+        NSMutableArray *items = [NSMutableArray array];
+        for (NSDictionary *dict in tempArray) {
+            
+            ACPItem *item =[[ACPItem alloc]initACPItem:nil iconImage:nil andLabel:dict[@"tagName"]];
+            [item setHighlightedBackground:nil iconHighlighted:nil textColorHighlighted:[UIColor redColor]];
+            [items addObject:item];
+        }
+        
+        acpMenu =[[ACPScrollMenu alloc]initACPScrollMenuWithFrame:CGRectMake(125, 0, 180, 30) withBackgroundColor:[UIColor whiteColor] menuItems:items];
+        
+        [acpMenu setAnimationType:ACPZoomOut];
+        [self.tableView reloadData];
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        [ProgressHUD show:@"推荐数据获取失败"];
+        NSLog(@"%@",[error localizedDescription]);
+    }];
+    
+    
+    
+    
     
     /*首页按钮图片名字数组*/
     self.images1 = @[@"美食.png",@"娱乐.png",@"教育.png",@"社区.png",@"健身.png",@"医疗.png",@"美容.png",@"酒店.png"];
@@ -560,7 +598,8 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
         label.textColor =baseTextColor;
         label.font =[UIFont systemFontOfSize:15];
         [cell.contentView addSubview:label];
-        [cell.contentView addSubview:ccsegementCV];
+//        [cell.contentView addSubview:ccsegementCV];
+        [cell.contentView addSubview:acpMenu];
         
         cell.layer.shadowColor =[UIColor colorWithWhite:0.1 alpha:0.85].CGColor;
         cell.layer.shadowOffset = CGSizeMake(0.1, 0.89);

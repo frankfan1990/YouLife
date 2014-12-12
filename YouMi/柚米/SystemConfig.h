@@ -346,4 +346,17 @@
 #pragma mark - 根据商圈id获取商铺
 #define API_GetShopByCircleId @"http://120.24.71.104:8080/youmi/shop//getByCircleId"
 
+
+
+
+
+/**
+ *  @author frankfan, 14-12-12 16:12:49
+ *
+ *  优米推荐接口
+ */
+#define API_Recomment @"http://120.24.71.104:8080/youmi/shopType/recommend"
+
+
+
 #endif
