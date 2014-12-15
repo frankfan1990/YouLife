@@ -46,6 +46,7 @@
                                                highlightedImage:highlightDotImage
                                                      dotsNumber:totalPageCounts sideLength:dotGapWidth dotsGap:dotGapWidth];
             _pageControl.hidden = NO;
+            
             self.scrollView.backgroundColor = [UIColor whiteColor];
             self.scrollView.showsVerticalScrollIndicator = NO;
             
@@ -94,7 +95,7 @@
                                                               repeats:YES];
         self.scrollView.directionalLockEnabled = YES;
         self.scrollView.bounces = NO;
-//        self.scrollView.userInteractionEnabled = NO;
+
         [self.animationTimer pauseTimer];
     }
     return self;

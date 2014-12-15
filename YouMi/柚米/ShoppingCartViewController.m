@@ -8,12 +8,31 @@
 
 #import "ShoppingCartViewController.h"
 #import "ShoppingCartTableViewCell.h"
+
+#import "ProgressHUD.h"
+#import "Reachability.h"
+#import <AFNetworking.h>
+#import "UIImageView+WebCache.h"
+#import <TMCache.h>
+#import "UserCartObject.h"
+
 @interface ShoppingCartViewController ()<UITableViewDelegate,UITableViewDataSource>
 {
     NSArray *arrOfgoodsName;
     NSArray *arrOfPrice;
     NSArray *arrOfshopName;
     NSArray *arrOfnumber;
+    
+    //
+    UILabel *totoalMoney;
+    UITableView *_tableView;
+    
+    NSMutableArray *recodeIndexPath;
+    Reachability *reachability;
+    
+    NSMutableArray *globalArray;
+    
+    
 }
 @end
 
@@ -22,6 +41,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = customGrayColor;
+    
+    //
+    recodeIndexPath =[NSMutableArray array];
+    globalArray =[NSMutableArray array];
     
     //导航栏上一些元素初始化
     [self createTabBar];
@@ -33,8 +56,75 @@
     [self createTableView];
     
     
+    /**
+     *  @author frankfan, 14-12-15 17:12:42
+     *
+     *  创建底部结算按钮
+     *
+     *  @return
+     */
     
-    // Do any additional setup after loading the view.
+    UIView *bottomBackView =[[UIView alloc]initWithFrame:CGRectMake(15, self.view.bounds.size.height-49, self.view.bounds.size.width-30, 49)];
+    bottomBackView.backgroundColor =[UIColor whiteColor];
+    [self.view addSubview:bottomBackView];
+    
+    UIButton *payItButton =[UIButton buttonWithType:UIButtonTypeCustom];
+    payItButton.frame = CGRectMake(bottomBackView.bounds.size.width-70, 5, 60, 39);
+    payItButton.layer.cornerRadius = 3;
+    payItButton.backgroundColor =baseRedColor;
+    [payItButton setTitle:@"结算" forState:UIControlStateNormal];
+    [bottomBackView addSubview:payItButton];
+    [payItButton addTarget:self action:@selector(payItButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    //结算
+    UILabel *payLabel =[[UILabel alloc]initWithFrame:CGRectMake(10, 0, 50, 49)];
+    payLabel.textColor =[UIColor blackColor];
+    payLabel.font =[UIFont boldSystemFontOfSize:14];
+    payLabel.text = @"结算:";
+    [bottomBackView addSubview:payLabel];
+    
+    totoalMoney =[[UILabel alloc]initWithFrame:CGRectMake(65, 0, 100, 49)];
+    totoalMoney.textColor =[UIColor whiteColor];
+    totoalMoney.font = [UIFont systemFontOfSize:14];
+    [bottomBackView addSubview:totoalMoney];
+    totoalMoney.adjustsFontSizeToFitWidth = YES;
+  
+#pragma mark - 开始网络请求
+    
+    reachability =[Reachability reachabilityWithHostName:@"www.baidu.com"];
+    if(![reachability isReachable]){
+    
+        [ProgressHUD showError:@"网络异常"];
+        return;
+    }
+    
+    AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
+    NSString *memberIdString = [[TMCache sharedCache]objectForKey:kUserInfo][memberID];
+    NSDictionary *parameter = nil;
+    if([memberIdString length]){
+    
+        parameter = @{memberID:memberIdString,
+                      @"start":@0,
+                      @"limit":@10};
+    }
+    
+    [ProgressHUD show:nil];
+    [manager GET:API_Cart parameters:parameter success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSLog(@"response:%@",responseObject);
+        globalArray = [responseObject[@"data"]mutableCopy];
+        [ProgressHUD dismiss];
+        [_tableView reloadData];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        NSLog(@"error:%@",[error localizedDescription]);
+        [ProgressHUD showError:@"网络错误"];
+    }];
+    
+    
 }
 -(void)createTabBar
 {
@@ -61,17 +151,9 @@
     [searchButton setImage:[UIImage imageNamed:@"编辑"] forState:UIControlStateNormal];
     [searchButton setImage:[UIImage imageNamed:@"完成"] forState:UIControlStateSelected];
     [searchButton addTarget:self action:@selector(navi_buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    //    UIButton *searchButton2 =[UIButton buttonWithType:UIButtonTypeCustom];
-    //    searchButton2.tag = 1002;
-    //    searchButton2.frame = CGRectMake(0, 0, 30, 30);
-    //    [searchButton2 setImage:[UIImage imageNamed:@"购物车"] forState:UIControlStateNormal];
-    //    [searchButton2 addTarget:self action:@selector(navi_buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    UIBarButtonItem *item1 =[[UIBarButtonItem alloc]initWithCustomView:searchButton];
-    //    UIBarButtonItem *item2 =[[UIBarButtonItem alloc]initWithCustomView:searchButton2];
-    //    NSArray *itemArrays = @[item1,item2];
-    //    self.navigationItem.rightBarButtonItems  =itemArrays;
-    self.navigationItem.rightBarButtonItem = item1;
+//    UIBarButtonItem *item1 =[[UIBarButtonItem alloc]initWithCustomView:searchButton];
+//    self.navigationItem.rightBarButtonItem = item1;
 }
 -(void)VariableInitialization
 {
@@ -82,14 +164,18 @@
 }
 -(void)createTableView
 {
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(15,0, self.view.frame.size.width-30, self.view.frame.size.height-60) style:UITableViewStylePlain];
-    tableView.backgroundColor = customGrayColor;
-    tableView.delegate = self;
-    tableView.dataSource = self;
-    tableView.showsVerticalScrollIndicator= NO;
-    [tableView reloadData];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(15,0, self.view.frame.size.width-30, self.view.frame.size.height-60) style:UITableViewStylePlain];
+    _tableView.backgroundColor = customGrayColor;
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    _tableView.showsVerticalScrollIndicator= NO;
+    [_tableView reloadData];
     
-    [self.view addSubview:tableView];
+    CGRect rect = CGRectZero;
+    UIView *footerView = [[UIView alloc]initWithFrame:rect];
+    _tableView.tableFooterView = footerView;
+    
+    [self.view addSubview:_tableView];
     
 }
 
@@ -97,14 +183,16 @@
 
 #pragma mark - tableView的代理
 
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
    return  1;
 }
 
+#pragma mark - cell个数
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return arrOfPrice.count;
+    return [globalArray count];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -124,25 +212,85 @@
     return headView;
 }
 
+
+#pragma mark - 创建cell
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    UserCartObject *userCart = nil;
+    if([globalArray count]){
+    
+        userCart = [UserCartObject modelWithDictionary:globalArray[indexPath.section] error:nil];
+    }
+    
     static NSString * cellname = @"cell";
     ShoppingCartTableViewCell *cell = (ShoppingCartTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellname];
     if (cell == nil) {
         cell = [[ShoppingCartTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellname];
     }
-    cell.labelOfGoodsName.text = arrOfgoodsName[indexPath.section];
-    cell.labelOfShoppName.text = arrOfshopName[indexPath.section];
-    cell.labelOfPrice.text = [NSString stringWithFormat:@"价格: %@元",arrOfPrice[indexPath.section]];
-    cell.labelOfNumber.text = [NSString stringWithFormat:@"数量:%@",arrOfnumber[indexPath.section]];
-    cell.imageOfGoods.image = [UIImage imageNamed:@"测试图片.png"];
+    cell.labelOfGoodsName.text = userCart.goodsName;
+    cell.labelOfShoppName.text = nil;
+    
+    double marketPrice = userCart.markerPrice;
+    cell.labelOfPrice.text = [NSString stringWithFormat:@"价格: %.f元",marketPrice];
+    
+    double numbers = userCart.goodsNumber;
+    cell.labelOfNumber.text = [NSString stringWithFormat:@"数量:%.f",numbers];
+    
+    //商品图像
+    [cell.imageOfGoods sd_setImageWithURL:[NSURL URLWithString:userCart.goodsPicture] placeholderImage:[UIImage imageNamed:@"defaultBackimageSmall"]];
+    
     [cell.btnOfSelected addTarget:self action:@selector(didBtn:) forControlEvents:UIControlEventTouchUpInside];
     cell.selectionStyle = NO;
     return cell;
 }
+
+#pragma mark - cell将要显示
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    UIButton *checkBox = (UIButton *)[cell viewWithTag:5001];
+    if([recodeIndexPath containsObject:indexPath]){
+    
+        [checkBox setBackgroundColor:baseRedColor];
+        
+    }else{
+    
+        [checkBox setBackgroundColor:customGrayColor];
+    }
+}
+
+
+
+#pragma mark - 结算按钮触发
+- (void)payItButtonClicked{
+    
+    
+}
+
+
+
+
 -(void)didBtn:(UIButton *)sender
 {
     sender.selected = !sender.selected;
+    
+    //检测点击按钮对应的indexPath
+    CGPoint buttonPosition =[sender convertPoint:CGPointZero toView:_tableView];
+    NSIndexPath *indexPath =[_tableView indexPathForRowAtPoint:buttonPosition];
+    
+    if(sender.selected){//被选中
+
+        [recodeIndexPath addObject:indexPath];
+        [sender setBackgroundColor:baseRedColor];
+    
+    }else{//被取消
+    
+        [recodeIndexPath removeObject:indexPath];
+        [sender setBackgroundColor:customGrayColor];
+    }
+    
+    
+    
 }
 #pragma mark - 导航栏按钮触发
 /**
@@ -170,6 +318,13 @@
     }
 
 
+}
+
+
+#pragma mark - 将要消失
+- (void)viewWillDisappear:(BOOL)animated{
+    
+    [ProgressHUD dismiss];
 }
 
 

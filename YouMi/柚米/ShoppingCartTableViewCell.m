@@ -19,10 +19,11 @@
         _labelOfPrice = [[UILabel alloc] init];
         _labelOfNumber = [[UILabel alloc] init];
         _imageOfGoods = [[UIImageView alloc] init];
+        _labelOfGoodsName.adjustsFontSizeToFitWidth = YES;
+        _labelOfShoppName.adjustsFontSizeToFitWidth = YES;
         
         _btnOfSelected = [[UIButton alloc] init];
-        [_btnOfSelected setBackgroundImage:[UIImage imageNamed:@"未选中.png"] forState:UIControlStateNormal];
-        [_btnOfSelected setBackgroundImage:[UIImage imageNamed:@"选中.png"] forState:UIControlStateSelected];
+        _btnOfSelected.tag = 5001;
         _btnOfSelected.selected =NO;
        
         
@@ -61,11 +62,11 @@
 {
     [super layoutSubviews];
     
-    _imageOfGoods.frame = CGRectMake(3, 3, 110, 70-6);
+    _imageOfGoods.frame = CGRectMake(3, 3, 90, 70-6);
     
-    _labelOfGoodsName.frame = CGRectMake(120, 5, 150, 20);
-    _labelOfShoppName.frame = CGRectMake(120, 30, 150, 15);
-    _labelOfPrice.frame = CGRectMake(120, 50, 150, 14);
+    _labelOfGoodsName.frame = CGRectMake(100, 5, 150, 20);
+    _labelOfShoppName.frame = CGRectMake(100, 30, 150, 15);
+    _labelOfPrice.frame = CGRectMake(100, 50, 150, 14);
     _labelOfNumber.frame = CGRectMake(self.frame.size.width-150, 50, 145, 20);
     
     _btnOfSelected.frame = CGRectMake(self.frame.size.width-30,70/2-15, 20, 20);

@@ -359,4 +359,15 @@
 
 
 
+#pragma mark - 根据用户ID获取用户购物车
+/**
+ *  @author frankfan, 14-12-15 18:12:32
+ *
+ *  用户购物车
+ */
+
+#define API_Cart @"http://120.24.71.104:8080/youmi/cart"
+
+
+
 #endif

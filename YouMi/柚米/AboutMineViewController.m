@@ -283,6 +283,7 @@
     if(indexPath.row==1){
         
         ShoppingCartViewController *shopCart =[ShoppingCartViewController new];
+        shopCart.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:shopCart animated:YES];
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         

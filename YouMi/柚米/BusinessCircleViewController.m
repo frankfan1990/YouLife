@@ -15,7 +15,11 @@
 #import "PinYinForObjc.h"
 
 @interface BusinessCircleViewController ()
+{
 
+    NSInteger whichRowSelected;
+    NSString *selectedCellCircleId;//被选中的那个商圈的Id
+}
 
 @property (nonatomic,strong)NSDictionary *dict1;
 @property (nonatomic,strong)NSMutableArray *oupPutData;
@@ -101,8 +105,6 @@
     
 #pragma mark 创建商圈数组
     self.BusinessCirArray = [NSMutableArray array];
-    /*fake data*/
-    self.BusinessCirArray =[NSMutableArray arrayWithObjects:@"芙蓉区",@"开福区",@"雨花区",@"天心区",@"岳麓区", nil];
     
     
 #pragma mark 创建flex_tableView
@@ -114,10 +116,7 @@
     [self.view addSubview:self.flex_tableView];
     
     
-#warning 模拟从后台获取的数据
-    /*开始构造假数据，模拟从后台获取的数据*/
-//    self.dict1 =@{@"A":@[@"阿波罗广场",@"奥特莱斯广场"],@"W":@[@"王婆臭豆腐",@"万家惠",@"吴家林"],@"B":@[@"百盛商圈",@"博富国际",@"百乐门"],@"C":@[@"超级卖场",@"策划商业街"],@"D":@[@"大碗厨",@"大上海",@"大海门"],@"F":@[@"飞鸟店铺",@"粉饼店"]};
-    ///**///
+
     
     /*创建最终输出的商圈数据*/
     self.oupPutData =[NSMutableArray array];
@@ -134,15 +133,15 @@
     }
     
     
-       AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+    AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
     
     NSDictionary *parameters = @{@"cityId":@"177"};
     
     [manager GET:API_GetCircleInfoByCityId parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
-        NSArray *tempArray = responseObject[@"data"];
-        [[TMCache sharedCache]setObject:tempArray forKey:kCircleInfo];
+//        NSArray *tempArray = responseObject[@"data"];
+//        [[TMCache sharedCache]setObject:tempArray forKey:kCircleInfo];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
@@ -160,11 +159,6 @@
         
         self.BusinessCirArray = [resultArray mutableCopy];
     }
-    
-    
-
-    
-    
     
     
     // Do any additional setup after loading the view.
@@ -275,16 +269,6 @@
     thLabel.textColor = baseRedColor;
     thLabel.font =[UIFont systemFontOfSize:14];
     
-    
-//    /*fake data 此处self.dict1为某个商圈下得详情数据，从接口处获取*/
-//    NSArray *tempAlpha = [self.dict1 allKeys];
-//    NSMutableArray *temp_array = [tempAlpha mutableCopy];
-//    /*字母排序*/
-//    [temp_array sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-//        
-//        return [obj1 compare:obj2 options:NSCaseInsensitiveSearch]==NSOrderedDescending;
-//    }];
-    
     thLabel.text = self.allkeys[section];
     [backgroundView addSubview:thLabel];
     
@@ -295,7 +279,20 @@
 #pragma mark - cell被点击
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+    
     if(tableView.tag==3001){//左侧
+        
+        whichRowSelected = indexPath.row;
+        
+        //默认选中第一行，若此时不是手动选中的第一行，则取消默认选中行
+        if(indexPath.row!=0){
+            
+            NSIndexPath *indexPathLocal =[NSIndexPath indexPathForRow:0 inSection:0];
+            UITableViewCell *cell =[self.static_tableView cellForRowAtIndexPath:indexPathLocal];
+            cell.selected = NO;
+        }
+        
+        
     
     [ProgressHUD show:nil];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -393,6 +390,27 @@
     });
         
     
+    }else{//右侧tableView被选中
+    
+        NSMutableArray *dataSourceForRightTableView = [[[TMCache sharedCache]objectForKey:kCircleInfo]mutableCopy];
+        [dataSourceForRightTableView removeObjectAtIndex:0];
+        NSDictionary *tempDict = dataSourceForRightTableView[whichRowSelected];
+        
+        NSArray *dicts = tempDict[@"circles"];
+        
+        NSArray *selectedArray = self.oupPutData[indexPath.section];
+        NSString *circleName = selectedArray[indexPath.row];
+        
+        //在这里取到被选中的商圈的circleId
+        for (NSDictionary *tempDict in dicts) {
+            
+            if([tempDict[@"circleName"] isEqualToString:circleName]){
+            
+                selectedCellCircleId = tempDict[@"circleId"];
+                NSLog(@"circleId:%@",selectedCellCircleId);
+            }
+        }
+        
     }
 
 
@@ -403,6 +421,7 @@
 #pragma mark - 根据汉字返回首字母
 - (NSString *)converChinessToPinYinHeader:(NSString *)chinese{
 
+  
     CFStringRef cfstring = (__bridge CFStringRef)chinese;
     CFMutableStringRef string = CFStringCreateMutableCopy(NULL, 0, cfstring);
     CFStringTransform(string, NULL, kCFStringTransformMandarinLatin, NO);
@@ -422,11 +441,8 @@
         return finalDone;
 
     }
-    
+
 }
-
-
-
 
 #pragma mark tableView头部高度
 
@@ -442,10 +458,18 @@
 }
 
 
+#pragma mark - 默认选中第一行
+- (void)viewDidAppear:(BOOL)animated{
 
-
-
-
+    [super viewDidAppear:animated];
+    
+    NSIndexPath *indexPath =[NSIndexPath indexPathForRow:0 inSection:0];
+    UITableViewCell *cell =[self.static_tableView cellForRowAtIndexPath:indexPath];
+    cell.selected = YES;
+    
+    [self tableView:self.static_tableView didSelectRowAtIndexPath:indexPath];
+    
+}
 
 
 #pragma mark 回退

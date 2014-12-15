@@ -193,7 +193,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     [four_Button4 addSubview:label4];
 
     
-    ///以下控件将要废弃
+    ///以下控件废弃
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ccsegementCV =[[CCSegmentedControl alloc]initWithItems:@[@"KTV",@"小吃",@"西餐",@"箱包"]];
     ccsegementCV.frame = CGRectMake(145, -8, 180, 50);

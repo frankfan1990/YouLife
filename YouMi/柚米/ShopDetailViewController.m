@@ -252,6 +252,7 @@ const NSString *text_html = @"text/html";
             cyclePlayImage.totalPagesCount = ^NSInteger{
                 
                 return [_self.iamgeViewArrays count];
+              
             };
             
             cyclePlayImage.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
