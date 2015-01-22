@@ -269,7 +269,7 @@
 
 
 
-
+#pragma mark - 复选框按钮触发
 -(void)didBtn:(UIButton *)sender
 {
     sender.selected = !sender.selected;

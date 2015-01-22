@@ -207,6 +207,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
 #pragma mark - 优米推荐网络请求
     
     AFHTTPRequestOperationManager *manager_recommend =[AFHTTPRequestOperationManager manager];
+    manager_recommend.requestSerializer.timeoutInterval = 15;
     manager_recommend.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
     [manager_recommend GET:API_Recomment parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
@@ -277,6 +278,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     if(![[[NSUserDefaults standardUserDefaults]objectForKey:kShopTypeArray] count]){
         
         AFHTTPRequestOperationManager *manager_shopType =[AFHTTPRequestOperationManager manager];
+        manager_shopType.requestSerializer.timeoutInterval = 15;
         manager_shopType.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
         [ProgressHUD show:nil Interaction:NO];
         [manager_shopType GET:API_ShopType parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -412,6 +414,7 @@ static NSInteger myCollectionCurrentIndex;/*我的收藏，当前所选索引*/
     if(1){//如果没缓存
         
         AFHTTPRequestOperationManager *manager =[AFHTTPRequestOperationManager manager];
+        manager.requestSerializer.timeoutInterval = 15;
         manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
         
         NSString *cityId = [[TMCache sharedCache]objectForKey:kCityId];

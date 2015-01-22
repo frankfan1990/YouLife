@@ -54,4 +54,8 @@
 @property (nonatomic,copy)NSString *shopTitle;//满100送50
 @property (nonatomic,copy)NSString *attentionId;
 @property (nonatomic,assign)BOOL attention;
+@property (nonatomic,assign)BOOL promote;
+@property (nonatomic,assign)BOOL certificate;
+@property (nonatomic,assign)BOOL recommend;
+@property (nonatomic,assign)BOOL theNew;
 @end

@@ -251,6 +251,7 @@ static NSInteger _start = 10;
     
     NSDictionary *parameters = @{api_typeId:self.shopTypeID,api_start:@0,api_limit:@10};
     AFHTTPRequestOperationManager *getShopList_manager =[AFHTTPRequestOperationManager manager];
+    getShopList_manager.requestSerializer.timeoutInterval = 15;
     getShopList_manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
     
         if([rechability isReachable]){//网络正常

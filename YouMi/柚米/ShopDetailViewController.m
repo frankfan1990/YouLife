@@ -174,6 +174,7 @@ const NSString *text_html = @"text/html";
     cyclePlayImage =[[CycleScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 180)
                                         animationDuration:2.8];
     cyclePlayImage.userInteractionEnabled = YES;
+    cyclePlayImage.scrollView.scrollEnabled = NO;
 
     /**
      *  @author frankfan, 14-12-02 13:12:04
@@ -245,6 +246,7 @@ const NSString *text_html = @"text/html";
 
             /******/
             [self.tableView reloadData];
+            cyclePlayImage.scrollView.scrollEnabled = YES;
             [self handleTheCyclePlayingImages:shopDetailObjcModel.pictures];
             /********************/
             

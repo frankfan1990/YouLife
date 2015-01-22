@@ -182,11 +182,19 @@ static NSInteger _start = 10;
     _reachability_turist =[Reachability reachabilityWithHostName:@"www.baidu.com"];
     
     if([self.tmcache_turist objectForKey:@"key_turistShop_cache"]){
-        
+
         NSDictionary *resultDict = [self.tmcache_turist objectForKey:@"key_turistShop_cache"];
-        shopList_turist = [[resultDict objectForKey:@"data"] mutableCopy];
+//        shopList_turist = [[resultDict objectForKey:@"data"] mutableCopy];
     }
 
+    TMCache *cachea = [TMCache sharedCache];
+    if([cachea objectForKey:@"cachea"]){
+    
+        NSDictionary *dic = [cachea objectForKey:@"cachea"];
+        shopList_turist = [dic objectForKey:@"data"];
+    }
+    
+    
     AFHTTPRequestOperationManager *manager =[self createNetworkRequestObjc:application_json_turist];
     NSDictionary *parameters = @{api_typeId:self.shopType_turist,api_start:@0,api_limit:@10};
     if([_reachability_turist isReachable]){//网络正常
@@ -199,6 +207,7 @@ static NSInteger _start = 10;
             
             [self.tableView reloadData];
             [self.tmcache_turist setObject:tempDict forKey:@"key_beautyShop_cache"];
+            [cachea setObject:tempDict forKey:@"cachea"];
             [ProgressHUD dismiss];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

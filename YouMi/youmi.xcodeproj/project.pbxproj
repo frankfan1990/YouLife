@@ -2034,9 +2034,6 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = ruizhou;
 				TargetAttributes = {
-					633E456019AD7A7C001D8F75 = {
-						DevelopmentTeam = 32PPUK7BX7;
-					};
 					633E457B19AD7A7C001D8F75 = {
 						TestTargetID = 633E456019AD7A7C001D8F75;
 					};
